@@ -95,6 +95,5 @@ namespace Lab1
         {
             return !(a != b);
         }
-
     }
 }
