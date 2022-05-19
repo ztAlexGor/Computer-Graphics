@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-
     internal class Point
     {
         private float x;
@@ -19,29 +18,38 @@ namespace Lab1
             this.y = y;
             this.z = z;
         }
+
         public Point(Point a)
         {
             this.x = a.x;
             this.y = a.y;
             this.z = a.z;
         }
-        public float X()
+
+        public float X() => x;
+
+        public float Y() => y;
+
+        public float Z() => z;
+
+        public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
+
+        public static bool operator ==(Point a, Point b) => !(a != b);
+
+        public override bool Equals(object? obj)
         {
-            return x;
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Point p = (Point)obj;
+                return (x == p.x) && (y == p.y) && (z == p.z);
+            }
         }
-        public float Y()
-        {
-            return y;
-        }
-        public float Z()
-        {
-            return z;
-        }
-        public static bool operator !=(Point a, Point b) {
-            if (a.x != b.x || a.y != b.y || a.z != b.z) return true;
-            else return false;
-        }
-        public static bool operator ==(Point a, Point b) { return !(a != b); }
-        
+
+        public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
+
     }
 }
