@@ -19,5 +19,13 @@ namespace Lab1
                 this.polygons.Add(new Polygon(polygon));
             }
         }
+
+        public void AddPolygon(Polygon polygon) => polygons.Add(new Polygon(polygon));
+
+        public void Rotate(float alpha = 0, float beta = 0, float gamma = 0)
+        {
+            // TBD
+        }
+
     }
 }
