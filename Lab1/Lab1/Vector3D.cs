@@ -30,6 +30,14 @@ namespace Lab1
             sqrLength = x * x + y * y + z * z;
             length = (float)Math.Sqrt(sqrLength);
         }
+        public Vector3D(Vector3D a)
+        {
+            x = a.X();
+            y = a.Y();
+            z = a.Z();
+            sqrLength = a.sqrLength;
+            length = a.length;
+        }
         public float X()
         {
             return x;
