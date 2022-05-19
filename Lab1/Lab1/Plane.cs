@@ -20,6 +20,7 @@ namespace Lab1
             this.c = c;
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
         }
+
         public bool IntersectsWith(Vector3D vector)
         {
             // TBD

@@ -9,10 +9,10 @@ namespace Lab1
 {
     internal class Polygon
     {
-        private Point a;
-        private Point b;
-        private Point c;
-        private Color color;
+        private readonly Point a;
+        private readonly Point b;
+        private readonly Point c;
+        private readonly Color color;
 
         public Polygon(Point a, Point b, Point c)
         {
@@ -40,7 +40,10 @@ namespace Lab1
             this.a = polygon.a;
             this.b = polygon.b;
             this.c = polygon.c;
+            this.color = polygon.color;
         }
 
+        public Polygon Rotate(float alpha = 0, float beta = 0, float gamma = 0) => 
+            new(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
     }
 }
