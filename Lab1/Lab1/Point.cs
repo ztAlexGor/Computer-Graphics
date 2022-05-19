@@ -32,6 +32,8 @@ namespace Lab1
 
         public float Z() => z;
 
+        public Point Rotate(float alpha, float beta, float gamma) => MathUtils.GetRotatedVector(this, alpha, beta, gamma);
+
         public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
 
         public static bool operator ==(Point a, Point b) => !(a != b);

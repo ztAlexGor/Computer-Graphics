@@ -22,9 +22,11 @@ namespace Lab1
 
         public void AddPolygon(Polygon polygon) => polygons.Add(new Polygon(polygon));
 
+        public List<Polygon> GetPolygons() => polygons;
+
         public void Rotate(float alpha = 0, float beta = 0, float gamma = 0)
         {
-            // TBD
+            // Still in progress
         }
 
     }
