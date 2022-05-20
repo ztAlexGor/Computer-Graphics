@@ -8,20 +8,29 @@ namespace Lab1
 {
     internal class Beam 
     {
-        private readonly Point start;
+        private readonly Point position;
         private readonly Vector3D direction;
 
-        public Beam(Point start, Vector3D direction)
+        public Beam(Point position, Vector3D direction)
         {
-            this.start = new Point(start);
+            this.position = new Point(position);
             this.direction = new Vector3D(direction);
         }
 
-        public Point GetStart() => start;
+        public Beam()
+        {
+            position = new Point(0, 0, 0);
+            direction = new Vector3D(0, 0, 0);
+        }
 
-        public Vector3D GetDirection() => direction;
+        public virtual Point GetPosition() => position;
 
-        public static bool operator !=(Beam a, Beam b) => (a.start != b.start) || (a.direction != b.direction);
+        public virtual Vector3D GetDirection() => direction;
+
+        public float GetCosBetweenAnotherBeam(Beam beam) => 
+            direction * beam.GetDirection() / (direction.Length() * beam.GetDirection().Length());
+
+        public static bool operator !=(Beam a, Beam b) => (a.position != b.position) || (a.direction != b.direction);
 
         public static bool operator ==(Beam a, Beam b) => !(a != b);
 
@@ -34,10 +43,10 @@ namespace Lab1
             else
             {
                 Beam b = (Beam)obj;
-                return (start == b.start) && (direction == b.direction);
+                return (position == b.position) && (direction == b.direction);
             }
         }
 
-        public override int GetHashCode() => start.GetHashCode() ^ direction.GetHashCode();
+        public override int GetHashCode() => position.GetHashCode() ^ direction.GetHashCode();
     }
 }

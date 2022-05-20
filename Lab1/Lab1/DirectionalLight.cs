@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    class DirectionalLight
+    class DirectionalLight : Beam
     {
         private Point position;
         private Vector3D direction;
 
-        public DirectionalLight(Point p, Vector3D v)
+        public DirectionalLight(Point position, Vector3D direction)
         {
-            this.position = p;
-            this.direction = Vector3D.Normalize(v);
+            this.position = new Point(position);
+            this.direction = new Vector3D(direction);
         }
 
-        public Point GetPosition() => position;
+        public override Point GetPosition() => position;
 
-        public Vector3D GetDirection() => direction;
+        public override Vector3D GetDirection() => direction;
 
         public void SetPosition(Point p) => position = new Point(p);
 
