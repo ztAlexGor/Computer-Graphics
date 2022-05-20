@@ -12,8 +12,8 @@ namespace Lab1
         private readonly Point center;
         public Sphere(Point center, float radius)
         {
-            radius = r;
-            center = c;
+            this.radius = radius;
+            this.center = center;
         }
         public bool IntersectsWith(Point viewPoint, Vector3D viewRay)
         {
