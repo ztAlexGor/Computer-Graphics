@@ -58,16 +58,23 @@ namespace Lab1
             return point;
         }
 
-        public static float[] SolveSoLE(Matrix matrix)
+        public static (float[], bool[]) SolveSoLE(Matrix matrix)
         {
-            int CountLeadingZeroes(float[] row)
+            static bool ApplyMaskAndCheck(float[] row, bool[] mask)
             {
-                int zeroesCounter = 0;
-                for (int i = 0; i < row.Length - 1; i++)
+                bool unknownValueFound = false;
+                for (int i = 0; i < mask.Length; i++)
                 {
-                    zeroesCounter += (row[i] == 0) ? 1 : 0;
+                    if (((mask[i]) ? 0 : 1) * row[i] != 0)
+                    {
+                        if (unknownValueFound)
+                        {
+                            return false;
+                        }
+                        unknownValueFound = true;
+                    }
                 }
-                return zeroesCounter;
+                return unknownValueFound;
             }
             // Init matrix vals and create updated array with
             // track of leading zeroes to impove performance
@@ -77,13 +84,12 @@ namespace Lab1
             int m = matrixVals[0].Length;
             for (int i = 0; i < n; i++)
             {
-                values[i] = new float[m + 2];
+                values[i] = new float[m + 1];
                 int leadingZeroesNumber = 0;
-                int zeroesCounter = 0;
                 bool metNonZero = false;
                 for (int j = 0; j < m; j++)
                 {
-                    if (!metNonZero)
+                    if (!metNonZero && j < m - 1)
                     {
                         if (matrixVals[i][j] == 0)
                         {
@@ -94,18 +100,16 @@ namespace Lab1
                             metNonZero = true;
                         }
                     }
-                    zeroesCounter += (matrixVals[i][j] == 0) ? 1 : 0;
                     values[i][j] = matrixVals[i][j];
                 }
                 values[i][m] = leadingZeroesNumber;
-                values[i][m + 1] = zeroesCounter;
             }
 
             float[] solutions = new float[m - 1];
-            bool[] solutionsFlag = new bool[m - 1];
+            bool[] mask = new bool[m - 1];
             for (int i = 0; i < m - 1; i++)
             {
-                solutionsFlag[i] = false;
+                mask[i] = 0;
                 solutions[i] = 0;
             }
 
@@ -127,11 +131,10 @@ namespace Lab1
                 {
                     float multiplier = -(values[row1][k] / values[row2][k]);
                     int leadingZeroesNumber = 0;
-                    int zeroesCounter = 0;
                     bool metNonZero = false;
                     for (int j = 0; j < m; j++)
                     {
-                        if (!metNonZero)
+                        if (!metNonZero && j < m - 1)
                         {
                             if (matrixVals[row1][j] == 0)
                             {
@@ -142,11 +145,9 @@ namespace Lab1
                                 metNonZero = true;
                             }
                         }
-                        zeroesCounter += (values[row1][j] == 0) ? 1 : 0;
                         values[row1][j] += multiplier * values[row2][j];
                     }
                     values[row1][m] = leadingZeroesNumber;
-                    values[row1][m + 1] = zeroesCounter;
                 }
                 else
                 {
@@ -155,20 +156,38 @@ namespace Lab1
             }
 
             k = m - 1;
-            int i = 0;
+            int idx = 0;
             bool noSolution = false;
             while (k >= 0 && !noSolution)
             {
-                while (i < n && values[i][m + 1] != k && i++ >= 0) ;
-                if (i == n)
+                while (idx < n && !ApplyMaskAndCheck(values[idx], mask) && idx++ >= 0) ;
+                if (idx < n)
                 {
-                    noSolution = true;
+                    float b = values[idx][m - 1];
+                    int xi = 0;
+                    for (int j = 0; j < m - 1; j++)
+                    {
+                        if (mask[j])
+                        {
+                            b += values[idx][j] * solutions[j];
+                        }
+                        else
+                        {
+                            if (values[idx][j] != 0)
+                            {
+                                xi = j;
+                            }
+                        }
+                    }
+                    solutions[xi] = -(b / values[idx][xi]);
+                    mask[xi] = true;
                 }
                 else
                 {
-                    // Solve the equation
+                    k--;
                 }
             }
+            return (solutions, mask);
         }
     }
 }

@@ -20,6 +20,11 @@ namespace Lab1
             }
         }
 
+        public Figure()
+        {
+            this.polygons = new List<Polygon>();
+        }
+
         public void AddPolygon(Polygon polygon) => polygons.Add(new Polygon(polygon));
 
         public List<Polygon> GetPolygons() => polygons;
