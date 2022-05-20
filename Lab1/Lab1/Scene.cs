@@ -21,14 +21,14 @@ namespace Lab1
 
         public void RayProcessing()
         {
-            for(int i = 0; i < cam?.GetHeight(); i++)
+            for (int i = 0; i < cam?.GetHeight(); i++)
             {
-                for(int j = 0; j < cam?.GetWidth(); j++)
+                for (int j = 0; j < cam?.GetWidth(); j++)
                 {
                     //How iterate by screen?
                     Point currScreenPoint = new(1, 2, 3); //#CHANGE THIS
                     bool f = false;
-                    foreach(ISimpleObject obj in objects)
+                    foreach (ISimpleObject obj in objects)
                     {
                         f = obj.IntersectsWith(cam.GetPosition(), Vector3D.Normalize(new Vector3D(cam.GetPosition(), currScreenPoint)));
                     }
