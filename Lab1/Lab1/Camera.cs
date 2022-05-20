@@ -10,14 +10,16 @@ namespace Lab1
     {
         Point position;
         Vector3D direction;
-        int[][] screen;
+        int width;
+        int height;
         float focusDistance;
 
         public Camera(Point p, Vector3D v, int sHeight, int sWidth, float f)
         {
             this.position = p;
             this.direction = Vector3D.Normalize(v);
-            this.screen = new int[sHeight][sWidth];
+            this.width = sWidth;
+            this.height = sHeight;
             this.focusDistance = f;
         }
 
@@ -38,20 +40,29 @@ namespace Lab1
         {
             this.direction = new Vector3D(v);
         }
-        public float getPosition()
+        public float getFocus()
         {
             return this.focusDistance;
         }
-        public void setPosition(float f)
+        public void setFocus(float f)
         {
             this.focusDistance = f;
         }
-
-        public void clearScreen()
+        public float getWidth()
         {
-            for (int i = 0; i < this.screen.Length; i++)
-                for (int j = 0; j < this.screen[0].Length; j++)
-                    this.screen[i][j] = 0;
+            return this.width;
+        }
+        public void setWidth(float f)
+        {
+            this.width;
+        }
+        public float getHeight()
+        {
+            return this.height;
+        }
+        public void setHeight(float f)
+        {
+            this.height;
         }
     }
 }
