@@ -23,7 +23,7 @@ namespace Lab1
 
         public bool IntersectsWith(Vector3D vector)
         {
-            double[] res = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));
+            double[] res, bool[] mask = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));
             // TBD
             return true;
         }

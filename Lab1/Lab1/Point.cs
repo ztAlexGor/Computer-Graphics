@@ -8,9 +8,9 @@ namespace Lab1
 {
     internal class Point
     {
-        private float x;
-        private float y;
-        private float z;
+        private readonly float x;
+        private readonly float y;
+        private readonly float z;
 
         public Point(float x, float y, float z)
         {

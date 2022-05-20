@@ -6,30 +6,38 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    internal class Beam {
-        private Point start;
-        private Vector3D direction;
+    internal class Beam 
+    {
+        private readonly Point start;
+        private readonly Vector3D direction;
+
         public Beam(Point start, Vector3D direction)
         {
             this.start = new Point(start);
             this.direction = new Vector3D(direction);
         }
-        public Point GetStart()
+
+        public Point GetStart() => start;
+
+        public Vector3D GetDirection() => direction;
+
+        public static bool operator !=(Beam a, Beam b) => (a.start != b.start) || (a.direction != b.direction);
+
+        public static bool operator ==(Beam a, Beam b) => !(a != b);
+
+        public override bool Equals(object? obj)
         {
-            return this.start;
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Beam b = (Beam)obj;
+                return (start == b.start) && (direction == b.direction);
+            }
         }
-        public Vector3D GetDirection()
-        {
-            return this.direction;
-        }
-        public static bool operator !=(Beam a, Beam b)
-        {
-            if (a.start != b.start || a.direction != b.direction) return true;
-            else return false;
-        }
-        public static bool operator ==(Beam a, Beam b)
-        {
-            return !(a != b);
-        }
+
+        public override int GetHashCode() => start.GetHashCode() ^ direction.GetHashCode();
     }
 }

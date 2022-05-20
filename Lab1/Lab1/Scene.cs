@@ -8,38 +8,31 @@ namespace Lab1
 {
     class Scene
     {
-        Camera cam;
-        DirectionalLight light;
-        SimpleObject[] objects;
+        private readonly Camera cam;
+        private readonly DirectionalLight light;
+        private readonly ISimpleObject[] objects;
 
         public Scene()
         {
             this.cam = new Camera(new Point(0, 0, 0), new Vector3D(1, 0, 0), 20, 20, 5);
             this.light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, -1, 0));
-            this.objects = new SimpleObject[1]{ new Sphere(new Point(20, 0, 0), 10) };
+            this.objects = new ISimpleObject[1]{ new Sphere(new Point(20, 0, 0), 10) };
         }
 
-        public rayProcessing()
+        public void RayProcessing()
         {
-            for(int i = 0; i < this.cam.getHeight(); i++)
+            for(int i = 0; i < cam?.GetHeight(); i++)
             {
-                for(int j = 0; j < this.cam.getWidth(); j++)
+                for(int j = 0; j < cam?.GetWidth(); j++)
                 {
                     //How iterate by screen?
-                    var currScreePoint = new Point(1, 2, 3); //#CHANGE THIS
+                    Point currScreePoint = new(1, 2, 3); //#CHANGE THIS
                     bool f = false;
-                    foreach(SimpleObject obj in this.objects)
+                    foreach(ISimpleObject obj in objects)
                     {
-                        f = obj.isIntersect(this.cam.getPosition, Vector3D.Normalize(new Vector3D(this.cam.getPosition, currScreePoint)));
+                        f = obj.IntersectsWith(cam.GetPosition(), Vector3D.Normalize(new Vector3D(cam.GetPosition(), currScreePoint)));
                     }
-                    if(f)
-                    {
-                        System.Write('X');
-                    }
-                    else
-                    {
-                        System.Write(' ');
-                    }
+                    System.Write(f ? 'X' : ' ');
                 }
                 System.Write('\n');
             }

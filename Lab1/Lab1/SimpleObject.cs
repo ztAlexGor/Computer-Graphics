@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    interface SimpleObject
+    interface ISimpleObject
     {
-        public bool isIntersect(Point viewPoint, Vector3D viewRay);
+        public bool IntersectsWith(Point viewPoint, Vector3D viewRay);
     }
 }

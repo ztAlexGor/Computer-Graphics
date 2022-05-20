@@ -8,9 +8,9 @@ namespace Lab1
 {
     internal class Vector3D
     {
-        private float x;
-        private float y;
-        private float z;
+        private readonly float x;
+        private readonly float y;
+        private readonly float z;
         private readonly float length;
         private readonly float sqrLength;
 
