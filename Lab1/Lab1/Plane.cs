@@ -8,10 +8,10 @@ namespace Lab1
 {
     internal class Plane
     {
-        private Point a;
-        private Point b;
-        private Point c;
-        private Vector3D normal;
+        private readonly Point a;
+        private readonly Point b;
+        private readonly Point c;
+        private readonly Vector3D normal;
 
         public Plane(Point a, Point b, Point c)
         {
@@ -21,11 +21,24 @@ namespace Lab1
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
         }
 
-        public bool IntersectsWith(Vector3D vector)
+        public Point? IntersectsWith(Vector3D vector)
         {
-            double[] res, bool[] mask = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));
-            // TBD
-            return true;
+            // And I've just realized it's pointless, because we have a normal vector
+            // (float[], bool) res = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));
+            // if (!res.Item2)
+            // {
+            //     return false;
+            // }
+            float d = -(normal.X() * a.X() + normal.Y() * a.Y() + normal.Z() * a.Z());
+            float sumt = normal.X() * vector.X() + normal.Y() * vector.Y() + normal.Z() * vector.Z();
+            if (sumt == 0)
+            {
+                return null;
+            }
+            
+            float t = -(sumt + d) / sumt;
+
+            return new Point(vector.X() * (t + 1), vector.Y() * (t + 1), vector.Z() * (t + 1));
         }
     }
 }

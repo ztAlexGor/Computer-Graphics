@@ -34,7 +34,7 @@ namespace Lab1
         {
             if (polygon == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(polygon), "Polygon object is null");
             }
 
             this.a = polygon.a;

@@ -58,7 +58,7 @@ namespace Lab1
             return point;
         }
 
-        public static (float[], bool[]) SolveSoLE(Matrix matrix)
+        public static (float[], bool) SolveSoLE(Matrix matrix)
         {
             static bool ApplyMaskAndCheck(float[] row, bool[] mask)
             {
@@ -187,7 +187,7 @@ namespace Lab1
                     k--;
                 }
             }
-            return (solutions, mask);
+            return (solutions, mask.Count(x => x) == m - 1);
         }
     }
 }
