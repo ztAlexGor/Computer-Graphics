@@ -26,15 +26,15 @@ namespace Lab1
                 for(int j = 0; j < cam?.GetWidth(); j++)
                 {
                     //How iterate by screen?
-                    Point currScreePoint = new(1, 2, 3); //#CHANGE THIS
+                    Point currScreenPoint = new(1, 2, 3); //#CHANGE THIS
                     bool f = false;
                     foreach(ISimpleObject obj in objects)
                     {
-                        f = obj.IntersectsWith(cam.GetPosition(), Vector3D.Normalize(new Vector3D(cam.GetPosition(), currScreePoint)));
+                        f = obj.IntersectsWith(cam.GetPosition(), Vector3D.Normalize(new Vector3D(cam.GetPosition(), currScreenPoint)));
                     }
-                    System.Write(f ? 'X' : ' ');
+                    Console.Write(f ? 'X' : ' ');
                 }
-                System.Write('\n');
+                Console.Write('\n');
             }
         }
     }

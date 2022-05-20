@@ -11,7 +11,7 @@ namespace Lab1
     {
         static void Main()
         {
-            System.WriteLine("Hello World!!!");
+            Console.WriteLine("Hello World!!!");
         }
     }
 }
