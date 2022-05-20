@@ -109,7 +109,7 @@ namespace Lab1
             bool[] mask = new bool[m - 1];
             for (int i = 0; i < m - 1; i++)
             {
-                mask[i] = 0;
+                mask[i] = false;
                 solutions[i] = 0;
             }
 

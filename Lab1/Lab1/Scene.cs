@@ -9,13 +9,14 @@ namespace Lab1
     class Scene
     {
         private readonly Camera cam;
-        private readonly DirectionalLight light;
+        private readonly Vector3D light;
         private readonly ISimpleObject[] objects;
 
         public Scene()
         {
             this.cam = new Camera(new Point(0, 0, 0), new Vector3D(1, 0, 0), 20, 20, 5);
-            this.light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, -1, 0));
+            this.light = new Vector3D(0, -1, 0);
+            //this.light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, -1, 0));
             this.objects = new ISimpleObject[1]{ new Sphere(new Point(20, 0, 0), 10) };
         }
 

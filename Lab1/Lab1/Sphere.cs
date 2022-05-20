@@ -29,7 +29,7 @@ namespace Lab1
 
             return (D >= 0) && (Math.Sqrt(D) * b / (2 * a) > 0);
         }
-        public Point GetCenter() { return center; }
-        public float GetRadius() { return radius; }
+        public Point GetCenter() => center;
+        public float GetRadius() => radius;
     }
 }
