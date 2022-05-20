@@ -17,10 +17,10 @@ namespace Lab1
             this.center = c;
         }
 
-        public bool isIntersect(Camera view)
+        public bool isIntersect(Point viewPoint, Vector3D viewRay)
         {
-            var d = view.getDirection();
-            var o = view.getPosition();
+            var d = viewRay;
+            var o = viewPoint;
             var k = new Vector3D(o, center);
 
             var a = d * d;

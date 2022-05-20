@@ -8,6 +8,6 @@ namespace Lab1
 {
     interface SimpleObject
     {
-        public bool isIntersect();
+        public bool isIntersect(Point viewPoint, Vector3D viewRay);
     }
 }
