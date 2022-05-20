@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    class Sphere
+    class Sphere : SimpleObject
     {
         float radius;
         Point center;
 
-        public Sphere(float r, Point c)
+        public Sphere(Point c, float r)
         {
             this.radius = r;
             this.center = c;
