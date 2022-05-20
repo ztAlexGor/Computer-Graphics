@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    class Sphere : ISimpleObject
+    internal class Sphere : ISimpleObject
     {
         private readonly float radius;
         private readonly Point center;
-
-        public Sphere(Point c, float r)
+        public Sphere(Point center, float radius)
         {
             radius = r;
             center = c;
         }
-
         public bool IntersectsWith(Point viewPoint, Vector3D viewRay)
         {
             Vector3D d = new(viewRay);
@@ -31,5 +29,7 @@ namespace Lab1
 
             return (D >= 0) && (Math.Sqrt(D) * b / (2 * a) > 0);
         }
+        public Point GetCenter() { return center; }
+        public float GetRadius() { return radius; }
     }
 }
