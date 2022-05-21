@@ -14,7 +14,7 @@ namespace Lab1
         public Beam(Point position, Vector3D direction)
         {
             this.position = new Point(position);
-            this.direction = new Vector3D(direction);
+            this.direction = Vector3D.Normalize(direction);
         }
 
         public virtual Point GetPosition() => position;

@@ -45,7 +45,7 @@ namespace Lab1
 
         public static bool operator ==(Point a, Point b) => !(a != b);
 
-        public static Point operator +(Point a, Vector3D b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static Point operator +(Point a, Vector3D b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
 
         public override bool Equals(object? obj)
         {

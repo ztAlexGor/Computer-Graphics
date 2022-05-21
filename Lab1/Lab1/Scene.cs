@@ -15,8 +15,8 @@ namespace Lab1
         public Scene()
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0));
-            objects = new ITraceable[] { new Sphere(new Point(0, 0, 20), 5) };
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(-1, 1, -1));
+            objects = new ITraceable[] { new Sphere(new Point(0, 0, 20), 13) };
         }
 
         public void RayProcessing()
@@ -24,10 +24,12 @@ namespace Lab1
             int screenHeight = cam.GetScreenHeight();
             int screenWidth = cam.GetScreenWidth();
             Point camPosition = cam.GetPosition();
-            Point screenNW = new(camPosition.X() - screenWidth + ((screenWidth + 1) % 2) * 0.5f,
+            /*Point screenNW = new(camPosition.X() - screenWidth + ((screenWidth + 1) % 2) * 0.5f,
                 camPosition.Y() - screenHeight + ((screenHeight + 1) % 2) * 0.5f,
-                camPosition.Z() + cam.GetFocalDistance());
-
+                camPosition.Z() + cam.GetFocalDistance());*/
+            Point screenNW = new(camPosition.X() - screenWidth / 2,
+                                camPosition.Y() - screenHeight / 2,
+                                camPosition.Z() + cam.GetFocalDistance());
             float[] screenValues = new float[screenHeight * screenWidth];
             int[] ZBuffer = new int[screenHeight * screenWidth];
             for (int i = 0; i < screenHeight * screenWidth; i++)
@@ -42,15 +44,15 @@ namespace Lab1
                 {
                     Beam ray = new(new Point(camPosition), new Vector3D(camPosition,
                         new Point(screenNW.X() + j, screenNW.Y() + i, screenNW.Z())));
-
                     foreach (ITraceable obj in objects)
                     {
                         Point? intersectionPoint = obj.GetIntersectionPoint(ray);
                         if (intersectionPoint is not null)
                         {
+                            int idx = i * screenHeight + j;
+                            //screenValues[idx] = 1;
                             Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
                             float dotProductValue = objNormal * light.GetDirection();
-                            int idx = i * screenHeight + j;
                             if (intersectionPoint.Z() < ZBuffer[idx])
                             {
                                 ZBuffer[idx] = (int)intersectionPoint.Z();
@@ -60,34 +62,34 @@ namespace Lab1
                     }
                 }
             }
-
             for (int i = 0; i < screenHeight; i++)
             {
                 for (int j = 0; j < screenWidth; j++)
                 {
                     float val = screenValues[i * screenHeight + j];
+
                     if (val <= 0)
                     {
-                        Console.Write(' ');
+                        Console.Write(' '.ToString().PadLeft(2));
                     }
-                    if (val > 0 && val < 0.2f)
+                    else if (val > 0 && val < 0.2f)
                     {
-                        Console.WriteLine('.');
+                        Console.Write('·'.ToString().PadLeft(2));
                     }
-                    if (val >= 0.2f && val < 0.5f)
+                    else if (val >= 0.2f && val < 0.5f)
                     {
-                        Console.WriteLine('*');
+                        Console.Write('*'.ToString().PadLeft(2));
                     }
-                    if (val >= 0.5f && val < 0.8f)
+                    else if (val >= 0.5f && val < 0.8f)
                     {
-                        Console.WriteLine('*');
+                        Console.Write('O'.ToString().PadLeft(2));
                     }
-                    if (val >= 0.8f)
+                    else if (val >= 0.8f)
                     {
-                        Console.WriteLine('#');
+                        Console.Write('#'.ToString().PadLeft(2));
                     }
                 }
-                Console.WriteLine('#');
+                Console.WriteLine();
             }
         }
     }

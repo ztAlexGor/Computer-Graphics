@@ -11,7 +11,9 @@ namespace Lab1
     {
         static void Main()
         {
-            Console.WriteLine("Hello World!!!");
+            Scene scene = new Scene();
+            scene.RayProcessing();
+            //Console.WriteLine("Hello World!!!");
         }
     }
 }

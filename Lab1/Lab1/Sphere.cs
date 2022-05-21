@@ -21,7 +21,7 @@ namespace Lab1
         {
             Vector3D d = new(ray.GetDirection());
             Point o = new(ray.GetPosition());
-            Vector3D k = new(o, center);
+            Vector3D k = new(center, o);
 
             float a = d * d;
             float b = d * 2 * k;
@@ -34,11 +34,11 @@ namespace Lab1
                 return null;
             }
 
-            float x1 = -(b + (float)Math.Sqrt(D)) / (2.0f * a);
-            float x2 = -(b - (float)Math.Sqrt(D)) / (2.0f * a);
-            return (x1 > 0) ? (o + (d * x1)) : ((x2 > 0) ? (o + (d * x2)) : null);
+            float x1 = (-b + (float)Math.Sqrt(D)) / (2.0f * a);
+            float x2 = (-b - (float)Math.Sqrt(D)) / (2.0f * a);
+            return (x2 > 0) ? (o + (d * x2)) : ((x1 > 0) ? (o + (d * x1)) : null);
         }
 
-        public Vector3D GetNormalAtPoint(Point point) => new(center, point);
+        public Vector3D GetNormalAtPoint(Point point) => Vector3D.Normalize(new Vector3D(center, point));
     }
 }

@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Lab1": {
-      "commandName": "Executable"
+      "commandName": "Executable",
+      "executablePath": "D:\\Study\\Computer Graphics\\Lab1\\Lab1\\bin\\Debug\\net6.0\\Lab1.exe"
     }
   }
 }

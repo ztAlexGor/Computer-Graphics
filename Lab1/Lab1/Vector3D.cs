@@ -17,11 +17,11 @@ namespace Lab1
             length = (float)Math.Sqrt(sqrLength);
         }
 
-        public Vector3D(Point a, Point b)
+        public Vector3D(Point start, Point end)
         {
-            x = b.X() - a.X();
-            y = b.Y() - a.Y();
-            z = b.Z() - a.Z();
+            x = end.X() - start.X();
+            y = end.Y() - start.Y();
+            z = end.Z() - start.Z();
             sqrLength = x * x + y * y + z * z;
             length = (float)Math.Sqrt(sqrLength);
         }
