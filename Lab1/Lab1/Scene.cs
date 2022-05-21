@@ -50,7 +50,7 @@ namespace Lab1
                         {
                             Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
                             float dotProductValue = objNormal * light.GetDirection();
-                            int idx = (int)(i * screenHeight + j);
+                            int idx = i * screenHeight + j;
                             if (intersectionPoint.Z() < ZBuffer[idx])
                             {
                                 ZBuffer[idx] = (int)intersectionPoint.Z();
