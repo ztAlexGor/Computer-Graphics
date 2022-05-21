@@ -29,7 +29,7 @@ namespace Lab1
                 camPosition.Z() + cam.GetFocalDistance());
 
             float[] screenValues = new float[screenHeight * screenWidth];
-            ITraceable[] ZBuffer = new ITraceable[screenHeight * screenWidth];
+            int[] ZBuffer = new int[screenHeight * screenWidth];
             for (int i = 0; i < screenHeight * screenWidth; i++)
             {
                 screenValues[i] = 0.0f;
