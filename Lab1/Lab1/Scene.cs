@@ -14,9 +14,9 @@ namespace Lab1
 
         public Scene()
         {
-            cam = new Camera(new Point(0, 0, 0), new Vector3D(1, 0, 0), 20, 20, 5);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, -1, 0));
-            objects = new ITraceable[1] { new Sphere(new Point(20, 0, 0), 10) };
+            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0));
+            objects = new ITraceable[1] { new Sphere(new Point(0, 0, 20), 5) };
         }
 
         public void RayProcessing()
@@ -29,11 +29,11 @@ namespace Lab1
                 camPosition.Z() + cam.GetFocalDistance());
 
             float[] screenValues = new float[screenHeight * screenWidth];
-            int[] ZBuffer = new int[screenHeight * screenWidth];
+            ITraceable[] ZBuffer = new ITraceable[screenHeight * screenWidth];
             for (int i = 0; i < screenHeight * screenWidth; i++)
             {
                 screenValues[i] = 0.0f;
-                ZBuffer[i] = int.MinValue;
+                ZBuffer[i] = int.MaxValue;
             }
 
             for (int i = 0; i < screenHeight; i++)
@@ -50,8 +50,8 @@ namespace Lab1
                         {
                             Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
                             float dotProductValue = objNormal * light.GetDirection();
-                            int idx = (int)(intersectionPoint.Y() * screenHeight + intersectionPoint.X());
-                            if (intersectionPoint.Z() > ZBuffer[idx])
+                            int idx = (int)(i * screenHeight + j);
+                            if (intersectionPoint.Z() < ZBuffer[idx])
                             {
                                 ZBuffer[idx] = (int)intersectionPoint.Z();
                                 screenValues[idx] = dotProductValue;

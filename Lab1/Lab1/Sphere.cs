@@ -28,8 +28,17 @@ namespace Lab1
             float c = k * k - radius * radius;
 
             float D = (b * b) - (4 * a * c);
+
+            if(D >= 0)
+            {
+                float x1 = -(b + Math.Sqrt(D)) / (2 * a);
+                float x2 = -(b - Math.Sqrt(D)) / (2 * a);
+                if(x1 > 0)
+                    return o + (d * x1);
+                else if(x2 > 0)
+                    return o + (d * x2);
+            }
             return null;
-            //return (D >= 0) && (Math.Sqrt(D) * b / (2 * a) > 0);
         }
 
         public Vector3D GetNormalAtPoint(Point point) => new(center, point);
