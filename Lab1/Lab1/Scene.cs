@@ -16,7 +16,7 @@ namespace Lab1
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0));
-            objects = new ITraceable[1] { new Sphere(new Point(0, 0, 20), 5) };
+            objects = new ITraceable[] { new Sphere(new Point(0, 0, 20), 5) };
         }
 
         public void RayProcessing()
@@ -65,7 +65,7 @@ namespace Lab1
             {
                 for (int j = 0; j < screenWidth; j++)
                 {
-                    float val = screenValues[i * screenHeight + screenWidth];
+                    float val = screenValues[i * screenHeight + j];
                     if (val <= 0)
                     {
                         Console.Write(' ');

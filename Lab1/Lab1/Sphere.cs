@@ -29,16 +29,14 @@ namespace Lab1
 
             float D = (b * b) - (4 * a * c);
 
-            if(D >= 0)
+            if (D < 0)
             {
-                float x1 = -(b + Math.Sqrt(D)) / (2 * a);
-                float x2 = -(b - Math.Sqrt(D)) / (2 * a);
-                if(x1 > 0)
-                    return o + (d * x1);
-                else if(x2 > 0)
-                    return o + (d * x2);
+                return null;
             }
-            return null;
+
+            float x1 = -(b + (float)Math.Sqrt(D)) / (2.0f * a);
+            float x2 = -(b - (float)Math.Sqrt(D)) / (2.0f * a);
+            return (x1 > 0) ? (o + (d * x1)) : ((x2 > 0) ? (o + (d * x2)) : null);
         }
 
         public Vector3D GetNormalAtPoint(Point point) => new(center, point);
