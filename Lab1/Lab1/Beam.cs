@@ -21,8 +21,9 @@ namespace Lab1
 
         public virtual Vector3D GetDirection() => direction;
 
-        public float GetCosBetweenAnotherBeam(Beam beam) => 
-            direction * beam.GetDirection() / (direction.Length() * beam.GetDirection().Length());
+        // UNUSED
+        // public float GetCosBetweenAnotherBeam(Beam beam) => 
+        //    direction * beam.GetDirection() / (direction.Length() * beam.GetDirection().Length());
 
         public static bool operator !=(Beam a, Beam b) => (a.position != b.position) || (a.direction != b.direction);
 

@@ -33,8 +33,9 @@ namespace Lab1
         public Polygon Rotate(float alpha = 0, float beta = 0, float gamma = 0) => 
             new(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
 
-        public override Point? IntersectsWith(Vector3D vector)
+        public override Point? GetIntersectionPoint(Beam ray)
         {
+            Vector3D vector = ray.GetDirection();
             float d = -(normal.X() * a.X() + normal.Y() * a.Y() + normal.Z() * a.Z());
             float sumt = normal.X() * vector.X() + normal.Y() * vector.Y() + normal.Z() * vector.Z();
             if (sumt == 0)
@@ -45,6 +46,10 @@ namespace Lab1
             float t = -(sumt + d) / sumt;
 
             Point intersectionPoint = new(vector.X() * (t + 1), vector.Y() * (t + 1), vector.Z() * (t + 1));
+            if (intersectionPoint.Z() < ray.GetPosition().Z())
+            {
+                return null;
+            }
 
             // Barycentric coordinates calculation
             float polygonArea = (a.Y() - c.Y()) * (b.X() - c.X()) + (b.Y() - c.Y()) * (c.X() - a.X());

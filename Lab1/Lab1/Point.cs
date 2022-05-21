@@ -8,9 +8,9 @@ namespace Lab1
 {
     internal class Point
     {
-        private readonly float x;
-        private readonly float y;
-        private readonly float z;
+        protected float x;
+        protected float y;
+        protected float z;
 
         public Point(float x, float y, float z)
         {
@@ -21,9 +21,16 @@ namespace Lab1
 
         public Point(Point a)
         {
-            this.x = a.x;
-            this.y = a.y;
-            this.z = a.z;
+            x = a.x;
+            y = a.y;
+            z = a.z;
+        }
+
+        public Point()
+        {
+            x = 0;
+            y = 0;
+            z = 0;
         }
 
         public float X() => x;

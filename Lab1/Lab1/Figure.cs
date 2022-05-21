@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    internal class Figure
+    internal class Figure : ITraceable
     {
         private List<Polygon> polygons;
 
@@ -28,6 +28,16 @@ namespace Lab1
         public void AddPolygon(Polygon polygon) => polygons.Add(new Polygon(polygon));
 
         public List<Polygon> GetPolygons() => polygons;
+
+        public Point? GetIntersectionPoint(Beam ray)
+        {
+            return null;
+        }
+
+        public Vector3D GetNormalAtPoint(Point point)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Rotate(float alpha = 0, float beta = 0, float gamma = 0)
         {

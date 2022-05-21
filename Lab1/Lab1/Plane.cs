@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    internal class Plane
+    internal class Plane : ITraceable
     {
         protected readonly Point a;
         protected readonly Point b;
@@ -33,7 +33,7 @@ namespace Lab1
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
         }
 
-        public virtual Point? IntersectsWith(Vector3D vector)
+        public virtual Point? GetIntersectionPoint(Beam ray)
         {
             // And I've just realized it's pointless, because we have a normal vector
             // (float[], bool) res = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));
@@ -41,6 +41,7 @@ namespace Lab1
             // {
             //     return false;
             // }
+            Vector3D vector = ray.GetDirection();
             float d = -(normal.X() * a.X() + normal.Y() * a.Y() + normal.Z() * a.Z());
             float sumt = normal.X() * vector.X() + normal.Y() * vector.Y() + normal.Z() * vector.Z();
             if (sumt == 0)
@@ -50,7 +51,11 @@ namespace Lab1
             
             float t = -(sumt + d) / sumt;
 
-            return new Point(vector.X() * (t + 1), vector.Y() * (t + 1), vector.Z() * (t + 1));
+            Point intersectionPoint = new(vector.X() * (t + 1), vector.Y() * (t + 1), vector.Z() * (t + 1));
+
+            return (intersectionPoint.Z() >= ray.GetPosition().Z()) ? intersectionPoint : null;
         }
+
+        public Vector3D GetNormalAtPoint(Point point) => normal;
     }
 }

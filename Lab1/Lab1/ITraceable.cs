@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    interface ISimpleObject
+    internal interface ITraceable
     {
-        public bool IntersectsWith(Point viewPoint, Vector3D viewRay);
+        public Point? GetIntersectionPoint(Beam ray);
 
-        public List<Beam> GenerateRays();
+        public Vector3D GetNormalAtPoint(Point point);
     }
 }

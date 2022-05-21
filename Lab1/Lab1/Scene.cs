@@ -10,100 +10,85 @@ namespace Lab1
     {
         private readonly Camera cam;
         private readonly DirectionalLight light;
-        private readonly ISimpleObject[] objects;
+        private readonly ITraceable[] objects;
 
         public Scene()
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(1, 0, 0), 20, 20, 5);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, -1, 0));
-            objects = new ISimpleObject[1] { new Sphere(new Point(20, 0, 0), 10) };
+            objects = new ITraceable[1] { new Sphere(new Point(20, 0, 0), 10) };
         }
 
         public void RayProcessing()
         {
-            // Add plain in front of the camera, making it with a temporary one
-            Plane plane = new(new Point(0, 0, 0), new Point(0, 20, 0), new Point(20, 0, 0));
-            float[] display = new float[400];
-            int[] raysHit = new int[400];
-            for (int i = 0; i < 400; i++)
+            int screenHeight = cam.GetScreenHeight();
+            int screenWidth = cam.GetScreenWidth();
+            Point camPosition = cam.GetPosition();
+            Point screenNW = new(camPosition.X() - screenWidth + ((screenWidth + 1) % 2) * 0.5f,
+                camPosition.Y() - screenHeight + ((screenHeight + 1) % 2) * 0.5f,
+                camPosition.Z() + cam.GetFocalDistance());
+
+            float[] screenValues = new float[screenHeight * screenWidth];
+            int[] ZBuffer = new int[screenHeight * screenWidth];
+            for (int i = 0; i < screenHeight * screenWidth; i++)
             {
-                display[i] = 0.0f;
-                raysHit[i] = 0;
+                screenValues[i] = 0.0f;
+                ZBuffer[i] = int.MinValue;
             }
 
-            foreach (var obj in objects)
+            for (int i = 0; i < screenHeight; i++)
             {
-                List<Beam> rays = obj.GenerateRays();
-                foreach (var ray in rays)
+                for (int j = 0; j < screenWidth; j++)
                 {
-                    Point? intersectionPoint = plane.IntersectsWith(ray.GetDirection());
-                    if (intersectionPoint is not null)
+                    Beam ray = new(new Point(camPosition), new Vector3D(camPosition,
+                        new Point(screenNW.X() + j, screenNW.Y() + i, screenNW.Z())));
+
+                    foreach (ITraceable obj in objects)
                     {
-                        if (Math.Abs(ray.GetDirection().X()) < Math.Abs(intersectionPoint.X()))
+                        Point? intersectionPoint = obj.GetIntersectionPoint(ray);
+                        if (intersectionPoint is not null)
                         {
-                            int hitX = (int)Math.Round(intersectionPoint.X());
-                            int hitY = (int)Math.Round(intersectionPoint.Y());
-                            if (hitX < 20 && hitX >= 0 && hitY < 20 && hitY >= 0)
+                            Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
+                            float dotProductValue = objNormal * light.GetDirection();
+                            int idx = (int)(intersectionPoint.Y() * screenHeight + intersectionPoint.X());
+                            if (intersectionPoint.Z() > ZBuffer[idx])
                             {
-                                display[hitY * 20 + hitX] += ray.GetCosBetweenAnotherBeam(light);
-                                raysHit[hitY * 20 + hitX]++;
+                                ZBuffer[idx] = (int)intersectionPoint.Z();
+                                screenValues[idx] = dotProductValue;
                             }
                         }
                     }
                 }
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < screenHeight; i++)
             {
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < screenWidth; j++)
                 {
-                    if (raysHit[i * 20 + j] > 0)
+                    float val = screenValues[i * screenHeight + screenWidth];
+                    if (val <= 0)
                     {
-                        float val = display[i * 20 + j] / raysHit[i * 20 + j];
-                        if (val <= 0)
-                        {
-                            Console.Write(' ');
-                        }
-                        if (val > 0 && val < 0.2f)
-                        {
-                            Console.WriteLine('.');
-                        }
-                        if (val >= 0.2f && val < 0.5f)
-                        {
-                            Console.WriteLine('*');
-                        }
-                        if (val >= 0.5f && val < 0.8f)
-                        {
-                            Console.WriteLine('*');
-                        }
-                        if (val >= 0.8f)
-                        {
-                            Console.WriteLine('#');
-                        }
+                        Console.Write(' ');
                     }
-                    else
+                    if (val > 0 && val < 0.2f)
                     {
-                        Console.WriteLine(' ');
+                        Console.WriteLine('.');
+                    }
+                    if (val >= 0.2f && val < 0.5f)
+                    {
+                        Console.WriteLine('*');
+                    }
+                    if (val >= 0.5f && val < 0.8f)
+                    {
+                        Console.WriteLine('*');
+                    }
+                    if (val >= 0.8f)
+                    {
+                        Console.WriteLine('#');
                     }
                 }
-                Console.WriteLine();
+                Console.WriteLine('#');
             }
-            // Legacy
-            // for (int i = 0; i < cam?.GetHeight(); i++)
-            // {
-            //     for (int j = 0; j < cam?.GetWidth(); j++)
-            //     {
-            //         //How iterate by screen?
-            //         Point currScreenPoint = new(1, 2, 3); //#CHANGE THIS
-            //         bool f = false;
-            //         foreach (ISimpleObject obj in objects)
-            //         {
-            //             f = f || obj.IntersectsWith(cam.GetPosition(), Vector3D.Normalize(new Vector3D(cam.GetPosition(), currScreenPoint)));
-            //         }
-            //         Console.Write(f ? 'X' : ' ');
-            //     }
-            //     Console.Write('\n');
-            // }
         }
     }
 }

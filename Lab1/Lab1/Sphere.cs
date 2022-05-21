@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    class Sphere : ISimpleObject
+    class Sphere : ITraceable
     {
         private readonly float radius;
         private readonly Point center;
@@ -17,10 +17,10 @@ namespace Lab1
             center = c;
         }
 
-        public bool IntersectsWith(Point viewPoint, Vector3D viewRay)
+        public Point? GetIntersectionPoint(Beam ray)
         {
-            Vector3D d = new(viewRay);
-            Point o = new(viewPoint);
+            Vector3D d = new(ray.GetDirection());
+            Point o = new(ray.GetPosition());
             Vector3D k = new(o, center);
 
             float a = d * d;
@@ -28,27 +28,10 @@ namespace Lab1
             float c = k * k - radius * radius;
 
             float D = (b * b) - (4 * a * c);
-
-            return (D >= 0) && (Math.Sqrt(D) * b / (2 * a) > 0);
+            return null;
+            //return (D >= 0) && (Math.Sqrt(D) * b / (2 * a) > 0);
         }
 
-        public List<Beam> GenerateRays()
-        {
-            List<Beam> rays = new();
-            for (float x = center.X() - radius; x <= center.X(); x++)
-            {
-                for (float y = center.Y() - radius; x <= center.Y(); y++)
-                {
-                    double z = Math.Sqrt(radius * radius - (Math.Pow(x - center.X(), 2) + Math.Pow(y - center.Y(), 2)));
-                    if (!double.IsNaN(z))
-                    {
-                        rays.Add(new Beam(new Point(center), new Vector3D(x, y, (float)z)));
-                        rays.Add(new Beam(new Point(center), new Vector3D(x, y, (float)-z)));
-                    }
-                    
-                }
-            }
-            return rays;
-        }
+        public Vector3D GetNormalAtPoint(Point point) => new(center, point);
     }
 }

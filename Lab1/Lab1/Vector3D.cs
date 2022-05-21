@@ -6,19 +6,13 @@ using System.Threading.Tasks;
 
 namespace Lab1
 {
-    internal class Vector3D
+    internal class Vector3D : Point
     {
-        private readonly float x;
-        private readonly float y;
-        private readonly float z;
         private readonly float length;
         private readonly float sqrLength;
 
-        public Vector3D(float x, float y, float z)
+        public Vector3D(float x, float y, float z) : base(x, y, z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
             sqrLength = x * x + y * y + z * z;
             length = (float)Math.Sqrt(sqrLength);
         }
@@ -40,12 +34,6 @@ namespace Lab1
             sqrLength = a.sqrLength;
             length = a.length;
         }
-
-        public float X() => x;
-
-        public float Y() => y;
-
-        public float Z() => z;
 
         public float Length() => length;
 

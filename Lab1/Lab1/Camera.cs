@@ -12,7 +12,7 @@ namespace Lab1
         private Vector3D direction;
         private int width;
         private int height;
-        private float focusDistance;
+        private float focalDistance;
 
         public Camera(Point p, Vector3D v, int sHeight, int sWidth, float f)
         {
@@ -20,24 +20,24 @@ namespace Lab1
             direction = Vector3D.Normalize(v);
             width = sWidth;
             height = sHeight;
-            focusDistance = f;
+            focalDistance = f;
         }
 
         public Point GetPosition() => position;
 
         public Vector3D GetDirection() => direction;
 
-        public float GetFocus() => focusDistance;
+        public float GetFocalDistance() => focalDistance;
 
-        public float GetWidth() => width;
+        public int GetScreenWidth() => width;
 
-        public float GetHeight() => height;
+        public int GetScreenHeight() => height;
 
         public void SetPosition(Point p) => position = new Point(p);
 
         public void SetDirection(Vector3D v) => direction = new Vector3D(v);
 
-        public void SetFocus(float f) => focusDistance = f;
+        public void SetFocalDistance(float f) => focalDistance = f;
 
         public void SetWidth(int w) => width = w;
 
