@@ -8,10 +8,10 @@ namespace Lab1
 {
     internal class Plane
     {
-        private readonly Point a;
-        private readonly Point b;
-        private readonly Point c;
-        private readonly Vector3D normal;
+        protected readonly Point a;
+        protected readonly Point b;
+        protected readonly Point c;
+        protected readonly Vector3D normal;
 
         public Plane(Point a, Point b, Point c)
         {
@@ -21,7 +21,19 @@ namespace Lab1
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
         }
 
-        public Point? IntersectsWith(Vector3D vector)
+        public Plane(Plane plane)
+        {
+            if (plane == null)
+            {
+                throw new ArgumentNullException(nameof(plane), "Trying to copy a null plain/polygon object!");
+            }
+            a = plane.a;
+            b = plane.b;
+            c = plane.c;
+            normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
+        }
+
+        public virtual Point? IntersectsWith(Vector3D vector)
         {
             // And I've just realized it's pointless, because we have a normal vector
             // (float[], bool) res = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));

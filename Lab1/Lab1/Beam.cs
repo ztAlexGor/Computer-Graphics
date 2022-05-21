@@ -8,19 +8,13 @@ namespace Lab1
 {
     internal class Beam 
     {
-        private readonly Point position;
-        private readonly Vector3D direction;
+        protected Point position;
+        protected Vector3D direction;
 
         public Beam(Point position, Vector3D direction)
         {
             this.position = new Point(position);
             this.direction = new Vector3D(direction);
-        }
-
-        public Beam()
-        {
-            position = new Point(0, 0, 0);
-            direction = new Vector3D(0, 0, 0);
         }
 
         public virtual Point GetPosition() => position;

@@ -14,7 +14,6 @@ namespace Lab1
         private int height;
         private float focusDistance;
 
-
         public Camera(Point p, Vector3D v, int sHeight, int sWidth, float f)
         {
             position = p;

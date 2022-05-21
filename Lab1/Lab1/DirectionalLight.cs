@@ -8,18 +8,7 @@ namespace Lab1
 {
     class DirectionalLight : Beam
     {
-        private Point position;
-        private Vector3D direction;
-
-        public DirectionalLight(Point position, Vector3D direction)
-        {
-            this.position = new Point(position);
-            this.direction = new Vector3D(direction);
-        }
-
-        public override Point GetPosition() => position;
-
-        public override Vector3D GetDirection() => direction;
+        public DirectionalLight(Point position, Vector3D direction) : base(position, direction) { }
 
         public void SetPosition(Point p) => position = new Point(p);
 
