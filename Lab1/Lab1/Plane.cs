@@ -15,9 +15,9 @@ namespace Lab1
 
         public Plane(Point a, Point b, Point c)
         {
-            this.a = a;
-            this.b = b;
-            this.c = c;
+            this.a = new Point(a);
+            this.b = new Point(b);
+            this.c = new Point(c);
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
         }
 
@@ -41,9 +41,9 @@ namespace Lab1
             // {
             //     return false;
             // }
-            Vector3D vector = ray.GetDirection();
+            Point rayPos = ray.GetPosition();
             float d = -(normal.X() * a.X() + normal.Y() * a.Y() + normal.Z() * a.Z());
-            float sumt = normal.X() * vector.X() + normal.Y() * vector.Y() + normal.Z() * vector.Z();
+            float sumt = normal.X() * rayPos.X() + normal.Y() * rayPos.Y() + normal.Z() * rayPos.Z();
             if (sumt == 0)
             {
                 return null;
@@ -51,7 +51,7 @@ namespace Lab1
             
             float t = -(sumt + d) / sumt;
 
-            Point intersectionPoint = new(vector.X() * (t + 1), vector.Y() * (t + 1), vector.Z() * (t + 1));
+            Point intersectionPoint = new(rayPos.X() * (t + 1), rayPos.Y() * (t + 1), rayPos.Z() * (t + 1));
 
             return (intersectionPoint.Z() >= ray.GetPosition().Z()) ? intersectionPoint : null;
         }
