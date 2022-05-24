@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lab1
+﻿namespace Lab1
 {
     class Camera
     {
@@ -16,7 +10,7 @@ namespace Lab1
 
         public Camera(Point p, Vector3D v, int sHeight, int sWidth, float f)
         {
-            position = p;
+            position = new Point(p);
             direction = Vector3D.Normalize(v);
             width = sWidth;
             height = sHeight;

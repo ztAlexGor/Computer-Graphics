@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lab1
+﻿namespace Lab1
 {
     class Scene
     {
@@ -14,9 +8,9 @@ namespace Lab1
 
         public Scene()
         {
-            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(-1, 1, -1));
-            objects = new ITraceable[] { new Sphere(new Point(0, 0, 20), 13) };
+            cam = new Camera(new Point(0, 0, -5), new Vector3D(0, 0, 1), 20, 20, 5);
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
+            objects = new ITraceable[] { new Plane(new Point(-2, 0, 1), new Point(2, 0, 1), new Point(0, -3, 2))};
         }
 
         public void RayProcessing()
@@ -24,9 +18,6 @@ namespace Lab1
             int screenHeight = cam.GetScreenHeight();
             int screenWidth = cam.GetScreenWidth();
             Point camPosition = cam.GetPosition();
-            /*Point screenNW = new(camPosition.X() - screenWidth + ((screenWidth + 1) % 2) * 0.5f,
-                camPosition.Y() - screenHeight + ((screenHeight + 1) % 2) * 0.5f,
-                camPosition.Z() + cam.GetFocalDistance());*/
             Point screenNW = new(camPosition.X() - screenWidth / 2,
                                 camPosition.Y() - screenHeight / 2,
                                 camPosition.Z() + cam.GetFocalDistance());
@@ -49,10 +40,9 @@ namespace Lab1
                         Point? intersectionPoint = obj.GetIntersectionPoint(ray);
                         if (intersectionPoint is not null)
                         {
-                            int idx = i * screenHeight + j;
-                            //screenValues[idx] = 1;
+                            int idx = i * screenWidth + j;
                             Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
-                            float dotProductValue = objNormal * light.GetDirection();
+                            float dotProductValue = -(objNormal * light.GetDirection());
                             if (intersectionPoint.Z() < ZBuffer[idx])
                             {
                                 ZBuffer[idx] = (int)intersectionPoint.Z();
@@ -66,27 +56,27 @@ namespace Lab1
             {
                 for (int j = 0; j < screenWidth; j++)
                 {
-                    float val = screenValues[i * screenHeight + j];
+                    float val = screenValues[i * screenWidth + j];
 
                     if (val <= 0)
                     {
-                        Console.Write(' '.ToString().PadLeft(2));
+                        Console.Write(' '.ToString().PadLeft(3));
                     }
                     else if (val > 0 && val < 0.2f)
                     {
-                        Console.Write('·'.ToString().PadLeft(2));
+                        Console.Write('·'.ToString().PadLeft(3));
                     }
                     else if (val >= 0.2f && val < 0.5f)
                     {
-                        Console.Write('*'.ToString().PadLeft(2));
+                        Console.Write('*'.ToString().PadLeft(3));
                     }
                     else if (val >= 0.5f && val < 0.8f)
                     {
-                        Console.Write('O'.ToString().PadLeft(2));
+                        Console.Write('O'.ToString().PadLeft(3));
                     }
                     else if (val >= 0.8f)
                     {
-                        Console.Write('#'.ToString().PadLeft(2));
+                        Console.Write('#'.ToString().PadLeft(3));
                     }
                 }
                 Console.WriteLine();

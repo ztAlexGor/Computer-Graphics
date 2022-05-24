@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace Lab1
 {
@@ -27,41 +22,36 @@ namespace Lab1
             {
                 throw new ArgumentNullException(nameof(polygon), "Trying to copy a null polygon object!");
             }
+
             color = polygon.color;
         }
 
-        public Polygon Rotate(float alpha = 0, float beta = 0, float gamma = 0) => 
+        public Polygon Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
             new(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
 
         public override Point? GetIntersectionPoint(Beam ray)
         {
-            Vector3D vector = ray.GetDirection();
-            float d = -(normal.X() * a.X() + normal.Y() * a.Y() + normal.Z() * a.Z());
-            float sumt = normal.X() * vector.X() + normal.Y() * vector.Y() + normal.Z() * vector.Z();
-            if (sumt == 0)
-            {
+            float e = 0.0000001f;
+            Vector3D AB = new Vector3D(base.a, base.b);
+            Vector3D AC = new Vector3D(base.a, base.c);
+            Vector3D h = Vector3D.CrossProduct(ray.GetDirection(), AC);
+            float a = AB * h;
+            if (a > -e && a < e)
                 return null;
-            }
-
-            float t = -(sumt + d) / sumt;
-
-            Point intersectionPoint = new(vector.X() * (t + 1), vector.Y() * (t + 1), vector.Z() * (t + 1));
-            if (intersectionPoint.Z() < ray.GetPosition().Z())
-            {
+            float f = 1.0f / a;
+            Vector3D s = new(ray.GetPosition() - AB);
+            float u = f * (s * h);
+            if (u < 0.0f || u > 1.0f)
                 return null;
-            }
-
-            // Barycentric coordinates calculation
-            float polygonArea = (a.Y() - c.Y()) * (b.X() - c.X()) + (b.Y() - c.Y()) * (c.X() - a.X());
-            float b1 = ((intersectionPoint.Y() - c.Y()) * (b.X() - c.X()) + 
-                (b.Y() - c.Y()) * (c.X() - intersectionPoint.X())) / polygonArea;
-            float b2 = ((intersectionPoint.Y() - a.Y()) * (c.X() - a.X()) + 
-                (c.Y() - a.Y()) * (a.X() - intersectionPoint.X())) / polygonArea;
-            float b3 = ((intersectionPoint.Y() - b.Y()) * (a.X() - b.X()) + 
-                (a.Y() - b.Y()) * (b.X() - intersectionPoint.X())) / polygonArea;
-
-            // If the intersection point is inside the triangle - returning it, otherwise returning null
-            return (b1 >= 0 && b1 <= 1 && b2 >= 0 && b2 <= 1 && b3 >= 0 && b3 <= 1) ? intersectionPoint : null;
+            Vector3D q = Vector3D.CrossProduct(s, AB);
+            float v = f * (ray.GetDirection() * q);
+            if (v < 0.0f || u + v > 1.0f)
+                return null;
+            float t = f * (AC * q);
+            if (t > e)
+                return ray.GetPosition() + (ray.GetDirection() * t);
+            else
+                return null;
         }
     }
 }

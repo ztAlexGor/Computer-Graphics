@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lab1
+﻿namespace Lab1
 {
     internal class Plane : ITraceable
     {
@@ -35,25 +29,16 @@ namespace Lab1
 
         public virtual Point? GetIntersectionPoint(Beam ray)
         {
-            // And I've just realized it's pointless, because we have a normal vector
-            // (float[], bool) res = MathUtils.SolveSoLE(MathUtils.CreatePlainMatrix(a, b, c));
-            // if (!res.Item2)
-            // {
-            //     return false;
-            // }
-            Point rayPos = ray.GetPosition();
-            float d = -(normal.X() * a.X() + normal.Y() * a.Y() + normal.Z() * a.Z());
-            float sumt = normal.X() * rayPos.X() + normal.Y() * rayPos.Y() + normal.Z() * rayPos.Z();
-            if (sumt == 0)
+            Vector3D d = ray.GetDirection();
+            Vector3D k = new Vector3D(ray.GetPosition(), c);
+
+            if (d * normal != 0)
             {
-                return null;
+                float t = (k * normal) / (d * normal);
+                return t > 0 ? (ray.GetPosition() + d * t) : null;
             }
-            
-            float t = -(sumt + d) / sumt;
 
-            Point intersectionPoint = new(rayPos.X() * (t + 1), rayPos.Y() * (t + 1), rayPos.Z() * (t + 1));
-
-            return (intersectionPoint.Z() >= ray.GetPosition().Z()) ? intersectionPoint : null;
+            return null;
         }
 
         public Vector3D GetNormalAtPoint(Point point) => normal;

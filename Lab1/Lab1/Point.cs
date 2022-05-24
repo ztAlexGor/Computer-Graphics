@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lab1
+﻿namespace Lab1
 {
     internal class Point
     {
@@ -46,6 +40,8 @@ namespace Lab1
         public static bool operator ==(Point a, Point b) => !(a != b);
 
         public static Point operator +(Point a, Vector3D b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
+        
+        public static Point operator -(Point a, Vector3D b) => new(a.x - b.x, a.y - b.y, a.z - b.z);
 
         public override bool Equals(object? obj)
         {

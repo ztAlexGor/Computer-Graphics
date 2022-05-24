@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lab1
+﻿namespace Lab1
 {
     internal class Vector3D : Point
     {
@@ -33,6 +27,15 @@ namespace Lab1
             z = a.Z();
             sqrLength = a.sqrLength;
             length = a.length;
+        }
+        
+        public Vector3D(Point a)
+        {
+            x = a.X();
+            y = a.Y();
+            z = a.Z();
+            sqrLength = x * x + y * y + z * z;
+            length = (float)Math.Sqrt(sqrLength);
         }
 
         public float Length() => length;

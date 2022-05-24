@@ -2,7 +2,7 @@
   "profiles": {
     "Lab1": {
       "commandName": "Executable",
-      "executablePath": "D:\\Study\\Computer Graphics\\Lab1\\Lab1\\bin\\Debug\\net6.0\\Lab1.exe"
+      "executablePath": "D:\\PlsYes\\C#\\CompGrafix\\Lab1\\Lab1\\bin\\Debug\\net6.0\\Lab1.exe"
     }
   }
 }
