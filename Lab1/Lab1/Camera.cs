@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    class Camera
+    public class Camera
     {
         private Point position;
         private Vector3D direction;

@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    internal class Vector3D : Point
+    public class Vector3D : Point
     {
         private readonly float length;
         private readonly float sqrLength;

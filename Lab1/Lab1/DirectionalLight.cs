@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    class DirectionalLight : Beam
+    public class DirectionalLight : Beam
     {
         public DirectionalLight(Point position, Vector3D direction) : base(position, Vector3D.Normalize(direction)) { }
 

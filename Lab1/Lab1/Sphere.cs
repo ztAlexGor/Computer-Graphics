@@ -1,6 +1,6 @@
 namespace Lab1
 {
-    class Sphere : ITraceable
+    public class Sphere : ITraceable
     {
         private readonly float radius;
         private readonly Point center;

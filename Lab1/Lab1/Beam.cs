@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    internal class Beam 
+    public class Beam 
     {
         protected Point position;
         protected Vector3D direction;
@@ -9,6 +9,12 @@
         {
             this.position = new Point(position);
             this.direction = Vector3D.Normalize(direction);
+        }
+
+        public Beam(Point p1, Point p2)
+        {
+            this.position = p1;
+            this.direction = Vector3D.Normalize(new Vector3D(p1, p2));
         }
 
         public virtual Point GetPosition() => position;

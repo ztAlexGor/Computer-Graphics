@@ -1,16 +1,34 @@
 ﻿namespace Lab1
 {
-    class Scene
+    public class Scene
     {
         private readonly Camera cam;
         private readonly DirectionalLight light;
         private readonly ITraceable[] objects;
+        private float[] ViewValues;
 
         public Scene()
         {
             cam = new Camera(new Point(0, 0, -5), new Vector3D(0, 0, 1), 20, 20, 5);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
             objects = new ITraceable[] { new Plane(new Point(-2, 0, 1), new Point(2, 0, 1), new Point(0, -3, 2))};
+            ViewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            ClearView();
+        }
+
+        public Scene(ITraceable[] objArr)
+        {
+            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
+            objects = objArr;
+            ViewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            ClearView();
+        }
+
+        private void ClearView()
+        {
+            for(int i = 0; i < ViewValues.Length; i++)
+                ViewValues[i] = 0.0f;
         }
 
         public void RayProcessing()
@@ -21,13 +39,7 @@
             Point screenNW = new(camPosition.X() - screenWidth / 2,
                                 camPosition.Y() - screenHeight / 2,
                                 camPosition.Z() + cam.GetFocalDistance());
-            float[] screenValues = new float[screenHeight * screenWidth];
-            int[] ZBuffer = new int[screenHeight * screenWidth];
-            for (int i = 0; i < screenHeight * screenWidth; i++)
-            {
-                screenValues[i] = 0.0f;
-                ZBuffer[i] = int.MaxValue;
-            }
+            ClearView();
 
             for (int i = 0; i < screenHeight; i++)
             {
@@ -35,28 +47,47 @@
                 {
                     Beam ray = new(new Point(camPosition), new Vector3D(camPosition,
                         new Point(screenNW.X() + j, screenNW.Y() + i, screenNW.Z())));
-                    foreach (ITraceable obj in objects)
+                    ITraceable resObj;
+                    Point? intersectionPoint = RayIntersect(ray, out resObj);
+                    if(intersectionPoint is not null)
+                        ViewValues[i * screenWidth + j] = -(resObj.GetNormalAtPoint(intersectionPoint) * light.GetDirection());
+                }
+            }
+            ViewOutput();
+        }
+
+        public Point RayIntersect(Beam ray, out ITraceable intObj)
+        {
+            int depth = int.MaxValue;
+            Point result = null;
+            intObj = null;
+            foreach (ITraceable obj in objects)
+            {
+                if(obj is not null) {
+                    Point? intersectionPoint = obj.GetIntersectionPoint(ray);
+                    if (intersectionPoint is not null)
                     {
-                        Point? intersectionPoint = obj.GetIntersectionPoint(ray);
-                        if (intersectionPoint is not null)
+                        Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
+                        float dotProductValue = -(objNormal * light.GetDirection());
+                        if (intersectionPoint.Z() < depth)
                         {
-                            int idx = i * screenWidth + j;
-                            Vector3D objNormal = obj.GetNormalAtPoint(intersectionPoint);
-                            float dotProductValue = -(objNormal * light.GetDirection());
-                            if (intersectionPoint.Z() < ZBuffer[idx])
-                            {
-                                ZBuffer[idx] = (int)intersectionPoint.Z();
-                                screenValues[idx] = dotProductValue;
-                            }
+                            depth = (int)intersectionPoint.Z();
+                            result = intersectionPoint;
+                            intObj = obj;
                         }
                     }
                 }
             }
-            for (int i = 0; i < screenHeight; i++)
+            return result;
+        }
+
+        private void ViewOutput()
+        {
+            for (int i = 0; i < cam.GetScreenWidth(); i++)
             {
-                for (int j = 0; j < screenWidth; j++)
+                for (int j = 0; j < cam.GetScreenWidth(); j++)
                 {
-                    float val = screenValues[i * screenWidth + j];
+                    float val = ViewValues[i * cam.GetScreenWidth() + j];
 
                     if (val <= 0)
                     {

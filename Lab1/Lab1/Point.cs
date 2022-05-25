@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    internal class Point
+    public class Point
     {
         protected float x;
         protected float y;
@@ -33,6 +33,13 @@
 
         public float Z() => z;
 
+        public void Simplify()
+        {
+            x = (float)Math.Round(x);
+            y = (float)Math.Round(y);
+            z = (float)Math.Round(z);
+        }
+        
         public Point Rotate(float alpha, float beta, float gamma) => MathUtils.GetRotatedVector(this, alpha, beta, gamma);
 
         public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);

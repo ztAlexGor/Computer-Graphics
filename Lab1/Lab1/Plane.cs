@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    internal class Plane : ITraceable
+    public class Plane : ITraceable
     {
         protected readonly Point a;
         protected readonly Point b;

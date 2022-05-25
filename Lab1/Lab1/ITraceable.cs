@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    internal interface ITraceable
+    public interface ITraceable
     {
         public Point? GetIntersectionPoint(Beam ray);
 

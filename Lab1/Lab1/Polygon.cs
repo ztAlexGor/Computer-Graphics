@@ -2,7 +2,7 @@
 
 namespace Lab1
 {
-    internal class Polygon : Plane
+    public class Polygon : Plane
     {
         private readonly Color color;
 
@@ -39,7 +39,7 @@ namespace Lab1
             if (a > -e && a < e)
                 return null;
             float f = 1.0f / a;
-            Vector3D s = new(ray.GetPosition() - AB);
+            Vector3D s = new(base.a, ray.GetPosition());
             float u = f * (s * h);
             if (u < 0.0f || u > 1.0f)
                 return null;
