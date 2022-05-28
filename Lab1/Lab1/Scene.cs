@@ -5,14 +5,14 @@
         private readonly Camera cam;
         private readonly DirectionalLight light;
         private readonly ITraceable[] objects;
-        private float[] ViewValues;
+        private float[] viewValues;
 
         public Scene()
         {
-            cam = new Camera(new Point(0, 0, -5), new Vector3D(0, 0, 1), 20, 20, 5);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
-            objects = new ITraceable[] { new Plane(new Point(-2, 0, 1), new Point(2, 0, 1), new Point(0, -3, 2))};
-            ViewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1),640, 640, 150);
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(2, 0.5f, 1));
+            objects = new ITraceable[] {new Sphere(new Point(0, 0, 25), 15)/*, new Polygon(new Point(15, 0, 0), new Point(0, 0, 15), new Point(0, 15, 0))*/};
+            viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
         }
 
@@ -21,14 +21,14 @@
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
             objects = objArr;
-            ViewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
         }
 
         private void ClearView()
         {
-            for(int i = 0; i < ViewValues.Length; i++)
-                ViewValues[i] = 0.0f;
+            for(int i = 0; i < viewValues.Length; i++)
+                viewValues[i] = 0.0f;
         }
 
         public void RayProcessing()
@@ -49,11 +49,15 @@
                         new Point(screenNW.X() + j, screenNW.Y() + i, screenNW.Z())));
                     ITraceable resObj;
                     Point? intersectionPoint = RayIntersect(ray, out resObj);
-                    if(intersectionPoint is not null)
-                        ViewValues[i * screenWidth + j] = -(resObj.GetNormalAtPoint(intersectionPoint) * light.GetDirection());
+                    if (intersectionPoint is not null)
+                    {
+                        float view = -(resObj.GetNormalAtPoint(intersectionPoint) * light.GetDirection());
+                        viewValues[i * screenWidth + j] = view >= 0 ? view : 0;
+                    }
                 }
             }
-            ViewOutput();
+            //ViewOutput();
+            FileWriter.WritePPM(viewValues, screenHeight, screenWidth, "D:\\PlsYes\\C#\\CompGrafix\\Lab1\\Lab1image.ppm");
         }
 
         public Point RayIntersect(Beam ray, out ITraceable intObj)
@@ -87,7 +91,7 @@
             {
                 for (int j = 0; j < cam.GetScreenWidth(); j++)
                 {
-                    float val = ViewValues[i * cam.GetScreenWidth() + j];
+                    float val = viewValues[i * cam.GetScreenWidth() + j];
 
                     if (val <= 0)
                     {
