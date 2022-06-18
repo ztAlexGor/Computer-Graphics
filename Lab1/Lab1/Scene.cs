@@ -4,19 +4,20 @@
     {
         private readonly Camera cam;
         private readonly DirectionalLight light;
-        private readonly ITraceable[] objects;
+        private readonly List<ITraceable> objects;
         private float[] viewValues;
 
         public Scene()
         {
-            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1),640, 640, 150);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1),720, 720, 200);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(2, 0.5f, 1));
-            objects = new ITraceable[] {new Sphere(new Point(0, 0, 25), 15)/*, new Polygon(new Point(15, 0, 0), new Point(0, 0, 15), new Point(0, 15, 0))*/};
+            ObjStructure obj = FileWork.ReadObj("D:\\PlsYes\\C#\\CompGrafix\\Lab1\\cow.obj");
+            objects = obj.GetObjects();
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
         }
 
-        public Scene(ITraceable[] objArr)
+        public Scene(List<ITraceable> objArr)
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
@@ -57,7 +58,7 @@
                 }
             }
             //ViewOutput();
-            FileWriter.WritePPM(viewValues, screenHeight, screenWidth, "D:\\PlsYes\\C#\\CompGrafix\\Lab1\\Lab1image.ppm");
+            FileWork.WritePPM(viewValues, screenHeight, screenWidth, "D:\\PlsYes\\C#\\CompGrafix\\Lab1\\Lab1image.ppm");
         }
 
         public Point RayIntersect(Beam ray, out ITraceable intObj)

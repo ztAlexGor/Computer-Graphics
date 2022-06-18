@@ -10,7 +10,10 @@ namespace Lab1
         {
             color = Color.White;
         }
-
+        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, v)
+        {
+            color = Color.White;
+        }
         public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c)
         {
             this.color = color;

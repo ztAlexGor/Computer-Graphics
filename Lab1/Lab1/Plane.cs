@@ -14,6 +14,14 @@
             this.c = new Point(c);
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
         }
+        
+        public Plane(Point a, Point b, Point c, Vector3D v)
+        {
+            this.a = new Point(a);
+            this.b = new Point(b);
+            this.c = new Point(c);
+            normal = v;
+        }
 
         public Plane(Plane plane)
         {

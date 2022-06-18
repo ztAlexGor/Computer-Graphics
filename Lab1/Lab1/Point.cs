@@ -27,6 +27,13 @@
             z = 0;
         }
 
+        public Point(float[] arr)
+        {
+            x = arr[0];
+            y = arr[1];
+            z = arr[2];
+        }
+
         public float X() => x;
 
         public float Y() => y;
