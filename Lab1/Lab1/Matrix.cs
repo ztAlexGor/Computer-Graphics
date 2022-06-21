@@ -1,6 +1,6 @@
 ﻿namespace Lab1
 {
-    internal class Matrix
+    public class Matrix
     {
         private readonly float[][] values;
         public readonly int N;
@@ -44,7 +44,7 @@
             }
         }
 
-        public float[][] Values() => this.values;
+        public float[][] Values() => values;
 
         public static Matrix operator *(Matrix matrix1, Matrix matrix2)
         {
@@ -65,5 +65,7 @@
             }
             return new Matrix(res);
         }
+
+        public static Point operator *(Matrix matrix, Point point) => point.GetMultipliedByMatrix(matrix);
     }
 }

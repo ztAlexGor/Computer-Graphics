@@ -5,7 +5,7 @@
         private readonly float length;
         private readonly float sqrLength;
 
-        public Vector3D(float x, float y, float z) : base(x, y, z)
+        public Vector3D(float x, float y, float z) : base(x, y, z, 0)
         {
             sqrLength = x * x + y * y + z * z;
             length = (float)Math.Sqrt(sqrLength);
@@ -48,6 +48,22 @@
 
         public float SquareLength() => sqrLength;
 
+        public override Point GetMultipliedByMatrix(Matrix matrix)
+        {
+            float[][] vals = matrix.Values();
+            float[] pointVals = { x, y, z, w };
+            float[] newVals = new float[matrix.N];
+            for (int i = 0; i < matrix.N; i++)
+            {
+                newVals[i] = 0;
+                for (int j = 0; j < matrix.M; j++)
+                {
+                    newVals[i] += vals[i][j] * pointVals[j];
+                }
+            }
+            return new Vector3D(newVals[0], newVals[1], newVals[2]);
+        }
+
         public static Vector3D operator +(Vector3D a, Vector3D b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
 
         public static Vector3D operator -(Vector3D a, Vector3D b) => new(a.x - b.x, a.y - b.y, a.z - b.z);
@@ -68,7 +84,7 @@
 
         public override bool Equals(object? obj)
         {
-            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            if ((obj == null) || !GetType().Equals(obj.GetType()))
             {
                 return false;
             }

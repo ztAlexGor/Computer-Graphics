@@ -34,23 +34,10 @@
                 0, 0, 0, 1.0f
             }, 4, 4);
 
-            Matrix transformDist = new(new float[] {
-                1.0f, 0, 0, 0,
-                0, 1.0f, 0, 0,
-                0, 0, 1.0f, 0,
-                0, 0, -600.0f, 1.0f
-            }, 4, 4);
-
-            return transformX * transformY * transformZ * transformDist;
+            return transformX * transformY * transformZ;
         }
 
-        // Idk, it has to be remade, because a point cannot be rotated
-        public static Point GetRotatedVector(Point point, float a, float b, float g)
-        {
-            // TBD
-            Matrix rotationMatrix = MathUtils.GetTransformationMatrix(a, b, g);
-            return point;
-        }
+        public static Point GetRotatedPoint(Point point, float a, float b, float g) => GetTransformationMatrix(a, b, g) * point;
 
         public static (float[], bool) SolveSoLE(Matrix matrix)
         {
