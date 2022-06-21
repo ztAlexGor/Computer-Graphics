@@ -7,15 +7,16 @@
         private readonly List<ITraceable> objects;
         private float[] viewValues;
 
-        public Scene()
+        public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1),720, 720, 200);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 720, 720, 200);
             light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(2, 0.5f, 1));
-            ObjStructure obj = FileWork.ReadObj("D:\\PlsYes\\C#\\CompGrafix\\Lab1\\cow.obj");
-            objects = obj.GetObjects();
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            objects = FileWork.ReadObj(inputPathName).GetObjects();
+
             ClearView();
         }
+
 
         public Scene(List<ITraceable> objArr)
         {
@@ -32,7 +33,7 @@
                 viewValues[i] = 0.0f;
         }
 
-        public void RayProcessing()
+        public void RayProcessing(string outputPathName)
         {
             int screenHeight = cam.GetScreenHeight();
             int screenWidth = cam.GetScreenWidth();
@@ -58,7 +59,7 @@
                 }
             }
             //ViewOutput();
-            FileWork.WritePPM(viewValues, screenHeight, screenWidth, "D:\\PlsYes\\C#\\CompGrafix\\Lab1\\Lab1image.ppm");
+            FileWork.WritePPM(viewValues, screenHeight, screenWidth, outputPathName);
         }
 
         public Point RayIntersect(Beam ray, out ITraceable intObj)
