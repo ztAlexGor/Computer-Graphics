@@ -9,8 +9,8 @@
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 720, 720, 200);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(2, 0.5f, 1));
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 128, 128, 70);
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(2, -0.5f, 1));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
 
@@ -39,7 +39,7 @@
             int screenWidth = cam.GetScreenWidth();
             Point camPosition = cam.GetPosition();
             Point screenNW = new(camPosition.X() - screenWidth / 2,
-                                camPosition.Y() - screenHeight / 2,
+                                camPosition.Y() + screenHeight / 2,
                                 camPosition.Z() + cam.GetFocalDistance());
             ClearView();
 
@@ -48,7 +48,7 @@
                 for (int j = 0; j < screenWidth; j++)
                 {
                     Beam ray = new(new Point(camPosition), new Vector3D(camPosition,
-                        new Point(screenNW.X() + j, screenNW.Y() + i, screenNW.Z())));
+                        new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())));
                     ITraceable resObj;
                     Point? intersectionPoint = RayIntersect(ray, out resObj);
                     if (intersectionPoint is not null)
