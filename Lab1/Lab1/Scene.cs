@@ -55,7 +55,7 @@
                     {
                         Beam lightRay = new(intersectionPoint, -light.GetDirection());
 
-                        if (RayIsIntersect(lightRay))
+                        if (RayIsIntersect(lightRay, resObj))
                         {
                             viewValues[i * screenWidth + j] = 0;
                         }
@@ -98,11 +98,11 @@
             return result;
         }
 
-        public bool RayIsIntersect(Beam ray)
+        public bool RayIsIntersect(Beam ray, ITraceable thisObj)
         {
             foreach (ITraceable obj in objects)
             {
-                if (obj is not null)
+                if (obj is not null && obj != thisObj)
                 {
                     Point? intersectionPoint = obj.GetIntersectionPoint(ray);
                     if (intersectionPoint is not null)
