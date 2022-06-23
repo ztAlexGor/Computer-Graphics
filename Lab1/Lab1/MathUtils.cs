@@ -7,7 +7,7 @@
             c.X(), c.Y(), c.Z(), 1.0f
         }, 3, 4);
 
-        public static Matrix GetTransformationMatrix(float a, float b, float g)
+        public static Matrix GetRotationMatrix(float a, float b, float g)
         {
             double[][] matrix = new double[4][];
             for (int i = 0; i < 4; i++)
@@ -37,7 +37,7 @@
             return transformX * transformY * transformZ;
         }
 
-        public static Point GetRotatedPoint(Point point, float a, float b, float g) => GetTransformationMatrix(a, b, g) * point;
+        public static Point GetRotatedPoint(Point point, float a, float b, float g) => GetRotationMatrix(a, b, g) * point;
 
         public static (float[], bool) SolveSoLE(Matrix matrix)
         {

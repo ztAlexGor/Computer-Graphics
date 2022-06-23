@@ -11,7 +11,7 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 100, 100, 50);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(1, 1, 0), 100, 100, 50);
             light = new DirectionalLight(new Vector3D(1, 1, 1), 1, Color.FromArgb(255, 255, 255, 255));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
@@ -31,7 +31,7 @@ namespace Lab1
 
         private void ClearView()
         {
-            for(int i = 0; i < viewValues.Length; i++)
+            for (int i = 0; i < viewValues.Length; i++)
                 viewValues[i] = 0.0f;
         }
 
@@ -40,8 +40,8 @@ namespace Lab1
             int screenHeight = cam.GetScreenHeight();
             int screenWidth = cam.GetScreenWidth();
             Point camPosition = cam.GetPosition();
-            Point screenNW = new(camPosition.X() - screenWidth / 2,
-                                camPosition.Y() + screenHeight / 2,
+            Point screenNW = new(camPosition.X() - screenWidth / 2 + ((screenWidth % 2 == 0) ? 0.5f : 0),
+                                camPosition.Y() + screenHeight / 2 - ((screenHeight % 2 == 0) ? 0.5f : 0),
                                 camPosition.Z() + cam.GetFocalDistance());
             ClearView();
 
@@ -49,8 +49,8 @@ namespace Lab1
             {
                 for (int j = 0; j < screenWidth; j++)
                 {
-                    Beam ray = new(new Point(camPosition), new Vector3D(camPosition,
-                        new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())));
+                    Beam ray = new Beam(new Point(camPosition), 
+                        new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())));
                     ITraceable resObj;
                     Point? intersectionPoint = RayIntersect(ray, out resObj);
                     if (intersectionPoint is not null)
@@ -67,7 +67,7 @@ namespace Lab1
                             viewValues[i * screenWidth + j] = view >= 0 ? view : 0;
                             //viewValues[i * screenWidth + j] = view >= 0 ? view : -view;
                         }
-                        
+
                     }
                 }
             }
@@ -82,7 +82,8 @@ namespace Lab1
             intObj = null;
             foreach (ITraceable obj in objects)
             {
-                if(obj is not null) {
+                if (obj is not null)
+                {
                     Point? intersectionPoint = obj.GetIntersectionPoint(ray);
                     if (intersectionPoint is not null)
                     {
@@ -118,7 +119,7 @@ namespace Lab1
 
         private void ViewOutput()
         {
-            for (int i = 0; i < cam.GetScreenWidth(); i++)
+            for (int i = 0; i < cam.GetScreenHeight(); i++)
             {
                 for (int j = 0; j < cam.GetScreenWidth(); j++)
                 {

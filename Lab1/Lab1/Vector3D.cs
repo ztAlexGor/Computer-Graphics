@@ -10,7 +10,7 @@
             sqrLength = x * x + y * y + z * z;
             length = (float)Math.Sqrt(sqrLength);
         }
-        
+
         public Vector3D(float[] arr) : base(arr)
         {
             sqrLength = x * x + y * y + z * z;
@@ -34,7 +34,7 @@
             sqrLength = a.sqrLength;
             length = a.length;
         }
-        
+
         public Vector3D(Point a)
         {
             x = a.X();
@@ -63,6 +63,10 @@
             }
             return new Vector3D(newVals[0], newVals[1], newVals[2]);
         }
+
+        public override Vector3D Rotate(float alpha, float beta, float gamma) => (Vector3D)MathUtils.GetRotatedPoint(this, alpha, beta, gamma);
+
+        public override Vector3D Rotate(Vector3D angles) => (Vector3D)MathUtils.GetRotatedPoint(this, angles.X(), angles.Y(), angles.Z());
 
         public static Vector3D operator +(Vector3D a, Vector3D b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
 
