@@ -12,11 +12,12 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 300, 300, 150);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 100, 100, 50);
             lights = new List<Light>();
             //lights.Add(new DirectionalLight(new Vector3D(1, 1, 1), 1, Color.Violet));
-            lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.Blue));
-            lights.Add(new DirectionalLight(new Vector3D(0, 1, 0), 1, Color.Yellow));
+            lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
+            lights.Add(new PointLight(new Vector3D(0, 1, 0), 1, Color.Red));
+            lights.Add(new Light(0.2f, Color.Green));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
@@ -62,63 +63,22 @@ namespace Lab1
                     Point? intersectionPoint = RayIntersect(ray, out resObj);
                     if (intersectionPoint is not null)
                     {
-                        List<Color> colors = new List<Color>();
-                        List<float> illuminances = new List<float>();
 
+                        //!todo change light accumulation
+                        byte r = 0;
+                        byte g = 0;
+                        byte b = 0;
                         foreach (Light light in lights)
                         {
-                            if (light.GetType() == typeof(DirectionalLight))
-                            {
-                                DirectionalLight l = (DirectionalLight)light;
-                                Beam lightRay = new(intersectionPoint, -l.GetDirection());
-                                if (RayIsIntersect(lightRay, resObj))
-                                {
-                                    viewValues[i * screenWidth + j] = 0;
-                                }
-                                else
-                                {
-                                    float view = -(resObj.GetNormalAtPoint(intersectionPoint) * l.GetDirection());
-                                    viewValues[i * screenWidth + j] = view >= 0 ? view : 0;
-                                    
-                                    colors.Add(l.GetColor());
-                                    illuminances.Add(l.GetIntensity() * viewValues[i * screenWidth + j]);
-                                }
-                            }
-                            else if(light.GetType() == typeof(PointLight))
-                            {
-                                PointLight l = (PointLight)light;
-                                if (SegmentIsIntersect(intersectionPoint, l.GetPosition(), resObj))
-                                {
-                                    viewValues[i * screenWidth + j] = 0;
-                                }
-                                else
-                                {
-                                    Vector3D dist = new(intersectionPoint, l.GetPosition());
-                                    float view = -(resObj.GetNormalAtPoint(intersectionPoint) * dist);
-                                    viewValues[i * screenWidth + j] = view >= 0 ? view : 0;
+                            Color color = light.GetColor();
+                            float illuminance = light.CalculateIntensity(objects, resObj, intersectionPoint);
 
-                                    colors.Add(l.GetColor());
-                                    illuminances.Add(l.GetIntensity() / dist.Length() * dist.Length() * viewValues[i * screenWidth + j]);
-                                }
-                            }
-                            else if (light.GetType() == typeof(Light))
-                            {
-                                colors.Add(light.GetColor());
-                                illuminances.Add(light.GetIntensity());
-                            }
-
-                            byte r = 0;
-                            byte g = 0;
-                            byte b = 0;
-                            for (int k = 0; k < colors.Count; k++)
-                            {
-                                r += (byte)Math.Round(illuminances[k] * colors[k].R);
-                                g += (byte)Math.Round(illuminances[k] * colors[k].G);
-                                b += (byte)Math.Round(illuminances[k] * colors[k].B);
-                            }
-
-                            viewColors[i * screenWidth + j] = Color.FromArgb(r, g, b);
+                            r += (byte)Math.Round(illuminance * color.R);
+                            g += (byte)Math.Round(illuminance * color.G);
+                            b += (byte)Math.Round(illuminance * color.B);
                         }
+
+                        viewColors[i * screenWidth + j] = Color.FromArgb(r, g, b);
                     }
                 }
             }
