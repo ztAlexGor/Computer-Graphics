@@ -11,7 +11,7 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 100, 100, 50);
+            cam = new Camera(new Point(0, 0, 0.75f), new Vector3D(0, 0, -1), 128, 128, 70);
             light = new DirectionalLight(new Vector3D(1, 1, 1), 1, Color.FromArgb(255, 255, 255, 255));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
@@ -71,7 +71,7 @@ namespace Lab1
                     }
                 }
             }
-            ViewOutput();
+            //ViewOutput();
             FileWork.WritePPM(viewValues, screenHeight, screenWidth, outputPathName);
         }
 

@@ -38,5 +38,9 @@
             // Still in progress
         }
 
+        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

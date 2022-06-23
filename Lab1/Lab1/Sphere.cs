@@ -34,5 +34,10 @@ namespace Lab1
         }
 
         public Vector3D GetNormalAtPoint(Point point) => Vector3D.Normalize(new Vector3D(center, point));
+
+        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

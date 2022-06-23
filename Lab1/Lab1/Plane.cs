@@ -50,5 +50,10 @@
         }
 
         public Vector3D GetNormalAtPoint(Point point) => normal;
+
+        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
