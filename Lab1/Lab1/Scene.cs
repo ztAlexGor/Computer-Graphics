@@ -1,4 +1,6 @@
-﻿namespace Lab1
+﻿using System.Drawing;
+
+namespace Lab1
 {
     public class Scene
     {
@@ -9,8 +11,8 @@
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 128, 128, 70);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(1, 1, 1));
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 100, 100, 50);
+            light = new DirectionalLight(new Vector3D(1, 1, 1), 1, Color.FromArgb(255, 255, 255, 255));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
 
@@ -21,7 +23,7 @@
         public Scene(List<ITraceable> objArr)
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(0, 1, 0.5f));
+            light = new DirectionalLight(new Vector3D(0, 1, 0.5f), 1, Color.FromArgb(255, 255, 255));
             objects = objArr;
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
