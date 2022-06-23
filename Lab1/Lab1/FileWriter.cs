@@ -1,11 +1,12 @@
 using System.Globalization;
+using System.Drawing;
 
 namespace Lab1;
 
 public class FileWork
 {
     public static readonly int VAR_NUMBER = 3;
-    public static void WritePPM(float[] view, int h, int w, string path)
+    public static void WritePPM(Color[] view, int h, int w, string path)
     {
         using (StreamWriter writer = new(path, false))
         {
@@ -14,11 +15,11 @@ public class FileWork
 
         using (BinaryWriter writer = new(File.Open(path, FileMode.Append)))
         {
-            foreach (float v in view)
+            foreach (Color v in view)
             {
-                writer.Write((byte)Math.Round(255 * v));
-                writer.Write((byte)Math.Round(255 * v));
-                writer.Write((byte)Math.Round(255 * v));
+                writer.Write(v.R);
+                writer.Write(v.G);
+                writer.Write(v.B);
             }
         }
     }
