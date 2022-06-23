@@ -7,7 +7,6 @@ namespace Lab1
         private readonly Camera cam;
         private readonly List<Light> lights;
         private readonly List<ITraceable> objects;
-        private float[] viewValues;
         private Color[] viewColors;
 
         public Scene(string inputPathName)
@@ -18,7 +17,6 @@ namespace Lab1
             lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
             lights.Add(new PointLight(new Vector3D(0, 1, 0), 1, Color.Red));
             lights.Add(new Light(0.2f, Color.Green));
-            viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
 
@@ -32,15 +30,14 @@ namespace Lab1
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(0, 1, 0.5f), 1, Color.FromArgb(255, 255, 255)));
             objects = objArr;
-            viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
         }
 
         private void ClearView()
         {
-            for(int i = 0; i < viewValues.Length; i++)
-                viewValues[i] = 0.0f;
+            for(int i = 0; i < viewColors.Length; i++)
+                viewColors[i] = new Color();
         }
 
         public void RayProcessing(string outputPathName)
@@ -82,7 +79,7 @@ namespace Lab1
                     }
                 }
             }
-            ViewOutput();
+            //ViewOutput();
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
         }
 
@@ -140,7 +137,7 @@ namespace Lab1
             }
             return false;
         }
-        private void ViewOutput()
+/*        private void ViewOutput()
         {
             for (int i = 0; i < cam.GetScreenWidth(); i++)
             {
@@ -171,6 +168,6 @@ namespace Lab1
                 }
                 Console.WriteLine();
             }
-        }
+        }*/
     }
 }
