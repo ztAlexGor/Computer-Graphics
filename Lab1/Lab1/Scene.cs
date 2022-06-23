@@ -10,7 +10,7 @@
         public Scene(string inputPathName)
         {
             cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 128, 128, 70);
-            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(2, -0.5f, 1));
+            light = new DirectionalLight(new Point(10, 20, 0), new Vector3D(1, 1, 1));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
 
@@ -53,18 +53,29 @@
                     Point? intersectionPoint = RayIntersect(ray, out resObj);
                     if (intersectionPoint is not null)
                     {
-                        float view = -(resObj.GetNormalAtPoint(intersectionPoint) * light.GetDirection());
-                        viewValues[i * screenWidth + j] = view >= 0 ? view : 0;
+                        Beam lightRay = new(intersectionPoint, -light.GetDirection());
+
+                        if (RayIsIntersect(lightRay))
+                        {
+                            viewValues[i * screenWidth + j] = 0;
+                        }
+                        else
+                        {
+                            float view = -(resObj.GetNormalAtPoint(intersectionPoint) * light.GetDirection());
+                            viewValues[i * screenWidth + j] = view >= 0 ? view : 0;
+                            //viewValues[i * screenWidth + j] = view >= 0 ? view : -view;
+                        }
+                        
                     }
                 }
             }
-            //ViewOutput();
+            ViewOutput();
             FileWork.WritePPM(viewValues, screenHeight, screenWidth, outputPathName);
         }
 
         public Point RayIntersect(Beam ray, out ITraceable intObj)
         {
-            int depth = int.MaxValue;
+            float depth = float.MaxValue;
             Point result = null;
             intObj = null;
             foreach (ITraceable obj in objects)
@@ -77,7 +88,7 @@
                         float dotProductValue = -(objNormal * light.GetDirection());
                         if (intersectionPoint.Z() < depth)
                         {
-                            depth = (int)intersectionPoint.Z();
+                            depth = intersectionPoint.Z();
                             result = intersectionPoint;
                             intObj = obj;
                         }
@@ -85,6 +96,22 @@
                 }
             }
             return result;
+        }
+
+        public bool RayIsIntersect(Beam ray)
+        {
+            foreach (ITraceable obj in objects)
+            {
+                if (obj is not null)
+                {
+                    Point? intersectionPoint = obj.GetIntersectionPoint(ray);
+                    if (intersectionPoint is not null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private void ViewOutput()

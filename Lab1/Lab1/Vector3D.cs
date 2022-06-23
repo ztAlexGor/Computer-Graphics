@@ -68,6 +68,8 @@
 
         public static Vector3D operator -(Vector3D a, Vector3D b) => new(a.x - b.x, a.y - b.y, a.z - b.z);
 
+        public static Vector3D operator -(Vector3D a) => new(-a.x, -a.y, -a.z);
+
         public static float operator *(Vector3D a, Vector3D b) => a.x * b.x + a.y * b.y + a.z * b.z;
 
         public static Vector3D operator *(Vector3D v, float a) => new(v.x * a, v.y * a, v.z * a);
