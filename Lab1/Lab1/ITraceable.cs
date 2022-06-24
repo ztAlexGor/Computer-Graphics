@@ -1,4 +1,6 @@
-﻿namespace Lab1
+﻿using System.Drawing;
+
+namespace Lab1
 {
     public interface ITraceable
     {
@@ -6,6 +8,6 @@
 
         public Vector3D GetNormalAtPoint(Point point);
 
-        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights);
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Lab1
+﻿using System.Drawing;
+
+namespace Lab1
 {
     public class Plane : ITraceable
     {
@@ -6,21 +8,15 @@
         protected readonly Point b;
         protected readonly Point c;
         protected readonly Vector3D normal;
+        protected IMaterial material;
 
-        public Plane(Point a, Point b, Point c)
+        public Plane(Point a, Point b, Point c, Vector3D v = null, IMaterial m = null)
         {
             this.a = new Point(a);
             this.b = new Point(b);
             this.c = new Point(c);
-            normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
-        }
-        
-        public Plane(Point a, Point b, Point c, Vector3D v)
-        {
-            this.a = new Point(a);
-            this.b = new Point(b);
-            this.c = new Point(c);
-            normal = v;
+            normal = (v is null) ? Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c))) : v;
+            material = (m is null) ? new Lambert() : m;
         }
 
         public Plane(Plane plane)
@@ -51,9 +47,9 @@
 
         public Vector3D GetNormalAtPoint(Point point) => normal;
 
-        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights)
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
         {
-            throw new NotImplementedException();
+            return material.RayBehaviour(startRay, interPoint, this, objects, lights);
         }
     }
 }

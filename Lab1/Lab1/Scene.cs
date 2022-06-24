@@ -11,22 +11,23 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 100, 100, 50);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 120, 120, 60);
             lights = new List<Light>();
-            //lights.Add(new DirectionalLight(new Vector3D(1, 1, 1), 1, Color.Violet));
-            lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
-            lights.Add(new PointLight(new Vector3D(0, 1, 0), 1, Color.Red));
-            lights.Add(new Light(0.2f, Color.Green));
+            lights.Add(new DirectionalLight(new Vector3D(1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
+            //lights.Add(new PointLight(new Point(0, -1f, 0), 1, Color.DeepPink));
+            lights.Add(new Light(0.2f, Color.Red));
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
-
+            objects.Add(new Plane(new Point(0, -1, 0), new Point(0, 0, 1), new Point(1, 0, 1), m: new Reflective()));
+            objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
             ClearView();
         }
 
 
         public Scene(List<ITraceable> objArr)
         {
-            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
+            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 128, 128, 70);
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(0, 1, 0.5f), 1, Color.FromArgb(255, 255, 255)));
             objects = objArr;
@@ -57,25 +58,10 @@ namespace Lab1
                     Beam ray = new(new Point(camPosition), new Vector3D(camPosition,
                         new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())));
                     ITraceable resObj;
-                    Point? intersectionPoint = RayIntersect(ray, out resObj);
-                    if (intersectionPoint is not null)
+                    Point? interPoint = RayIntersect(ray, objects, out resObj);
+                    if (interPoint is not null)
                     {
-
-                        //!todo change light accumulation
-                        byte r = 0;
-                        byte g = 0;
-                        byte b = 0;
-                        foreach (Light light in lights)
-                        {
-                            Color color = light.GetColor();
-                            float illuminance = light.CalculateIntensity(objects, resObj, intersectionPoint);
-
-                            r += (byte)Math.Round(illuminance * color.R);
-                            g += (byte)Math.Round(illuminance * color.G);
-                            b += (byte)Math.Round(illuminance * color.B);
-                        }
-
-                        viewColors[i * screenWidth + j] = Color.FromArgb(r, g, b);
+                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, objects, lights);
                     }
                 }
             }
@@ -83,19 +69,25 @@ namespace Lab1
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
         }
 
-        public Point RayIntersect(Beam ray, out ITraceable intObj)
+        public static Point RayIntersect(Beam ray, List<ITraceable> objects, out ITraceable intObj)
         {
             float depth = float.MaxValue;
             Point result = null;
             intObj = null;
             foreach (ITraceable obj in objects)
             {
-                if(obj is not null) {
+                if(obj is not null) 
+                {
                     Point? intersectionPoint = obj.GetIntersectionPoint(ray);
-                    if (intersectionPoint is not null && intersectionPoint.Z() < depth){
-                        depth = intersectionPoint.Z();
-                        result = intersectionPoint;
-                        intObj = obj;
+                    if (intersectionPoint is not null) 
+                    {
+                        float sqLenght = new Vector3D(ray.GetPosition(), intersectionPoint).SquareLength();
+                        if (sqLenght < depth)
+                        {
+                            depth = sqLenght;
+                            result = intersectionPoint;
+                            intObj = obj;
+                        }
                     }
                 }
             }

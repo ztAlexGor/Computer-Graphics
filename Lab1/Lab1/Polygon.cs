@@ -34,7 +34,7 @@ namespace Lab1
 
         public override Point? GetIntersectionPoint(Beam ray)
         {
-            float e = 0.0000001f;
+            float e = 0.00001f;
             Vector3D AB = new Vector3D(base.a, base.b);
             Vector3D AC = new Vector3D(base.a, base.c);
             Vector3D h = Vector3D.CrossProduct(ray.GetDirection(), AC);

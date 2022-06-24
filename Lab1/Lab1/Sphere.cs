@@ -1,3 +1,5 @@
+using System.Drawing;
+
 namespace Lab1
 {
     public class Sphere : ITraceable
@@ -35,7 +37,7 @@ namespace Lab1
 
         public Vector3D GetNormalAtPoint(Point point) => Vector3D.Normalize(new Vector3D(center, point));
 
-        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights)
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
         {
             throw new NotImplementedException();
         }

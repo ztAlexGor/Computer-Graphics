@@ -1,6 +1,8 @@
+using System.Drawing;
+
 namespace Lab1;
 
 public interface IMaterial
 {
-    public MyColor RayBehaviour(Beam ray, ITraceable interObj, List<ITraceable> objects, List<Light> lights);
+    public Color RayBehaviour(Beam startRay, Point interPoint, ITraceable interObj, List<ITraceable> objects, List<Light> lights);
 }

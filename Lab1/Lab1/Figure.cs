@@ -1,4 +1,6 @@
-﻿namespace Lab1
+﻿using System.Drawing;
+
+namespace Lab1
 {
     internal class Figure : ITraceable
     {
@@ -38,7 +40,7 @@
             // Still in progress
         }
 
-        public MyColor GetColorAtPoint(Point point, List<ITraceable> objects, List<Light> lights)
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
         {
             throw new NotImplementedException();
         }
