@@ -77,7 +77,11 @@
             return new Point(newVals[0], newVals[1], newVals[2], newVals[3]);
         }
         
-        public Point Rotate(float alpha, float beta, float gamma) => MathUtils.GetRotatedPoint(this, alpha, beta, gamma);
+        public virtual Point Rotate(float alpha, float beta, float gamma) => MathUtils.GetRotatedPoint(this, alpha, beta, gamma);
+
+        public virtual Point Rotate(Vector3D angles) => MathUtils.GetRotatedPoint(this, angles.X(), angles.Y(), angles.Z());
+
+        public virtual Point Scale(float sx, float sy, float sz) => MathUtils.GetScaledPoint(this, sx, sy, sz);
 
         public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
 

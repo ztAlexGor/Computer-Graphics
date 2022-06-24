@@ -7,23 +7,19 @@
             c.X(), c.Y(), c.Z(), 1.0f
         }, 3, 4);
 
-        public static Matrix GetTransformationMatrix(float a, float b, float g)
+        public static Matrix GetRotationMatrix(float a, float b, float g)
         {
-            double[][] matrix = new double[4][];
-            for (int i = 0; i < 4; i++)
-                matrix[i] = new double[4];
-
             Matrix transformX = new(new float[] {
-                (float)Math.Cos(a), 0, -(float)Math.Sin(a), 0,
-                0, 1.0f, 0, 0,
-                (float)Math.Sin(a), 0, (float)Math.Cos(a), 0,
+                1.0f, 0, 0, 0,
+                0, (float)Math.Cos(a), (float)Math.Sin(a), 0,
+                0, -(float)Math.Sin(a), (float)Math.Cos(a), 0,
                 0, 0, 0, 1.0f
             }, 4, 4);
 
             Matrix transformY = new(new float[] {
-                1.0f, 0, 0, 0,
-                0, (float)Math.Cos(b), (float)Math.Sin(b), 0,
-                0, -(float)Math.Sin(b), (float)Math.Cos(b), 0,
+                (float)Math.Cos(b), 0, -(float)Math.Sin(b), 0,
+                0, 1.0f, 0, 0,
+                (float)Math.Sin(b), 0, (float)Math.Cos(b), 0,
                 0, 0, 0, 1.0f
             }, 4, 4);
 
@@ -37,7 +33,21 @@
             return transformX * transformY * transformZ;
         }
 
-        public static Point GetRotatedPoint(Point point, float a, float b, float g) => GetTransformationMatrix(a, b, g) * point;
+        public static Point GetRotatedPoint(Point point, float a, float b, float g) => GetRotationMatrix(a, b, g) * point;
+
+        public static Matrix GetScalationMatrix(float sx, float sy, float sz)
+        {
+            Matrix scale = new(new float[] {
+                sx, 0, 0, 0,
+                0, sy, 0, 0,
+                0, 0, sz, 0,
+                0, 0, 0, 1.0f
+            }, 4, 4);
+
+            return scale;
+        }
+
+        public static Point GetScaledPoint(Point point, float sx, float sy, float sz) => GetScalationMatrix(sx, sy, sz) * point;
 
         public static (float[], bool) SolveSoLE(Matrix matrix)
         {

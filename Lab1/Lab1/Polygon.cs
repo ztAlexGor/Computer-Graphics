@@ -32,6 +32,9 @@ namespace Lab1
         public Polygon Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
             new(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
 
+        public Polygon Scale(float sx = 0, float sy = 0, float sz = 0) =>
+            new(a.Scale(sx, sy, sz), b.Scale(sx, sy, sz), c.Scale(sx, sy, sz), color);
+
         public override Point? GetIntersectionPoint(Beam ray)
         {
             float e = 0.00001f;
@@ -53,8 +56,7 @@ namespace Lab1
             float t = f * (AC * q);
             if (t > e)
                 return ray.GetPosition() + (ray.GetDirection() * t);
-            else
-                return null;
+            return null;
         }
     }
 }
