@@ -38,17 +38,18 @@ namespace Lab1
         public Vector3D GetDirection() => direction;
         public override float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
         {
-            Beam lightRay = new(p, -direction);
-            if (IsVisible(objects, thisObject, lightRay))
+            float angle = -(thisObject.GetNormalAtPoint(p) * direction);
+
+            if (angle > 0)
             {
-                return 0;
+                Beam lightRay = new(p, -direction);
+                if (IsVisible(objects, thisObject, lightRay))
+                {
+                    return intensity * angle;
+                }
             }
-            else
-            {
-                float angle = -(thisObject.GetNormalAtPoint(p) * direction);
-                angle = angle >= 0 ? angle : 0;
-                return intensity * angle;
-            }
+            return 0;
+            
         }
         private bool IsVisible(List<ITraceable> objects, ITraceable thisObj, Beam ray)
         {
@@ -59,11 +60,11 @@ namespace Lab1
                     Point? intersectionPoint = obj.GetIntersectionPoint(ray);
                     if (intersectionPoint is not null)
                     {
-                        return true;
+                        return false;
                     }
                 }
             }
-            return false;
+            return true;
         }
     }
 
@@ -80,18 +81,14 @@ namespace Lab1
         public Point GetPosition() => position;
         public override float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
         {
-            if (IsVisible(objects, thisObject, p, position))
-            {
-                return 0;
-            }
-            else
-            {
-                Vector3D dist = new(position, p);
-                float angle = -(thisObject.GetNormalAtPoint(p) * dist);
-                angle = angle >= 0 ? angle : 0;
+            Vector3D dist = new(position, p);
+            float angle = -(thisObject.GetNormalAtPoint(p) * dist);
 
-                return intensity / (dist.Length() * dist.Length()) * angle;//
+            if (angle > 0 && IsVisible(objects, thisObject, p, position))
+            {
+                return intensity / (dist.Length() * dist.Length()) * angle;
             }
+            return 0;
         }
         private bool IsVisible(List<ITraceable> objects, ITraceable thisObject, Point start, Point end)
         {
@@ -107,11 +104,11 @@ namespace Lab1
 
                     if (intersectionPoint is not null && (new Vector3D(start, intersectionPoint)).SquareLength() < sqDist)
                     {
-                        return true;
+                        return false;
                     }
                 }
             }
-            return false;
+            return true;
         }
     }
 }
