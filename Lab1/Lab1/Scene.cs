@@ -11,7 +11,7 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(1, 1, 0), 100, 100, 50);
+            cam = new Camera(new Point(0, -10.0f, 0), new Vector3D(90, 0, -90), 100, 100, 50);
             light = new DirectionalLight(new Vector3D(1, 1, 1), 1, Color.FromArgb(255, 255, 255, 255));
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
@@ -22,7 +22,7 @@ namespace Lab1
 
         public Scene(List<ITraceable> objArr)
         {
-            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 20, 20, 5);
+            cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 0), 20, 20, 5);
             light = new DirectionalLight(new Vector3D(0, 1, 0.5f), 1, Color.FromArgb(255, 255, 255));
             objects = objArr;
             viewValues = new float[cam.GetScreenHeight() * cam.GetScreenWidth()];
@@ -50,7 +50,8 @@ namespace Lab1
                 for (int j = 0; j < screenWidth; j++)
                 {
                     Beam ray = new Beam(new Point(camPosition), 
-                        new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())));
+                        new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
+                        .ApplyRotationToDirectionVector(cam.GetAngles());
                     ITraceable resObj;
                     Point? intersectionPoint = RayIntersect(ray, out resObj);
                     if (intersectionPoint is not null)

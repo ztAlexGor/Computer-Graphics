@@ -29,7 +29,7 @@ public class ObjStructure
         foreach (int?[] p in f)
         {
             Polygon plgn = new Polygon(new Point(v[(int)p[6] - 1]), new Point(v[(int)p[3] - 1]), new Point(v[(int)p[0] - 1]), new Vector3D(vn[(int)p[5] - 1]));
-            res.Add(plgn);
+            res.Add(plgn.Scale(10, 10, 10));
         }
         return res;
     }

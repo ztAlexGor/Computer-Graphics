@@ -68,6 +68,8 @@
 
         public override Vector3D Rotate(Vector3D angles) => (Vector3D)MathUtils.GetRotatedPoint(this, angles.X(), angles.Y(), angles.Z());
 
+        public override Vector3D Scale(float sx, float sy, float sz) => (Vector3D)MathUtils.GetScaledPoint(this, sx, sy, sz);
+
         public static Vector3D operator +(Vector3D a, Vector3D b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
 
         public static Vector3D operator -(Vector3D a, Vector3D b) => new(a.x - b.x, a.y - b.y, a.z - b.z);

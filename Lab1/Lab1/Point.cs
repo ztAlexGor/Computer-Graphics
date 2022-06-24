@@ -81,6 +81,8 @@
 
         public virtual Point Rotate(Vector3D angles) => MathUtils.GetRotatedPoint(this, angles.X(), angles.Y(), angles.Z());
 
+        public virtual Point Scale(float sx, float sy, float sz) => MathUtils.GetScaledPoint(this, sx, sy, sz);
+
         public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
 
         public static bool operator ==(Point a, Point b) => !(a != b);
