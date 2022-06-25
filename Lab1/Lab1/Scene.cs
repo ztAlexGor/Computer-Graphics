@@ -11,7 +11,7 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 120, 120, 60);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 1), 720, 720, 360);
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
@@ -20,7 +20,7 @@ namespace Lab1
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             objects = FileWork.ReadObj(inputPathName).GetObjects();
             objects.Add(new Plane(new Point(0, -1, 0), new Point(0, 0, 1), new Point(1, 0, 1), m: new Reflective()));
-            objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
+            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
             ClearView();
         }
 
