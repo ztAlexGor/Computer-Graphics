@@ -6,6 +6,8 @@ public class Lambert : Material
 {
     public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, List<ITraceable> objects, List<Light> lights)
     {
+        Random rand = new Random();
+        return Color.FromArgb(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
         byte r = 0;
         byte g = 0;
         byte b = 0;

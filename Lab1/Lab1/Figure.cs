@@ -15,9 +15,6 @@ namespace Lab1
                 this.polygons.Add(new Polygon(polygon));
             }
         }
-
-
-        // SASHA 
         
         public Figure()
         {
