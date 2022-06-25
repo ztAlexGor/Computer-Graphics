@@ -20,6 +20,15 @@ namespace Lab1
             material = (m is null) ? new Lambert() : m;
             this.color = color;
         }
+        public Plane(Point a, Point b, Point c, Vector3D v = null, Material m = null)
+        {
+            this.a = new Point(a);
+            this.b = new Point(b);
+            this.c = new Point(c);
+            normal = (v is null) ? Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c))) : v;
+            material = (m is null) ? new Lambert() : m;
+            this.color = Color.White;
+        }
 
         public Plane(Plane plane)
         {

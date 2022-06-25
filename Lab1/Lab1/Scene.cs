@@ -11,7 +11,7 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(55, 0, -190f), new Vector3D(0, 0, 0), 200, 200, 200);
+            cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 200, 200, 200);
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
@@ -24,6 +24,7 @@ namespace Lab1
 
             cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI/2);
             cow.Scale(100, 100, 100);
+            cow.Translate(x: 20);
 
             figures.Add(cow);
             Figure mirror = new();
