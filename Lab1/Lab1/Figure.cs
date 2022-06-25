@@ -15,7 +15,7 @@ namespace Lab1
                 this.polygons.Add(new Polygon(polygon));
             }
         }
-
+        
         public Figure()
         {
             this.polygons = new List<ITraceable>();

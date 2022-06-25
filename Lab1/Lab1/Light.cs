@@ -38,14 +38,15 @@ namespace Lab1
         public Vector3D GetDirection() => direction;
         public override float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
         {
-            float angle = -(thisObject.GetNormalAtPoint(p) * direction);
+            Vector3D norm = thisObject.GetNormalAtPoint(p);
+            float dotProduct = -(norm * direction);
 
-            if (angle > 0)
+            if (dotProduct > 0)
             {
                 Beam lightRay = new(p, -direction);
                 if (IsVisible(objects, thisObject, lightRay))
                 {
-                    return intensity * angle;
+                    return intensity * dotProduct / norm.Length() / direction.Length();
                 }
             }
             return 0;
@@ -82,11 +83,13 @@ namespace Lab1
         public override float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
         {
             Vector3D dist = new(position, p);
-            float angle = -(thisObject.GetNormalAtPoint(p) * dist);
 
-            if (angle > 0 && IsVisible(objects, thisObject, p, position))
+            Vector3D norm = thisObject.GetNormalAtPoint(p);
+            float dotProduct = -(norm * dist);
+
+            if (dotProduct > 0 && IsVisible(objects, thisObject, p, position))
             {
-                return intensity / (dist.Length() * dist.Length()) * angle;
+                return intensity /*/ (dist.Length() * dist.Length())*/ * dotProduct / norm.Length() / dist.Length();
             }
             return 0;
         }
