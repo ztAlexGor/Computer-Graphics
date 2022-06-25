@@ -8,9 +8,9 @@ namespace Lab1
         protected readonly Point b;
         protected readonly Point c;
         protected readonly Vector3D normal;
-        protected IMaterial material;
+        protected Material material;
 
-        public Plane(Point a, Point b, Point c, Vector3D v = null, IMaterial m = null)
+        public Plane(Point a, Point b, Point c, Vector3D v = null, Material m = null)
         {
             this.a = new Point(a);
             this.b = new Point(b);
@@ -29,6 +29,7 @@ namespace Lab1
             b = plane.b;
             c = plane.c;
             normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
+            material = plane.material;
         }
 
         public virtual Point? GetIntersectionPoint(Beam ray)

@@ -11,7 +11,7 @@ namespace Lab1
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, 0), 120, 120, 60);
+            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, -90), 120, 120, 60);
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
@@ -38,7 +38,9 @@ namespace Lab1
         private void ClearView()
         {
             for(int i = 0; i < viewColors.Length; i++)
+            {
                 viewColors[i] = new Color();
+            }  
         }
 
         public void RayProcessing(string outputPathName)
