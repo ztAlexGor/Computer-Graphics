@@ -2,9 +2,9 @@ using System.Drawing;
 
 namespace Lab1;
 
-public class Lambert : IMaterial
+public class Lambert : Material
 {
-    public Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, List<ITraceable> objects, List<Light> lights)
+    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, List<ITraceable> objects, List<Light> lights)
     {
         byte r = 0;
         byte g = 0;

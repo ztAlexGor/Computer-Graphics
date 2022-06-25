@@ -4,20 +4,11 @@ namespace Lab1
 {
     public class Polygon : Plane
     {
-        private readonly Color color;
+        public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { }
 
-        public Polygon(Point a, Point b, Point c) : base(a, b, c)
-        {
-            color = Color.White;
-        }
-        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, v)
-        {
-            color = Color.White;
-        }
-        public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c)
-        {
-            this.color = color;
-        }
+        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { }
+
+        public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c, color) { }
 
         public Polygon(Polygon polygon) : base(polygon)
         {
@@ -25,18 +16,22 @@ namespace Lab1
             {
                 throw new ArgumentNullException(nameof(polygon), "Trying to copy a null polygon object!");
             }
-
-            color = polygon.color;
         }
 
-        public Polygon Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
-            new(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
+        public override ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
+            new Polygon(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
+
+        public override ITraceable Scale(float sx = 0, float sy = 0, float sz = 0) =>
+            new Polygon(a.Scale(sx, sy, sz), b.Scale(sx, sy, sz), c.Scale(sx, sy, sz), color);
+
+        public override ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
+            new Polygon(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color);
 
         public override Point? GetIntersectionPoint(Beam ray)
         {
             float e = 0.00001f;
-            Vector3D AB = new Vector3D(base.a, base.b);
-            Vector3D AC = new Vector3D(base.a, base.c);
+            Vector3D AB = new(base.a, base.b);
+            Vector3D AC = new(base.a, base.c);
             Vector3D h = Vector3D.CrossProduct(ray.GetDirection(), AC);
             float a = AB * h;
             if (a > -e && a < e)
@@ -53,8 +48,7 @@ namespace Lab1
             float t = f * (AC * q);
             if (t > e)
                 return ray.GetPosition() + (ray.GetDirection() * t);
-            else
-                return null;
+            return null;
         }
     }
 }

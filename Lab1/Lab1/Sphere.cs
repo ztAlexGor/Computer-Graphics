@@ -41,5 +41,14 @@ namespace Lab1
         {
             throw new NotImplementedException();
         }
+
+        public ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
+            new Sphere(center.Rotate(alpha, beta, gamma), radius);
+
+        public ITraceable Scale(float sx = 0, float sy = 0, float sz = 0) =>
+            new Sphere(center, radius * sx);
+
+        public ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
+            new Sphere(center.Translate(x, y, z), radius);
     }
 }
