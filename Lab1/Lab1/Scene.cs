@@ -6,31 +6,34 @@ namespace Lab1
     {
         private readonly Camera cam;
         private readonly List<Light> lights;
-        private readonly List<ITraceable> objects;
+        private readonly List<Figure> figures;
         private Color[] viewColors;
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(0, 0, -0.75f), new Vector3D(0, 0, -90), 120, 120, 60);
+            cam = new Camera(new Point(0, 0, -10f), new Vector3D(0, 0, 0), 120, 120, 600);
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
             //lights.Add(new PointLight(new Point(0, -1f, 0), 1, Color.DeepPink));
             lights.Add(new Light(0.2f, Color.Red));
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
-            objects = FileWork.ReadObj(inputPathName).GetObjects();
-            objects.Add(new Plane(new Point(0, -1, 0), new Point(0, 0, 1), new Point(1, 0, 1), m: new Reflective()));
-            objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
+            figures = new List<Figure>();
+            figures.Add(new Figure(FileWork.ReadObj(inputPathName).GetObjects()));
+            Figure mirror = new();
+            mirror.AddPolygon(new Plane(new Point(0, -1, 0), new Point(0, 0, 1), new Point(1, 0, 1), Color.White, m: new Reflective()));
+            figures.Add(mirror);
+            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
             ClearView();
         }
 
 
-        public Scene(List<ITraceable> objArr)
+        public Scene(List<Figure> figArr)
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 128, 128, 70);
             lights = new List<Light>();
             lights.Add(new DirectionalLight(new Vector3D(0, 1, 0.5f), 1, Color.FromArgb(255, 255, 255)));
-            objects = objArr;
+            figures = figArr;
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
         }
@@ -51,6 +54,13 @@ namespace Lab1
             Point screenNW = new(camPosition.X() - screenWidth / 2 + ((screenWidth % 2 == 0) ? 0.5f : 0),
                                 camPosition.Y() + screenHeight / 2 - ((screenHeight % 2 == 0) ? 0.5f : 0),
                                 camPosition.Z() + cam.GetFocalDistance());
+
+            List<ITraceable> allPolygons = new List<ITraceable>();
+            foreach (Figure f in figures)
+            {
+                allPolygons.AddRange(f.GetPolygons());
+            }
+
             ClearView();
 
             for (int i = 0; i < screenHeight; i++)
@@ -61,10 +71,10 @@ namespace Lab1
                         new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
                         .ApplyRotationToDirectionVector(cam.GetAngles());
                     ITraceable resObj;
-                    Point? interPoint = RayIntersect(ray, objects, out resObj);
+                    Point? interPoint = RayIntersect(ray, allPolygons, out resObj);
                     if (interPoint is not null)
                     {
-                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, objects, lights);
+                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, allPolygons, lights);
                     }
                 }
             }
@@ -77,6 +87,7 @@ namespace Lab1
             float depth = float.MaxValue;
             Point result = null;
             intObj = null;
+
             foreach (ITraceable obj in objects)
             {
                 if (obj is not null)
@@ -99,7 +110,7 @@ namespace Lab1
 
         public bool RayIsIntersect(Beam ray, ITraceable thisObj)
         {
-            foreach (ITraceable obj in objects)
+            foreach (ITraceable obj in figures)
             {
                 if (obj is not null && obj != thisObj)
                 {
@@ -117,7 +128,7 @@ namespace Lab1
             Beam lightRay = new(start, new Vector3D(start, end));
             float sqDist = new Vector3D(start, end).SquareLength();
 
-            foreach (ITraceable obj in objects)
+            foreach (ITraceable obj in figures)
             {
                 if (obj is not null && obj != thisObj)
                 {

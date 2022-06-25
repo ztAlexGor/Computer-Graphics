@@ -2,15 +2,15 @@
 
 namespace Lab1
 {
-    internal class Figure : ITraceable
+    public class Figure
     {
-        private List<Polygon> polygons;
+        private List<ITraceable> polygons;
 
-        public Figure(List<Polygon> polygons)
+        public Figure(List<ITraceable> polygons)
         {
-            this.polygons = new List<Polygon>(polygons.Count);
+            this.polygons = new List<ITraceable>(polygons.Count);
 
-            foreach (var polygon in polygons)
+            foreach (Polygon polygon in polygons)
             {
                 this.polygons.Add(new Polygon(polygon));
             }
@@ -18,14 +18,47 @@ namespace Lab1
 
         public Figure()
         {
-            this.polygons = new List<Polygon>();
+            this.polygons = new List<ITraceable>();
         }
 
-        public void AddPolygon(Polygon polygon) => polygons.Add(new Polygon(polygon));
+        public void AddPolygon(ITraceable polygon) => polygons.Add(polygon);//copy!!
 
-        public List<Polygon> GetPolygons() => polygons;
+        public List<ITraceable> GetPolygons() => polygons;
 
-        public Point? GetIntersectionPoint(Beam ray)
+
+        public void Rotate(float alpha = 0, float beta = 0, float gamma = 0)
+        {
+            for (int i = 0; i < polygons.Count; i++)
+            {
+                polygons[i] = polygons[i].Rotate(alpha, beta, gamma);
+            }
+        }
+
+        public void Scale(float x = 0, float y = 0, float z = 0)
+        {
+            for (int i = 0; i < polygons.Count; i++)
+            {
+                polygons[i] = polygons[i].Scale(x, y, z);
+            }
+        }
+
+        public void Translate(float x = 0, float y = 0, float z = 0)
+        {
+            for (int i = 0; i < polygons.Count; i++)
+            {
+                polygons[i] = polygons[i].Translate(x, y, z);
+            }
+        }
+
+
+
+
+/*        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
+        {
+            throw new NotImplementedException();
+        }
+
+                public Point? GetIntersectionPoint(Beam ray)
         {
             return null;
         }
@@ -34,15 +67,6 @@ namespace Lab1
         {
             throw new NotImplementedException();
         }
-
-        public void Rotate(float alpha = 0, float beta = 0, float gamma = 0)
-        {
-            // Still in progress
-        }
-
-        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
-        {
-            throw new NotImplementedException();
-        }
+*/
     }
 }

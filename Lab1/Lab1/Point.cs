@@ -83,6 +83,7 @@
 
         public virtual Point Scale(float sx, float sy, float sz) => MathUtils.GetScaledPoint(this, sx, sy, sz);
 
+        public virtual Point Translate(float x, float y, float z) => new(this.x + x, this.y + y, this.z + z);
         public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
 
         public static bool operator ==(Point a, Point b) => !(a != b);
