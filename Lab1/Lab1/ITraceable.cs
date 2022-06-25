@@ -15,5 +15,7 @@ namespace Lab1
         public ITraceable Scale(float sx = 0, float sy = 0, float sz = 0);
 
         public ITraceable Translate(float x = 0, float y = 0, float z = 0);
+
+        public float[] GetBoxBorders();
     }
 }

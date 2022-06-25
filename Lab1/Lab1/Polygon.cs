@@ -4,11 +4,12 @@ namespace Lab1
 {
     public class Polygon : Plane
     {
-        public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { }
+        private float[] boxBorders;
+        public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { BoxBordersInit(); }
 
-        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { }
+        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { BoxBordersInit(); }
 
-        public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c, color) { }
+        public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c, color) { BoxBordersInit(); }
 
         public Polygon(Polygon polygon) : base(polygon)
         {
@@ -49,6 +50,45 @@ namespace Lab1
             if (t > e)
                 return ray.GetPosition() + (ray.GetDirection() * t);
             return null;
+        }
+
+        private void BoxBordersInit()
+        {
+            boxBorders = new float[6];
+            boxBorders[0] = MaxBorder(a.X(), b.X(), c.X());
+            boxBorders[1] = MinBorder(a.X(), b.X(), c.X());
+            boxBorders[2] = MaxBorder(a.Y(), b.Y(), c.Y());
+            boxBorders[3] = MinBorder(a.Y(), b.Y(), c.Y());
+            boxBorders[4] = MaxBorder(a.Z(), b.Z(), c.Z());
+            boxBorders[5] = MinBorder(a.Z(), b.Z(), c.Z());
+        }
+
+        private float MaxBorder(float a, float b, float c)
+        {
+            if (a > b && a > c)
+            {
+                return a;
+            }
+            if (b > c)
+                return b;
+
+            return c;
+        }
+        
+        private float MinBorder(float a, float b, float c)
+        {
+            if (a < b && a < c)
+            {
+                return a;
+            }
+            if (b < c)
+                return b;
+
+            return c;
+        }
+        public float[] GetBoxBorders()
+        {
+            return boxBorders;
         }
     }
 }

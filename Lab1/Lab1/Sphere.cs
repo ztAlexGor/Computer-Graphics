@@ -6,11 +6,13 @@ namespace Lab1
     {
         private readonly float radius;
         private readonly Point center;
+        private readonly float[] boxBorders;
 
         public Sphere(Point c, float r)
         {
             radius = r;
             center = c;
+            boxBorders = new float[6] {c.X() + r, c.X() - r, c.Y() + r, c.Y() - r, c.Z() + r, c.Z() - r};
         }
 
         public Point? GetIntersectionPoint(Beam ray)
@@ -50,5 +52,10 @@ namespace Lab1
 
         public ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
             new Sphere(center.Translate(x, y, z), radius);
+
+        public float[] GetBoxBorders()
+        {
+            return boxBorders;
+        }
     }
 }
