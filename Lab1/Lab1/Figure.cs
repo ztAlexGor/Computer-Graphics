@@ -16,6 +16,9 @@ namespace Lab1
             }
         }
 
+
+        // SASHA 
+        
         public Figure()
         {
             this.polygons = new List<ITraceable>();
