@@ -8,10 +8,11 @@ namespace Lab1
         private readonly List<Light> lights;
         private readonly List<Figure> figures;
         private Color[] viewColors;
+        private BoxTree tree;
 
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 200, 200, 200);
+            cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 1000, 1000, 600);
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
             figures = new List<Figure>();
@@ -34,10 +35,17 @@ namespace Lab1
             cow.Scale(100, 100, 100);
             cow.Translate(x: 20);
             figures.Add(cow);
-
-            Figure mirror = new();
-            mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
-            figures.Add(mirror);
+            
+            tree = new BoxTree(4);
+            List<ITraceable> total = new List<ITraceable>();
+            foreach (Figure f in figures)
+            {
+                total.AddRange(f.GetPolygons());
+            }
+            tree.Build(total);
+            //Figure mirror = new();
+            //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
+            //figures.Add(mirror);
             //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
         }
 
@@ -67,13 +75,6 @@ namespace Lab1
             Point screenNW = new(camPosition.X() - screenWidth / 2 + ((screenWidth % 2 == 0) ? 0.5f : 0),
                                 camPosition.Y() + screenHeight / 2 - ((screenHeight % 2 == 0) ? 0.5f : 0),
                                 camPosition.Z() + cam.GetFocalDistance());
-
-            List<ITraceable> allPolygons = new List<ITraceable>();
-            foreach (Figure f in figures)
-            {
-                allPolygons.AddRange(f.GetPolygons());
-            }
-
             ClearView();
 
             for (int i = 0; i < screenHeight; i++)
@@ -83,79 +84,42 @@ namespace Lab1
                     Beam ray = new Beam(new Point(camPosition), 
                         new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
                         .ApplyRotationToDirectionVector(cam.GetAngles());
-                    ITraceable resObj;
-                    Point? interPoint = RayIntersect(ray, allPolygons, out resObj);
+                    Point? interPoint = tree.FindIntersection(ray);
                     if (interPoint is not null)
                     {
-                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, allPolygons, lights);
+                        ITraceable resObj = tree.GetObject();
+                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, tree, lights);
                     }
                 }
             }
-            //ViewOutput();
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
         }
 
-        public static Point RayIntersect(Beam ray, List<ITraceable> objects, out ITraceable intObj)
-        {
-            float depth = float.MaxValue;
-            Point result = null;
-            intObj = null;
-
-            foreach (ITraceable obj in objects)
-            {
-                if (obj is not null)
-                {
-                    Point? intersectionPoint = obj.GetIntersectionPoint(ray);
-                    if (intersectionPoint is not null) 
-                    {
-                        float sqLenght = new Vector3D(ray.GetPosition(), intersectionPoint).SquareLength();
-                        if (sqLenght < depth)
-                        {
-                            depth = sqLenght;
-                            result = intersectionPoint;
-                            intObj = obj;
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-
-        public bool RayIsIntersect(Beam ray, ITraceable thisObj)
-        {
-            foreach (ITraceable obj in figures)
-            {
-                if (obj is not null && obj != thisObj)
-                {
-                    Point? intersectionPoint = obj.GetIntersectionPoint(ray);
-                    if (intersectionPoint is not null)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        public bool SegmentIsIntersect(Point start, Point end, ITraceable thisObj)
-        {
-            Beam lightRay = new(start, new Vector3D(start, end));
-            float sqDist = new Vector3D(start, end).SquareLength();
-
-            foreach (ITraceable obj in figures)
-            {
-                if (obj is not null && obj != thisObj)
-                {
-                    Point? intersectionPoint = obj.GetIntersectionPoint(lightRay);
-
-                    
-                    if (intersectionPoint is not null && (new Vector3D(start, intersectionPoint)).SquareLength() < sqDist)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        // public static Point RayIntersect(Beam ray, List<ITraceable> objects, ITraceable[] intObj)
+        // {
+        //     float depth = float.MaxValue;
+        //     Point result = null;
+        //     intObj = null;
+        //
+        //     foreach (ITraceable obj in objects)
+        //     {
+        //         if (obj is not null)
+        //         {
+        //             Point? intersectionPoint = obj.GetIntersectionPoint(ray);
+        //             if (intersectionPoint is not null) 
+        //             {
+        //                 float sqLenght = new Vector3D(ray.GetPosition(), intersectionPoint).SquareLength();
+        //                 if (sqLenght < depth)
+        //                 {
+        //                     depth = sqLenght;
+        //                     result = intersectionPoint;
+        //                     intObj[0] = obj;
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     return result;
+        // }
 /*        private void ViewOutput()
         {
             for (int i = 0; i < cam.GetScreenHeight(); i++)

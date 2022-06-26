@@ -9,8 +9,8 @@ public class Reflective : Material
         Vector3D newStartVector = ray.GetDirection() + (interObj.GetNormalAtPoint(interPoint) * 2.0f);
         interPoint += (interObj.GetNormalAtPoint(interPoint) * 0.0001f);
         Beam newStartRay = new(interPoint, newStartVector);
-        ITraceable resObject;
-        Point? newInterPoint = Scene.RayIntersect(newStartRay, tree, out resObject);
+        Point? newInterPoint = tree.FindIntersection(ray);
+        ITraceable resObject = tree.GetObject();
         if (newInterPoint is not null)
         {
             return resObject.GetColorAtPoint(newStartRay, newInterPoint, tree, lights);

@@ -4,6 +4,8 @@ namespace Lab1
     {
         private Box alpha;
         private int boxCapacity;
+        private Point bestPoint;
+        private ITraceable bestObj;
 
         public BoxTree(int boxCapacity)
         {
@@ -16,11 +18,16 @@ namespace Lab1
             alpha.Build(items);
         }
 
-        public List<ITraceable> FindBox(Beam ray)
+        public Point FindIntersection(Beam ray)
         {
-            return alpha.FindBox(ray);
+            bestObj = null;
+            bestPoint = null;
+            alpha.FindIntersection(ray);
+            return bestPoint;
         }
 
+        public ITraceable GetObject() { return bestObj; }
+        
         internal class Box
         {
             private List<ITraceable> items;
@@ -28,6 +35,7 @@ namespace Lab1
             private BoxTree tree;
             private float[] borders;
             private float[] pivot;
+            private ITraceable bestObj;
 
             public Box(BoxTree tree, Box parent = null)
             {
@@ -106,26 +114,38 @@ namespace Lab1
                 return i;
             }
 
-            public List<ITraceable> FindBox(Beam ray)
+            public void FindIntersection(Beam ray)
             {
+                bestObj = null;
                 if (IsBoxIntersected(ray))
                 {
                     if (lChild == null && rChild == null)
                     {
-                        return items;
+                        Point result = LookForIntersection(ray);
+                        if (tree.bestPoint is null)
+                        {
+                            tree.bestPoint = result;
+                            tree.bestObj = bestObj;
+                        }
+                        else
+                        {
+                            if (result is not null)
+                            {
+                                CheckBest(result, ray);
+                            }
+                        }
                     }
-
-                    List<ITraceable> merged = lChild.FindBox(ray);
-                    merged.AddRange(rChild.FindBox(ray));
-                    return merged;
+                    else
+                    {
+                        lChild.FindIntersection(ray);
+                        rChild.FindIntersection(ray);
+                    }
                 }
-
-                return new List<ITraceable>();
             }
 
             private bool IsBoxIntersected(Beam ray)
             {
-                float e = 0.0001f;
+                bool flag = false;
                 Point sPoint = ray.GetPosition();
                 Vector3D dirVector = ray.GetDirection();
                 float[] start = new float[3] { sPoint.X(), sPoint.Y(), sPoint.Z() };
@@ -144,7 +164,7 @@ namespace Lab1
                         if (t1 > 0)
                         {
                             Point final = sPoint + (dirVector * t1);
-                            if (IsItIn(final, i))
+                            if (IsItIn(final, i, ray))
                             {
                                 return true;
                             }
@@ -153,7 +173,7 @@ namespace Lab1
                         if (t2 > 0)
                         {
                             Point final = sPoint + (dirVector * t1);
-                            if (IsItIn(final, i))
+                            if (IsItIn(final, i, ray))
                             {
                                 return true;
                             }
@@ -164,15 +184,61 @@ namespace Lab1
                 return false;
             }
 
-            private bool IsItIn(Point p, int i)
+            private bool IsItIn(Point p, int i, Beam ray)
             {
                 float[] point = new float[3] { p.X(), p.Y(), p.Z() };
-                float e = 0.0001f;
 
-                return point[(i + 1) % 3] >= borders[((i + 1) % 3) * 2 + 1] &&
-                       point[(i + 1) % 3] <= borders[((i + 1) % 3) * 2] &&
-                       point[(i + 2) % 3] >= borders[((i + 2) % 3) * 2 + 1] &&
-                       point[(i + 2) % 3] <= borders[((i + 2) % 3) * 2];
+                if (point[(i + 1) % 3] >= borders[((i + 1) % 3) * 2 + 1] &&
+                    point[(i + 1) % 3] <= borders[((i + 1) % 3) * 2] &&
+                    point[(i + 2) % 3] >= borders[((i + 2) % 3) * 2 + 1] &&
+                    point[(i + 2) % 3] <= borders[((i + 2) % 3) * 2])
+                {
+                    if (tree.bestPoint is null)
+                    {
+                        return true;
+                    }
+                    float oldBest = new Vector3D(ray.GetPosition(), tree.bestPoint ).SquareLength();
+                    float possibleBest = new Vector3D(ray.GetPosition(), p).SquareLength();
+                    return (possibleBest < oldBest) ? true : false;
+                }
+
+                return false;
+            }
+
+            private Point LookForIntersection(Beam ray)
+            {
+                float depth = float.MaxValue;
+                Point result = null;
+
+                foreach (ITraceable obj in items)
+                {
+                    if (obj is not null)
+                    {
+                        Point? intersectionPoint = obj.GetIntersectionPoint(ray);
+                        if (intersectionPoint is not null) 
+                        {
+                            float sqLenght = new Vector3D(ray.GetPosition(), intersectionPoint).SquareLength();
+                            if (sqLenght < depth)
+                            {
+                                depth = sqLenght;
+                                result = intersectionPoint;
+                                bestObj = obj;
+                            }
+                        }
+                    }
+                }
+                return result;
+            }
+
+            private void CheckBest(Point p, Beam ray)
+            {
+                float oldBest = new Vector3D(ray.GetPosition(), tree.bestPoint ).SquareLength();
+                float possibleBest = new Vector3D(ray.GetPosition(), p).SquareLength();
+                if (oldBest > possibleBest)
+                {
+                    tree.bestPoint = p;
+                    tree.bestObj = bestObj;
+                }
             }
         }
     }
