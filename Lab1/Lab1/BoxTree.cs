@@ -2,40 +2,39 @@ namespace Lab1
 {
     public class BoxTree
     {
-        private Box alpha;
+        private Box root;
         private int boxCapacity;
-        private Point bestPoint;
-        private ITraceable bestObj;
+        private Point? bestPoint;
+        private ITraceable? bestObj;
 
         public BoxTree(int boxCapacity)
         {
-            alpha = new(this);
+            root = new(this);
             this.boxCapacity = boxCapacity;
         }
 
         public void Build(List<ITraceable> items)
         {
-            alpha.Build(items);
+            root.Build(items);
         }
 
-        public Point FindIntersection(Beam ray)
+        public Point? FindIntersection(Beam ray)
         {
             bestObj = null;
             bestPoint = null;
-            alpha.FindIntersection(ray);
+            root.FindIntersection(ray);
             return bestPoint;
         }
 
-        public ITraceable GetObject() { return bestObj; }
+        public ITraceable? GetObject() { return bestObj; }
         
         internal class Box
         {
             private List<ITraceable> items;
-            private Box parent, lChild, rChild;
+            private Box? parent, lChild, rChild;
             private BoxTree tree;
             private float[] borders;
-            private float[] pivot;
-            private ITraceable bestObj;
+            private ITraceable? bestObj;
 
             public Box(BoxTree tree, Box parent = null)
             {
@@ -46,7 +45,6 @@ namespace Lab1
                 this.tree = tree;
                 borders = new float[]
                     { float.MinValue, float.MaxValue, float.MinValue, float.MaxValue, float.MinValue, float.MaxValue };
-                pivot = new float[] { -1f, 0f };
             }
 
             public void Build(List<ITraceable> items)
@@ -55,8 +53,8 @@ namespace Lab1
                 UpdateBorders();
                 if (this.items.Count > tree.boxCapacity)
                 {
-                    SelectDimension();
-                    this.items.Sort((item1, item2) => item1.GetBoxCenter()[(int)pivot[0]].CompareTo(item2.GetBoxCenter()[(int)pivot[0]]));
+                    int dim = SelectDimension();
+                    this.items.Sort((item1, item2) => item1.GetBoxCenter()[dim].CompareTo(item2.GetBoxCenter()[dim]));
                     BoxDecay();
                 }
             }
@@ -74,7 +72,7 @@ namespace Lab1
                 }
             }
 
-            private void SelectDimension()
+            private int SelectDimension()
             {
                 float[] diff = new float[]
                 {
@@ -82,22 +80,21 @@ namespace Lab1
                     borders[2] - borders[3],
                     borders[4] - borders[5]
                 };
+
                 if (diff[0] > diff[1] && diff[0] > diff[2])
                 {
-                    pivot[0] = 0;
+                    return 0;
                 }
-
                 if (diff[1] > diff[2])
                 {
-                    pivot[0] = 1;
+                    return 1;
                 }
-
-                pivot[0] = 2;
+                return 2;
             }
             
             private void BoxDecay()
             {
-                int i = FindPivot();
+                int i = items.Count / 2;//FindPivot();
                 lChild = new Box(tree, this);
                 rChild = new Box(tree, this);
                 lChild.Build(items.GetRange(0, i));
@@ -105,14 +102,14 @@ namespace Lab1
                 items.Clear();
             }
 
-            private int FindPivot()
+/*            private int FindPivot()
             {
                 int i = items.Count / 2;
-                float leftLast = items[i - 1].GetBoxCenter()[(int)pivot[0]];
-                float rightFirst = items[i].GetBoxCenter()[(int)pivot[0]];
+                float leftLast = items[i - 1].GetBoxCenter()[pivot];
+                float rightFirst = items[i].GetBoxCenter()[pivot];
                 pivot[1] = leftLast + (rightFirst - leftLast);
                 return i;
-            }
+            }*/
 
             public void FindIntersection(Beam ray)
             {
@@ -145,7 +142,6 @@ namespace Lab1
 
             private bool IsBoxIntersected(Beam ray)
             {
-                bool flag = false;
                 Point sPoint = ray.GetPosition();
                 Vector3D dirVector = ray.GetDirection();
                 float[] start = new float[3] { sPoint.X(), sPoint.Y(), sPoint.Z() };
@@ -172,7 +168,7 @@ namespace Lab1
 
                         if (t2 > 0)
                         {
-                            Point final = sPoint + (dirVector * t1);
+                            Point final = sPoint + (dirVector * t2);
                             if (IsItIn(final, i, ray))
                             {
                                 return true;
@@ -199,7 +195,7 @@ namespace Lab1
                     }
                     float oldBest = new Vector3D(ray.GetPosition(), tree.bestPoint ).SquareLength();
                     float possibleBest = new Vector3D(ray.GetPosition(), p).SquareLength();
-                    return (possibleBest < oldBest) ? true : false;
+                    return possibleBest < oldBest;
                 }
 
                 return false;

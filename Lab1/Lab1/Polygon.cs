@@ -60,38 +60,15 @@ namespace Lab1
             boxBorders[3] = MinBorder(a.Y(), b.Y(), c.Y());
             boxBorders[4] = MaxBorder(a.Z(), b.Z(), c.Z());
             boxBorders[5] = MinBorder(a.Z(), b.Z(), c.Z());
+
             boxCenter = new float[3];
             boxCenter[0] = boxBorders[0] + (boxBorders[0] - boxBorders[1]) / 2;
             boxCenter[1] = boxBorders[2] + (boxBorders[2] - boxBorders[3]) / 2;
             boxCenter[2] = boxBorders[4] + (boxBorders[4] - boxBorders[5]) / 2;
         }
 
-        private float MaxBorder(float a, float b, float c)
-        {
-            if (a > b && a > c)
-            {
-                return a;
-            }
-            if (b > c)
-                return b;
-
-            return c;
-        }
+        private float MaxBorder(float a, float b, float c) => Math.Max(Math.Max(a, b), c);
         
-        private float MinBorder(float a, float b, float c)
-        {
-            if (a < b && a < c)
-            {
-                return a;
-            }
-            if (b < c)
-                return b;
-
-            return c;
-        }
-        public float[] GetBoxBorders()
-        {
-            return boxBorders;
-        }
+        private float MinBorder(float a, float b, float c) => Math.Min(Math.Min(a, b), c);
     }
 }

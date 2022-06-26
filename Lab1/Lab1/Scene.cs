@@ -16,8 +16,11 @@ namespace Lab1
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
             figures = new List<Figure>();
+            tree = new BoxTree(4);
+
             ClearView();
             SetScene(inputPathName);
+            
         }
 
         public void SetScene(string inputPathName)
@@ -36,7 +39,6 @@ namespace Lab1
             cow.Translate(x: 20);
             figures.Add(cow);
             
-            tree = new BoxTree(4);
             List<ITraceable> total = new List<ITraceable>();
             foreach (Figure f in figures)
             {
