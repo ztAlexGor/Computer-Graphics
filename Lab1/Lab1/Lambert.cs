@@ -10,14 +10,7 @@ public class Lambert : Material
 
         foreach (Light light in lights)
         {
-            int countOfRays = light.IsReplicated() ? 1 : 16;
-
-            float illuminance = 0;
-            for (int i = 0; i < countOfRays; i++)
-            {
-                illuminance+= CalculateIlluminance(objects, interObj, interPoint, light);
-            }
-            illuminance /= countOfRays;
+            float illuminance = CalculateIlluminance(objects, interObj, interPoint, light);
 
             if (illuminance > 0)
             {
@@ -27,7 +20,7 @@ public class Lambert : Material
                 b += (color.B * illuminance);
             }
         }
-        float maxValue = Math.Max(Math.Max(r, g), Math.Max(b, 1));
+        float maxValue = Math.Max(Math.Max(r, g), b);
 
         return Color.FromArgb((byte)(r * 255.0f / maxValue),
                               (byte)(g * 255.0f / maxValue),
@@ -37,22 +30,27 @@ public class Lambert : Material
     private float CalculateIlluminance(List<ITraceable> objects, ITraceable thisObject, Point point, Light light)
     {
         Vector3D norm = thisObject.GetNormalAtPoint(point);
-        Vector3D dir = light.GetRayDirection(norm, point);
-        float dotProduct = norm * dir;
+        float illuminance = 0;
+        int rayNumber = 0;
 
-        if (dotProduct > 0 && IsVisible(objects, thisObject, point, dir, light.IsBeamRay()))
+        foreach (Vector3D dir in light.GetRayDirection(norm, point))
         {
-            return light.GetIntensity() * light.GetAttenuationCoefficient(point) * dotProduct / norm.Length() / dir.Length();
+            float dotProduct = norm * dir;
+
+            if (dotProduct > 0 && IsVisible(objects, thisObject, point, dir, light.IsRayInfinite()))
+            {
+                illuminance += light.GetIntensity() * light.GetAttenuationCoefficient(point) * dotProduct / norm.Length() / dir.Length();
+            }
+            rayNumber++;
         }
-        return 0;
+
+        return illuminance / rayNumber;
     }
 
 
-    private bool IsVisible(List<ITraceable> objects, ITraceable thisObject, Point start, Vector3D dir, bool isBeam)
+    private bool IsVisible(List<ITraceable> objects, ITraceable thisObject, Point start, Vector3D dir, bool bIgnoreDistance)
     {
-        Beam lightRay = isBeam ? new(start, dir) : new(start, new Vector3D(start, start + dir));
-
-        float sqDist = isBeam ? -1 : dir.SquareLength();
+        Beam lightRay = bIgnoreDistance ? new(start, dir) : new(start, new Vector3D(start, start + dir));
 
         foreach (ITraceable obj in objects)
         {
@@ -60,12 +58,10 @@ public class Lambert : Material
             {
                 Point? intersectionPoint = obj.GetIntersectionPoint(lightRay);
 
-                if (intersectionPoint is not null)
+                if (intersectionPoint is not null && 
+                    (bIgnoreDistance || new Vector3D(start, intersectionPoint).SquareLength() < dir.SquareLength()))
                 {
-                    if (isBeam || (new Vector3D(start, intersectionPoint)).SquareLength() < sqDist)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
         }
