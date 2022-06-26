@@ -6,7 +6,7 @@ public class Reflective : Material
 {
     public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, List<ITraceable> objects, List<Light> lights)
     {
-        Vector3D newStartVector = ray.GetDirection() + (interObj.GetNormalAtPoint(interPoint) * 2f);
+        Vector3D newStartVector = ray.GetDirection() + (interObj.GetNormalAtPoint(interPoint) * 2.0f);
         interPoint += (interObj.GetNormalAtPoint(interPoint) * 0.0001f);
         Beam newStartRay = new(interPoint, newStartVector);
         ITraceable resObject;
