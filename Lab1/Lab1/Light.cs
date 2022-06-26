@@ -60,7 +60,7 @@ namespace Lab1
                 int ix = random.Next(0, randAnglesX.Count);
                 int iy = random.Next(0, randAnglesY.Count);
                 int iz = random.Next(0, randAnglesZ.Count);
-                res.Add(new Vector3D(randAnglesX[ix], randAnglesY[iy], randAnglesZ[iz]));
+                res.Add(n.Rotate(randAnglesX[ix], randAnglesY[iy], randAnglesZ[iz]));
                 randAnglesX.RemoveAt(ix);
                 randAnglesY.RemoveAt(iy);
                 randAnglesZ.RemoveAt(iz);
