@@ -22,9 +22,13 @@ public class Lambert : Material
         }
         float maxValue = Math.Max(Math.Max(r, g), b);
 
-        return Color.FromArgb((byte)(r * 255.0f / maxValue),
-                              (byte)(g * 255.0f / maxValue),
-                              (byte)(b * 255.0f / maxValue));
+        if (maxValue > 255)
+        {
+            return Color.FromArgb((byte)(r * 255.0f / maxValue),
+                                  (byte)(g * 255.0f / maxValue),
+                                  (byte)(b * 255.0f / maxValue));
+        }
+        return Color.FromArgb((byte)r, (byte)g, (byte)b);
     }
 
     private float CalculateIlluminance(BoxTree tree, ITraceable thisObject, Point point, Light light)
