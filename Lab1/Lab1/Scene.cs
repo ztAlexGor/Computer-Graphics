@@ -12,28 +12,34 @@ namespace Lab1
         public Scene(string inputPathName)
         {
             cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 200, 200, 200);
+            viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
+            figures = new List<Figure>();
+            ClearView();
+            SetScene(inputPathName);
+        }
+
+        public void SetScene(string inputPathName)
+        {
+            //Lights
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
-            lights.Add(new Light(0.2f, Color.Yellow));
-            viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
-            figures = new List<Figure>();
+            lights.Add(new Light(0.2f, Color.White));
 
+            //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
 
-            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI/2);
+            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
             cow.Scale(100, 100, 100);
             cow.Translate(x: 20);
-
             figures.Add(cow);
+
             Figure mirror = new();
             mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
             figures.Add(mirror);
             //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
-            ClearView();
         }
-
 
         public Scene(List<Figure> figArr)
         {
