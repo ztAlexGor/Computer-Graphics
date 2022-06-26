@@ -4,7 +4,6 @@ namespace Lab1
 {
     public class Polygon : Plane
     {
-        private float[] boxBorders;
         public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { BoxBordersInit(); }
 
         public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { BoxBordersInit(); }
@@ -61,6 +60,10 @@ namespace Lab1
             boxBorders[3] = MinBorder(a.Y(), b.Y(), c.Y());
             boxBorders[4] = MaxBorder(a.Z(), b.Z(), c.Z());
             boxBorders[5] = MinBorder(a.Z(), b.Z(), c.Z());
+            boxCenter = new float[3];
+            boxCenter[0] = boxBorders[0] + (boxBorders[0] - boxBorders[1]) / 2;
+            boxCenter[1] = boxBorders[2] + (boxBorders[2] - boxBorders[3]) / 2;
+            boxCenter[2] = boxBorders[4] + (boxBorders[4] - boxBorders[5]) / 2;
         }
 
         private float MaxBorder(float a, float b, float c)

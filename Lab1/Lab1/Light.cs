@@ -19,7 +19,7 @@ namespace Lab1
         }
         public float GetIntensity() => intensity;
         public Color GetColor() => color;
-        public virtual float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
+        public virtual float CalculateIntensity(BoxTree tree, ITraceable thisObject, Point p)
         {
             return intensity;
         }
@@ -36,7 +36,7 @@ namespace Lab1
         }
         public void SetDirection(Vector3D v) => direction = new Vector3D(v);
         public Vector3D GetDirection() => direction;
-        public override float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
+        public override float CalculateIntensity(BoxTree tree, ITraceable thisObject, Point p)
         {
             Vector3D norm = thisObject.GetNormalAtPoint(p);
             float dotProduct = -(norm * direction);
@@ -44,7 +44,7 @@ namespace Lab1
             if (dotProduct > 0)
             {
                 Beam lightRay = new(p, -direction);
-                if (IsVisible(objects, thisObject, lightRay))
+                if (IsVisible(tree, thisObject, lightRay))
                 {
                     return intensity * dotProduct / norm.Length() / direction.Length();
                 }
@@ -52,9 +52,9 @@ namespace Lab1
             return 0;
             
         }
-        private bool IsVisible(List<ITraceable> objects, ITraceable thisObj, Beam ray)
+        private bool IsVisible(BoxTree tree, ITraceable thisObj, Beam ray)
         {
-            foreach (ITraceable obj in objects)
+            foreach (ITraceable obj in tree.FindBox(ray))
             {
                 if (obj is not null && obj != thisObj)
                 {
@@ -80,25 +80,25 @@ namespace Lab1
         }
         public void SetPosition(Point p) => position = new Point(p);
         public Point GetPosition() => position;
-        public override float CalculateIntensity(List<ITraceable> objects, ITraceable thisObject, Point p)
+        public override float CalculateIntensity(BoxTree tree, ITraceable thisObject, Point p)
         {
             Vector3D dist = new(position, p);
 
             Vector3D norm = thisObject.GetNormalAtPoint(p);
             float dotProduct = -(norm * dist);
 
-            if (dotProduct > 0 && IsVisible(objects, thisObject, p, position))
+            if (dotProduct > 0 && IsVisible(tree, thisObject, p, position))
             {
                 return intensity /*/ (dist.Length() * dist.Length())*/ * dotProduct / norm.Length() / dist.Length();
             }
             return 0;
         }
-        private bool IsVisible(List<ITraceable> objects, ITraceable thisObject, Point start, Point end)
+        private bool IsVisible(BoxTree tree, ITraceable thisObject, Point start, Point end)
         {
             Beam lightRay = new(start, new Vector3D(start, end));
             float sqDist = new Vector3D(start, end).SquareLength();
 
-            foreach (ITraceable obj in objects)
+            foreach (ITraceable obj in tree.FindBox(lightRay))
             {
                 if (obj is not null && obj != thisObject)
                 {

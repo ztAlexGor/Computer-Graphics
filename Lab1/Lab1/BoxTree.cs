@@ -11,9 +11,9 @@ namespace Lab1
             this.boxCapacity = boxCapacity;
         }
 
-        public void AddItem(ITraceable item)
+        public void Build(List<ITraceable> items)
         {
-            alpha.AddItem(item);
+            alpha.Build(items);
         }
 
         public List<ITraceable> FindBox(Beam ray)
@@ -41,71 +41,71 @@ namespace Lab1
                 pivot = new float[] { -1f, 0f };
             }
 
-            public void AddItem(ITraceable item)
+            public void Build(List<ITraceable> items)
             {
-                if (items.Count == tree.boxCapacity)
+                this.items = items;
+                UpdateBorders();
+                if (this.items.Count > tree.boxCapacity)
                 {
+                    SelectDimension();
+                    this.items.Sort((item1, item2) => item1.GetBoxCenter()[(int)pivot[0]].CompareTo(item2.GetBoxCenter()[(int)pivot[0]]));
                     BoxDecay();
-                }
-                else
-                {
-                    items.Add(item);
-                    UpdateBorders();
                 }
             }
 
             private void UpdateBorders()
             {
-                float[] itemBorders = items[items.Count - 1].GetBoxBorders();
-                for (int i = 0; i < 3; i++)
+                foreach (ITraceable item in items)
                 {
-                    borders[2 * i] = (borders[2 * i] < itemBorders[2 * i]) ? itemBorders[2 * i] : borders[2 * i];
-                    borders[2 * i + 1] = (borders[2 * i + 1] > itemBorders[2 * i + 1]) ? itemBorders[2 * i + 1] : borders[2 * i + 1];
+                    float[] itemBorders = item.GetBoxBorders();
+                    for (int i = 0; i < 3; i++)
+                    {
+                        borders[i * 2] = (borders[i * 2] < itemBorders[i * 2]) ? itemBorders[i * 2] : borders[i * 2];
+                        borders[i * 2 + 1] = (borders[i * 2 + 1] > itemBorders[i * 2 + 1]) ? itemBorders[i * 2 + 1] : borders[i * 2 + 1];
+                    }
                 }
             }
 
+            private void SelectDimension()
+            {
+                float[] diff = new float[]
+                {
+                    borders[0] - borders[1],
+                    borders[2] - borders[3],
+                    borders[4] - borders[5]
+                };
+                if (diff[0] > diff[1] && diff[0] > diff[2])
+                {
+                    pivot[0] = 0;
+                }
+
+                if (diff[1] > diff[2])
+                {
+                    pivot[0] = 1;
+                }
+
+                pivot[0] = 2;
+            }
+            
             private void BoxDecay()
             {
-                FindPivot();
+                int i = FindPivot();
                 lChild = new Box(tree, this);
                 rChild = new Box(tree, this);
-                foreach (ITraceable item in items)
-                {
-                    if (item.GetBoxBorders()[(int)pivot[0] * 2 + 1] < pivot[1])
-                    {
-                        lChild.AddItem(item);
-                    }
-
-                    if (item.GetBoxBorders()[(int)pivot[0] * 2] > pivot[1])
-                    {
-                        rChild.AddItem(item);
-                    }
-                }
+                lChild.Build(items.GetRange(0, i));
+                rChild.Build(items.GetRange(i, items.Count - i));
                 items.Clear();
             }
 
-            private void FindPivot()
+            private int FindPivot()
             {
-                float xDiff = borders[0] - borders[1];
-                float yDiff = borders[2] - borders[3];
-                float zDiff = borders[4] - borders[5];
-                if (xDiff > yDiff && xDiff > zDiff)
-                {
-                    pivot[0] = 0;
-                    pivot[1] = borders[1] + xDiff / 2;
-                }
-                else if (yDiff > zDiff)
-                {
-                    pivot[0] = 1;
-                    pivot[1] = borders[3] + yDiff / 2;
-                }
-                else
-                {
-                    pivot[0] = 2;
-                    pivot[1] = borders[5] + zDiff / 2;
-                }
+                int i = items.Count / 2;
+                float leftLast = items[i - 1].GetBoxCenter()[(int)pivot[0]];
+                float rightFirst = items[i].GetBoxCenter()[(int)pivot[0]];
+                pivot[1] = leftLast + (rightFirst - leftLast);
+                return i;
             }
-            
+
             public List<ITraceable> FindBox(Beam ray)
             {
                 if (IsBoxIntersected(ray))

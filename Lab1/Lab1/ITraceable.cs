@@ -8,7 +8,7 @@ namespace Lab1
 
         public Vector3D GetNormalAtPoint(Point point);
 
-        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights);
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, BoxTree tree, List<Light> lights);
 
         public ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0);
 
@@ -17,5 +17,7 @@ namespace Lab1
         public ITraceable Translate(float x = 0, float y = 0, float z = 0);
 
         public float[] GetBoxBorders();
+
+        public float[] GetBoxCenter();
     }
 }

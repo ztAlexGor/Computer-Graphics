@@ -7,6 +7,7 @@ namespace Lab1
         private readonly Camera cam;
         private readonly List<Light> lights;
         private readonly List<Figure> figures;
+        private BoxTree tree;
         private Color[] viewColors;
 
         public Scene(string inputPathName)
@@ -27,9 +28,16 @@ namespace Lab1
             cow.Translate(x: 20);
 
             figures.Add(cow);
-            Figure mirror = new();
-            mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
-            figures.Add(mirror);
+            //Figure mirror = new();
+            //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
+            //figures.Add(mirror);
+            tree = new BoxTree(4);
+            List<ITraceable> total = new List<ITraceable>();
+            foreach (Figure f in figures)
+            {
+                total.AddRange(f.GetPolygons());
+            }
+            tree.Build(total);
             //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
             ClearView();
         }
@@ -62,11 +70,11 @@ namespace Lab1
                                 camPosition.Y() + screenHeight / 2 - ((screenHeight % 2 == 0) ? 0.5f : 0),
                                 camPosition.Z() + cam.GetFocalDistance());
 
-            List<ITraceable> allPolygons = new List<ITraceable>();
-            foreach (Figure f in figures)
-            {
-                allPolygons.AddRange(f.GetPolygons());
-            }
+            // List<ITraceable> allPolygons = new List<ITraceable>();
+            // foreach (Figure f in figures)
+            // {
+            //     allPolygons.AddRange(f.GetPolygons());
+            // }
 
             ClearView();
 
@@ -78,10 +86,10 @@ namespace Lab1
                         new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
                         .ApplyRotationToDirectionVector(cam.GetAngles());
                     ITraceable resObj;
-                    Point? interPoint = RayIntersect(ray, allPolygons, out resObj);
+                    Point? interPoint = RayIntersect(ray, tree, out resObj);
                     if (interPoint is not null)
                     {
-                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, allPolygons, lights);
+                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, tree, lights);
                     }
                 }
             }
@@ -89,13 +97,13 @@ namespace Lab1
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
         }
 
-        public static Point RayIntersect(Beam ray, List<ITraceable> objects, out ITraceable intObj)
+        public static Point RayIntersect(Beam ray, BoxTree tree, out ITraceable intObj)
         {
             float depth = float.MaxValue;
             Point result = null;
             intObj = null;
 
-            foreach (ITraceable obj in objects)
+            foreach (ITraceable obj in tree.FindBox(ray))
             {
                 if (obj is not null)
                 {

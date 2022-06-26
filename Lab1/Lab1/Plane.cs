@@ -10,7 +10,8 @@ namespace Lab1
         protected readonly Vector3D normal;
         protected Material material;
         protected readonly Color color;
-        protected readonly float[] boxBorders;
+        protected float[] boxBorders;
+        protected float[] boxCenter;
 
         public Plane(Point a, Point b, Point c, Color color, Vector3D v = null, Material m = null)
         {
@@ -63,8 +64,8 @@ namespace Lab1
 
         public Vector3D GetNormalAtPoint(Point point) => normal;
 
-        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights) =>
-            material.RayBehaviour(startRay, interPoint, this, objects, lights);
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, BoxTree tree, List<Light> lights) =>
+            material.RayBehaviour(startRay, interPoint, this, tree, lights);
 
         public virtual ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
             new Plane(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
@@ -74,9 +75,11 @@ namespace Lab1
         public virtual ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
             new Plane(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color);
 
-        public float[] GetBoxBorders()
+        public float[] GetBoxBorders() { return boxBorders; }
+
+        public float[] GetBoxCenter()
         {
-            return boxBorders;
+            return boxCenter;
         }
     }
 }

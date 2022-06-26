@@ -4,7 +4,7 @@ namespace Lab1;
 
 public class Lambert : Material
 {
-    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, List<ITraceable> objects, List<Light> lights)
+    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BoxTree tree, List<Light> lights)
     {
         int r = 0;
         int g = 0;
@@ -14,7 +14,7 @@ public class Lambert : Material
         foreach (Light light in lights)
         {
             Color color = light.GetColor();
-            float illuminance = light.CalculateIntensity(objects, interObj, interPoint);
+            float illuminance = light.CalculateIntensity(tree, interObj, interPoint);
 
             r += (byte)Math.Round(illuminance * color.R);
             g += (byte)Math.Round(illuminance * color.G);
