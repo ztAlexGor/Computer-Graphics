@@ -7,41 +7,39 @@ namespace Lab1
         private readonly Camera cam;
         private readonly List<Light> lights;
         private readonly List<Figure> figures;
-        private BoxTree tree;
         private Color[] viewColors;
 
         public Scene(string inputPathName)
         {
             cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 200, 200, 200);
+            viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
+            figures = new List<Figure>();
+            ClearView();
+            SetScene(inputPathName);
+        }
+
+        public void SetScene(string inputPathName)
+        {
+            //Lights
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
-            lights.Add(new Light(0.2f, Color.Yellow));
-            viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
-            figures = new List<Figure>();
+            lights.Add(new Light(0.2f, Color.White));
 
+            //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
 
-            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI/2);
+            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
             cow.Scale(100, 100, 100);
             cow.Translate(x: 20);
-
             figures.Add(cow);
-            //Figure mirror = new();
-            //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
-            //figures.Add(mirror);
-            tree = new BoxTree(4);
-            List<ITraceable> total = new List<ITraceable>();
-            foreach (Figure f in figures)
-            {
-                total.AddRange(f.GetPolygons());
-            }
-            tree.Build(total);
-            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
-            ClearView();
-        }
 
+            Figure mirror = new();
+            mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
+            figures.Add(mirror);
+            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
+        }
 
         public Scene(List<Figure> figArr)
         {
@@ -70,11 +68,11 @@ namespace Lab1
                                 camPosition.Y() + screenHeight / 2 - ((screenHeight % 2 == 0) ? 0.5f : 0),
                                 camPosition.Z() + cam.GetFocalDistance());
 
-            // List<ITraceable> allPolygons = new List<ITraceable>();
-            // foreach (Figure f in figures)
-            // {
-            //     allPolygons.AddRange(f.GetPolygons());
-            // }
+            List<ITraceable> allPolygons = new List<ITraceable>();
+            foreach (Figure f in figures)
+            {
+                allPolygons.AddRange(f.GetPolygons());
+            }
 
             ClearView();
 
@@ -86,10 +84,10 @@ namespace Lab1
                         new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
                         .ApplyRotationToDirectionVector(cam.GetAngles());
                     ITraceable resObj;
-                    Point? interPoint = RayIntersect(ray, tree, out resObj);
+                    Point? interPoint = RayIntersect(ray, allPolygons, out resObj);
                     if (interPoint is not null)
                     {
-                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, tree, lights);
+                        viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, allPolygons, lights);
                     }
                 }
             }
@@ -97,13 +95,13 @@ namespace Lab1
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
         }
 
-        public static Point RayIntersect(Beam ray, BoxTree tree, out ITraceable intObj)
+        public static Point RayIntersect(Beam ray, List<ITraceable> objects, out ITraceable intObj)
         {
             float depth = float.MaxValue;
             Point result = null;
             intObj = null;
 
-            foreach (ITraceable obj in tree.FindBox(ray))
+            foreach (ITraceable obj in objects)
             {
                 if (obj is not null)
                 {
