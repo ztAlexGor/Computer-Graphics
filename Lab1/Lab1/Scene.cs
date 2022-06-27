@@ -8,11 +8,13 @@ namespace Lab1
         private readonly List<Light> lights;
         private readonly List<Figure> figures;
         private Color[] viewColors;
+        private Color[] normalColors;
         private BVHTree tree;
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 1000, 1000, 600);
+            cam = new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 1000, 1000, 600);
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            normalColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
             figures = new List<Figure>();
             tree = new BVHTree(4);
@@ -32,8 +34,9 @@ namespace Lab1
 
             //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            // Figure 
 
-            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            // cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
             cow.Scale(100, 100, 100);
             cow.Translate(x: 20);
             figures.Add(cow);
@@ -41,6 +44,14 @@ namespace Lab1
             List<ITraceable> total = new List<ITraceable>();
             foreach (Figure f in figures)
             {
+                /*foreach (var poly in f.GetPolygons())
+                {
+                    (Point vt1, Point vt2, Point vt3) = poly.GetVT();
+                    if (vt1 is not null && vt2 is not null && vt3 is not null)
+                    {
+                        Console.WriteLine("xd xd xd xd");
+                    }
+                }*/
                 total.AddRange(f.GetPolygons());
             }
             tree.Build(total);
@@ -91,11 +102,13 @@ namespace Lab1
                     if (interPoint is not null)
                     {
                         ITraceable resObj = tree.GetIntersectionObj();
+                        normalColors[i * screenWidth + j] = ((resObj.GetNormalAtPoint(interPoint) / 2 + new Vector3D(0.5f, 0.5f, 0.5f)) * 255.0f).ToColor();
                         viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, tree, lights);
                     }
                 }
             }
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
+            FileWork.WritePPM(normalColors, screenHeight, screenWidth, "../../../../Examples/result_normalsmap.ppm");
         }
 
         // public static Point RayIntersect(Beam ray, List<ITraceable> objects, ITraceable[] intObj)
