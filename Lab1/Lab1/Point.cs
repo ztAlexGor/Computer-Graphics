@@ -92,6 +92,16 @@
         
         public static Point operator -(Point a, Vector3D b) => new(a.x - b.x, a.y - b.y, a.z - b.z);
 
+        public static Point operator +(Point a, Point b) => new(a.x + b.x, a.y + b.y, a.z + b.z);
+
+        public static Point operator -(Point a, Point b) => new(a.x - b.x, a.y - b.y, a.z - b.z);
+
+        public static Point operator -(Point a) => new(-a.x, -a.y, -a.z);
+
+        public static Point operator *(Point v, float a) => new(v.x * a, v.y * a, v.z * a);
+
+        public static Point operator /(Point v, float a) => new(v.x / a, v.y / a, v.z / a);
+
         public override bool Equals(object? obj)
         {
             if ((obj == null) || !GetType().Equals(obj.GetType()))
@@ -106,6 +116,5 @@
         }
 
         public override int GetHashCode() => x.GetHashCode() ^ y.GetHashCode() ^ z.GetHashCode();
-
     }
 }

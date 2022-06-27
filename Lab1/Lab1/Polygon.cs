@@ -10,9 +10,9 @@ namespace Lab1
 
         public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { }
 
-        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { }
+        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { BoxBordersInit(); }
 
-        public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c, color) { }
+        public Polygon(Point a, Point b, Point c, Color color) : base(a, b, c, color) { BoxBordersInit(); }
 
         public Polygon(Polygon polygon) : base(polygon)
         {
@@ -61,5 +61,14 @@ namespace Lab1
                 return ray.GetPosition() + (ray.GetDirection() * t);
             return null;
         }
+
+        public override float[] BoxBordersInit() =>
+            new float[] { MaxBorder(a.X(), b.X(), c.X()), MinBorder(a.X(), b.X(), c.X()),
+                          MaxBorder(a.Y(), b.Y(), c.Y()), MinBorder(a.Y(), b.Y(), c.Y()),
+                          MaxBorder(a.Z(), b.Z(), c.Z()), MinBorder(a.Z(), b.Z(), c.Z()) };
+
+        private float MaxBorder(float a, float b, float c) => Math.Max(Math.Max(a, b), c);
+        
+        private float MinBorder(float a, float b, float c) => Math.Min(Math.Min(a, b), c);
     }
 }
