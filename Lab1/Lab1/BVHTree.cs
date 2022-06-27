@@ -71,7 +71,7 @@
 
         private void FindIntersection(Node curr, Beam ray)
         {
-            if (curr.aabb.IsIntersect(ray))
+            if (curr.aabb.IsIntersect(ray, bestSqDist))
             {
                 if (curr.items.Count == 0)
                 {
