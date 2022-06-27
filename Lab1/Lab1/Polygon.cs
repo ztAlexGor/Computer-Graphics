@@ -51,21 +51,10 @@ namespace Lab1
             return null;
         }
 
-        private void BoxBordersInit()
-        {
-            boxBorders = new float[6];
-            boxBorders[0] = MaxBorder(a.X(), b.X(), c.X());
-            boxBorders[1] = MinBorder(a.X(), b.X(), c.X());
-            boxBorders[2] = MaxBorder(a.Y(), b.Y(), c.Y());
-            boxBorders[3] = MinBorder(a.Y(), b.Y(), c.Y());
-            boxBorders[4] = MaxBorder(a.Z(), b.Z(), c.Z());
-            boxBorders[5] = MinBorder(a.Z(), b.Z(), c.Z());
-
-            boxCenter = new float[3];
-            boxCenter[0] = boxBorders[0] + (boxBorders[0] - boxBorders[1]) / 2;
-            boxCenter[1] = boxBorders[2] + (boxBorders[2] - boxBorders[3]) / 2;
-            boxCenter[2] = boxBorders[4] + (boxBorders[4] - boxBorders[5]) / 2;
-        }
+        public override float[] BoxBordersInit() =>
+            new float[] { MaxBorder(a.X(), b.X(), c.X()), MinBorder(a.X(), b.X(), c.X()),
+                          MaxBorder(a.Y(), b.Y(), c.Y()), MinBorder(a.Y(), b.Y(), c.Y()),
+                          MaxBorder(a.Z(), b.Z(), c.Z()), MinBorder(a.Z(), b.Z(), c.Z()) };
 
         private float MaxBorder(float a, float b, float c) => Math.Max(Math.Max(a, b), c);
         

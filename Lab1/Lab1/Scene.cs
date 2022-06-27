@@ -8,15 +8,14 @@ namespace Lab1
         private readonly List<Light> lights;
         private readonly List<Figure> figures;
         private Color[] viewColors;
-        private BoxTree tree;
-
+        private BVHTree tree;
         public Scene(string inputPathName)
         {
             cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 1000, 1000, 600);
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
             figures = new List<Figure>();
-            tree = new BoxTree(4);
+            tree = new BVHTree(4);
 
             ClearView();
             SetScene(inputPathName);
@@ -45,6 +44,7 @@ namespace Lab1
                 total.AddRange(f.GetPolygons());
             }
             tree.Build(total);
+
             //Figure mirror = new();
             //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
             //figures.Add(mirror);
@@ -86,10 +86,11 @@ namespace Lab1
                     Beam ray = new Beam(new Point(camPosition), 
                         new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
                         .ApplyRotationToDirectionVector(cam.GetAngles());
+
                     Point? interPoint = tree.FindIntersection(ray);
                     if (interPoint is not null)
                     {
-                        ITraceable resObj = tree.GetObject();
+                        ITraceable resObj = tree.GetIntersectionObj();
                         viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, tree, lights);
                     }
                 }

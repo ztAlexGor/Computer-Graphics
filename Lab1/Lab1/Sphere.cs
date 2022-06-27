@@ -6,13 +6,14 @@ namespace Lab1
     {
         private readonly float radius;
         private readonly Point center;
-        private readonly float[] boxBorders;
+        //private readonly float[] boxBorders;
+        private readonly AABB aabb;
 
         public Sphere(Point c, float r)
         {
             radius = r;
             center = c;
-            boxBorders = new float[6] {c.X() + r, c.X() - r, c.Y() + r, c.Y() - r, c.Z() + r, c.Z() - r};
+            aabb = new AABB(BoxBordersInit());
         }
 
         public Point? GetIntersectionPoint(Beam ray)
@@ -39,7 +40,7 @@ namespace Lab1
 
         public Vector3D GetNormalAtPoint(Point point) => Vector3D.Normalize(new Vector3D(center, point));
 
-        public Color GetColorAtPoint(Beam startRay, Point interPoint, BoxTree tree, List<Light> lights)
+        public Color GetColorAtPoint(Beam startRay, Point interPoint, BVHTree tree, List<Light> lights)
         {
             throw new NotImplementedException();
         }
@@ -53,15 +54,13 @@ namespace Lab1
         public ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
             new Sphere(center.Translate(x, y, z), radius);
 
-        public float[] GetBoxBorders() { return boxBorders; }
-        
-        public float[] GetBoxCenter()
-        {
-            float[] center = new float[3];
-            center[0] = boxBorders[0] + (boxBorders[0] - boxBorders[1]) / 2;
-            center[1] = boxBorders[2] + (boxBorders[2] - boxBorders[3]) / 2;
-            center[2] = boxBorders[4] + (boxBorders[4] - boxBorders[5]) / 2;
-            return center;
-        }
+        public float[] BoxBordersInit() => 
+            new float[6] { center.X() + radius, center.X() - radius,
+                           center.Y() + radius, center.Y() - radius,
+                           center.Z() + radius, center.Z() - radius };
+
+        public float[] GetBoxBorders() => aabb.GetBorders();
+        public float[] GetBoxCenter() => aabb.GetCenter();
+        public AABB GetAABB() => aabb;
     }
 }

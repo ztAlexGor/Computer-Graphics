@@ -4,7 +4,7 @@ namespace Lab1;
 
 public class Lambert : Material
 {
-    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BoxTree tree, List<Light> lights)
+    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)
     {
         float r = 0, g = 0, b = 0;
 
@@ -31,12 +31,13 @@ public class Lambert : Material
         return Color.FromArgb((byte)r, (byte)g, (byte)b);
     }
 
-    private float CalculateIlluminance(BoxTree tree, ITraceable thisObject, Point point, Light light)
+    private float CalculateIlluminance(BVHTree tree, ITraceable thisObject, Point point, Light light)
     {
         Vector3D norm = thisObject.GetNormalAtPoint(point);
         float illuminance = 0;
         int rayNumber = 0;
 
+        point = point + new Point(norm * 0.001f);
         foreach (Vector3D dir in light.GetRayDirection(norm, point))
         {
             float dotProduct = norm * dir;
@@ -52,7 +53,7 @@ public class Lambert : Material
     }
 
 
-    private bool IsVisible(BoxTree tree, ITraceable thisObject, Point start, Vector3D dir, bool bIgnoreDistance)
+    private bool IsVisible(BVHTree tree, ITraceable thisObject, Point start, Vector3D dir, bool bIgnoreDistance)
     {
         Beam lightRay = bIgnoreDistance ? new(start, dir) : new(start, new Vector3D(start, start + dir));
         Point? intersectionPoint = tree.FindIntersection(lightRay);

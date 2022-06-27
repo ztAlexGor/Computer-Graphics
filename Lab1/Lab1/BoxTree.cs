@@ -26,25 +26,30 @@ namespace Lab1
             return bestPoint;
         }
 
-        public ITraceable? GetObject() { return bestObj; }
-        
+        public ITraceable? GetObject() => bestObj;
+/*        public int Traversal() => Traversal(root);
+        private int Traversal(Box curr)
+        {
+            if (curr == null)return 0;
+            return curr.items.Count() + Traversal(curr.lChild) + Traversal(curr.rChild);
+        }*/
         internal class Box
         {
-            private List<ITraceable> items;
-            private Box? parent, lChild, rChild;
+            public List<ITraceable> items;
+            public Box? lChild, rChild;
             private BoxTree tree;
             private float[] borders;
             private ITraceable? bestObj;
 
-            public Box(BoxTree tree, Box parent = null)
+            public Box(BoxTree tree)
             {
                 items = new List<ITraceable>();
-                this.parent = parent;
                 lChild = null;
                 rChild = null;
                 this.tree = tree;
-                borders = new float[]
-                    { float.MinValue, float.MaxValue, float.MinValue, float.MaxValue, float.MinValue, float.MaxValue };
+                borders = new float[] { float.MinValue, float.MaxValue, 
+                                        float.MinValue, float.MaxValue,
+                                        float.MinValue, float.MaxValue };
             }
 
             public void Build(List<ITraceable> items)
@@ -74,42 +79,28 @@ namespace Lab1
 
             private int SelectDimension()
             {
-                float[] diff = new float[]
+                float max = borders[0] - borders[1];
+                int maxInd = 0;
+                for (int i = 1; i < 3; i++)
                 {
-                    borders[0] - borders[1],
-                    borders[2] - borders[3],
-                    borders[4] - borders[5]
-                };
-
-                if (diff[0] > diff[1] && diff[0] > diff[2])
-                {
-                    return 0;
+                    if (borders[i] - borders[i + 1] > max)
+                    {
+                        max = borders[i] - borders[i + 1];
+                        maxInd = i;
+                    }
                 }
-                if (diff[1] > diff[2])
-                {
-                    return 1;
-                }
-                return 2;
+                return maxInd;
             }
             
             private void BoxDecay()
             {
                 int i = items.Count / 2;//FindPivot();
-                lChild = new Box(tree, this);
-                rChild = new Box(tree, this);
+                lChild = new Box(tree);
+                rChild = new Box(tree);
                 lChild.Build(items.GetRange(0, i));
                 rChild.Build(items.GetRange(i, items.Count - i));
                 items.Clear();
             }
-
-/*            private int FindPivot()
-            {
-                int i = items.Count / 2;
-                float leftLast = items[i - 1].GetBoxCenter()[pivot];
-                float rightFirst = items[i].GetBoxCenter()[pivot];
-                pivot[1] = leftLast + (rightFirst - leftLast);
-                return i;
-            }*/
 
             public void FindIntersection(Beam ray)
             {
