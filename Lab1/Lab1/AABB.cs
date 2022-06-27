@@ -57,7 +57,7 @@
 
 
 
-        public bool IsIntersect(Beam ray)
+        public bool IsIntersect(Beam ray, float bestDist/* = float.MaxValue*/)
         {
             Point sPoint = ray.GetPosition();
             Vector3D dirVector = ray.GetDirection();
@@ -77,7 +77,7 @@
                     if (t1 > 0)
                     {
                         Point final = sPoint + (dirVector * t1);
-                        if (IsItIn(final, i, ray))
+                        if (IsItIn(final, i, ray, bestDist))
                         {
                             return true;
                         }
@@ -86,7 +86,7 @@
                     if (t2 > 0)
                     {
                         Point final = sPoint + (dirVector * t2);
-                        if (IsItIn(final, i, ray))
+                        if (IsItIn(final, i, ray, bestDist))
                         {
                             return true;
                         }
@@ -97,7 +97,7 @@
             return false;
         }
 
-        private bool IsItIn(Point p, int i, Beam ray)
+        private bool IsItIn(Point p, int i, Beam ray, float bestDist)
         {
             float[] point = new float[3] { p.X(), p.Y(), p.Z() };
 
@@ -106,16 +106,9 @@
                 point[(i + 2) % 3] >= borders[((i + 2) % 3) * 2 + 1] &&
                 point[(i + 2) % 3] <= borders[((i + 2) % 3) * 2])
             {
-                return true;
-                /*if (tree.bestPoint is null)
-                {
-                    return true;
-                }
-                float oldBest = new Vector3D(ray.GetPosition(), tree.bestPoint).SquareLength();
-                float possibleBest = new Vector3D(ray.GetPosition(), p).SquareLength();
-                return possibleBest < oldBest;*/
+                
+                return bestDist > new Vector3D(ray.GetPosition(), p).SquareLength();
             }
-
             return false;
         }
         /*        public AABB(Point min, Point max)

@@ -7,7 +7,7 @@ namespace Lab1
     {
         static void Main(string[] args)
         {
-            string inpPath = "../../../../Examples/cow.obj";
+            string inpPath = "../../../../Examples/dragon.obj";
             string outPath = "../../../../Examples/result.ppm";
             
             if (args.Length == 2)
