@@ -11,7 +11,7 @@ namespace Lab1
         private BVHTree tree;
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(65, 0, -200f), new Vector3D(0, 0, 0), 1000, 1000, 600);
+            cam = new Camera(new Point(10, 50, -600f), new Vector3D(0, 0, 0), 2000, 2000, 2200);
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
             figures = new List<Figure>();
@@ -28,12 +28,12 @@ namespace Lab1
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
-            lights.Add(new Light(0.2f, Color.White));
+            lights.Add(new Light(0.8f, Color.Firebrick));
 
             //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
 
-            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            cow.Rotate(alpha: (float)Math.PI*0.1f, beta: (float)Math.PI*1.2f, gamma: (float)Math.PI*0f);
             cow.Scale(100, 100, 100);
             cow.Translate(x: 20);
             figures.Add(cow);
