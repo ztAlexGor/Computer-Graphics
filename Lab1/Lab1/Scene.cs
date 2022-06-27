@@ -25,7 +25,7 @@ namespace Lab1
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.White));
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
-            lights.Add(new Light(0.2f, Color.White));
+            // lights.Add(new Light(0.2f, Color.White));
 
             //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());

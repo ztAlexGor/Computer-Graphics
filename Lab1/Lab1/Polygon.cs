@@ -4,6 +4,10 @@ namespace Lab1
 {
     public class Polygon : Plane
     {
+        private Point? vt1;
+        private Point? vt2;
+        private Point? vt3;
+
         public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { }
 
         public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { }
@@ -26,6 +30,13 @@ namespace Lab1
 
         public override ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
             new Polygon(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color);
+
+        public void AddVt(Point a, Point b, Point c)
+        {
+            vt1 = new Point(a);
+            vt2 = new Point(b);
+            vt3 = new Point(c);
+        }
 
         public override Point? GetIntersectionPoint(Beam ray)
         {
