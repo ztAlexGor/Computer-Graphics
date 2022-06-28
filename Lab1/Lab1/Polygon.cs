@@ -14,7 +14,7 @@ namespace Lab1
 
         public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { BoxBordersInit(); }
 
-        public Polygon(Point a, Point b, Point c, Color color, Point? vt1 = null, Point? vt2 = null, Point? vt3 = null) : base(a, b, c, color) 
+        public Polygon(Point a, Point b, Point c, Color color, Point? vt1 = null, Point? vt2 = null, Point? vt3 = null, Material m = null) : base(a, b, c, color, m: m) 
         {
             this.vt1 = vt1;
             this.vt2 = vt2;

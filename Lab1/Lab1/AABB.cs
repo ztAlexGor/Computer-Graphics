@@ -9,6 +9,17 @@
         public AABB(float[] boxBorders)
         {
             borders = boxBorders;
+/*            for (int i = 0; i < 6; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    borders[i] += 1;
+                }
+                else
+                {
+                    borders[i] -= 1;
+                }
+            }*/
             center = ComputeCenter();
         }
 
@@ -57,7 +68,7 @@
 
 
 
-        public bool IsIntersect(Beam ray, float bestDist/* = float.MaxValue*/)
+        public bool IsIntersect(Beam ray, float bestDist = float.MaxValue)
         {
             Point sPoint = ray.GetPosition();
             Vector3D dirVector = ray.GetDirection();
@@ -106,8 +117,8 @@
                 point[(i + 2) % 3] >= borders[((i + 2) % 3) * 2 + 1] &&
                 point[(i + 2) % 3] <= borders[((i + 2) % 3) * 2])
             {
-                
-                return bestDist > new Vector3D(ray.GetPosition(), p).SquareLength();
+                return true;
+                //return bestDist >= new Vector3D(ray.GetPosition(), p).SquareLength();
             }
             return false;
         }

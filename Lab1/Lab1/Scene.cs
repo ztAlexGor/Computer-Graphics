@@ -20,7 +20,8 @@ namespace Lab1
             Material.LoadTexture("../../../../Textures/tire.ppm");
 
             //SetScene(inputPathName);
-            SetCowScene();
+            SetMirrorScene(inputPathName);
+            //SetCowScene();
             BuildTree();
 
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
@@ -80,6 +81,32 @@ namespace Lab1
             //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
         }
 
+
+        public void SetMirrorScene(string inputPathName = "../../../../Examples/cow.obj")
+        {
+            cam.SetCamera(new Camera(new Point(0, 100, -350f), new Vector3D(0, 0, 0), 800, 800, 400));
+
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new Light(0.5f, Color.White));
+
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            cow.Rotate(alpha: 0, /*beta: (float)Math.PI, */gamma: (float)Math.PI / 2);
+            cow.Scale(300, 300, 300);
+            cow.Translate(y: -5);
+
+            Figure floor = new Figure();
+            floor.AddPolygon(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
+            floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
+
+            Figure mirror = new();
+            mirror.AddPolygon(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), Color.White, m: new Reflective(20, 0.9f)));
+            mirror.AddPolygon(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), Color.White, m: new Reflective(20, 0.9f)));
+            figures.Add(cow);
+            figures.Add(floor);
+            figures.Add(mirror);
+            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
+        }
+
         public void BuildTree()
         {
             List<ITraceable> total = new List<ITraceable>();
@@ -124,6 +151,7 @@ namespace Lab1
             {
                 for (int j = 0; j < screenWidth; j++)
                 {
+
                     Beam ray = new Beam(new Point(camPosition), 
                         new Vector3D(camPosition, new Point(screenNW.X() + j, screenNW.Y() - i, screenNW.Z())))
                         .ApplyRotationToDirectionVector(cam.GetAngles());
@@ -138,7 +166,7 @@ namespace Lab1
                 }
             }
             FileWork.WritePPM(viewColors, screenHeight, screenWidth, outputPathName);
-            FileWork.WritePPM(normalColors, screenHeight, screenWidth, "../../../../Examples/result_normalsmap.ppm");
+            FileWork.WritePPM(normalColors, screenHeight, screenWidth, "../../../../Examples/result_normals_map.ppm");
         }
 
         // public static Point RayIntersect(Beam ray, List<ITraceable> objects, ITraceable[] intObj)
