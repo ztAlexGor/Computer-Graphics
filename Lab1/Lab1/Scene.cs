@@ -12,7 +12,7 @@ namespace Lab1
         private BVHTree tree;
         public Scene(string inputPathName)
         {
-            cam = new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 100, 100, 50);
+            cam = new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 500, 500, 300);
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             normalColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
@@ -27,17 +27,17 @@ namespace Lab1
         public void SetScene(string inputPathName)
         {
             //Lights
-            //lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.Red));
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
             //lights.Add(new Light(2f, Color.White));
-
+            Material.LoadTexture("../../../../Textures/tire.ppm");
             //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
             // Figure 
 
-            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
-            cow.Scale(300, 300, 300);
+            // cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            cow.Scale(100, 100, 100);
             cow.Translate(x: 20);
             figures.Add(cow);
 
@@ -53,6 +53,7 @@ namespace Lab1
                 total.AddRange(f.GetPolygons());
             }
             tree.Build(total);
+            
 
             //Figure mirror = new();
             //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
