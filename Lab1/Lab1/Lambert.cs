@@ -4,6 +4,10 @@ namespace Lab1;
 
 public class Lambert : Material
 {
+    public Lambert(string path)
+    {
+        LoadTexture(path);
+    }
     public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)
     {
         float r = 0, g = 0, b = 0;
@@ -23,20 +27,25 @@ public class Lambert : Material
         if (uvw is not null && vt1 is not null && vt2 is not null && vt3 is not null)
         {
             Point texturePosition = vt1 * uvw.X() + vt2 * uvw.Y() + vt3 * uvw.Z();
-            float textureX = texturePosition.X() * TEXTURE_WIDTH;
-            float textureY = texturePosition.Y() * TEXTURE_HEIGHT;
-            if ((textureX <= 0.5f && textureY >= 0.5f) || (textureX >= 0.5f && textureY <= 0.5f))
-            {
-                r = 0;
-                g = 0;
-                b = 128;
-            }
-            else
-            {
-                r = 128;
-                g = 0;
-                b = 0;
-            }
+            float textureX = texturePosition.X() * width;
+            float textureY = texturePosition.Y() * height;
+
+            /*            if ((textureX <= 0.5f && textureY >= 0.5f) || (textureX >= 0.5f && textureY <= 0.5f))
+                        {
+                            r = 0;
+                            g = 0;
+                            b = 128;
+                        }
+                        else
+                        {
+                            r = 128;
+                            g = 0;
+                            b = 0;
+                        }*/
+            Color textureAtPoint = texture[(int)(textureY * width + textureX)];
+            r = textureAtPoint.R;
+            g = textureAtPoint.G;
+            b = textureAtPoint.B;
         }
 
         foreach (Light light in lights)
@@ -74,7 +83,6 @@ public class Lambert : Material
         foreach (Vector3D dir in light.GetRayDirection(norm, point))
         {
             float dotProduct = norm * dir;
-
             if (dotProduct > 0 && IsVisible(tree, thisObject, point, dir, light.IsRayInfinite()))
             {
                 illuminance += light.GetIntensity() * light.GetAttenuationCoefficient(point) * dotProduct / norm.Length() / dir.Length();
