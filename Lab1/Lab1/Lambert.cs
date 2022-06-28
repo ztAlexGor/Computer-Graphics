@@ -4,9 +4,9 @@ namespace Lab1;
 
 public class Lambert : Material
 {
-    public Lambert(string path)
+    public Lambert()
     {
-        LoadTexture(path);
+        // LoadTexture(path);
     }
     public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)
     {
@@ -27,8 +27,8 @@ public class Lambert : Material
         if (uvw is not null && vt1 is not null && vt2 is not null && vt3 is not null)
         {
             Point texturePosition = vt1 * uvw.X() + vt2 * uvw.Y() + vt3 * uvw.Z();
-            float textureX = texturePosition.X() * width;
-            float textureY = texturePosition.Y() * height;
+            float textureX = texturePosition.X() * Material.width;
+            float textureY = texturePosition.Y() * Material.height;
 
             /*            if ((textureX <= 0.5f && textureY >= 0.5f) || (textureX >= 0.5f && textureY <= 0.5f))
                         {
@@ -42,10 +42,11 @@ public class Lambert : Material
                             g = 0;
                             b = 0;
                         }*/
-            Color textureAtPoint = texture[(int)(textureY * width + textureX)];
-            r = textureAtPoint.R;
-            g = textureAtPoint.G;
-            b = textureAtPoint.B;
+            int tidx = Math.Min((int)((int)(textureY * Material.width) + (int)textureX), Material.width * Material.height - 1);
+            
+            r = (Material.texture[tidx]).R;
+            g = (Material.texture[tidx]).G;
+            b = (Material.texture[tidx]).B;
         }
 
         foreach (Light light in lights)

@@ -18,7 +18,7 @@ namespace Lab1
             this.b = new Point(b);
             this.c = new Point(c);
             normal = (v is null) ? Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c))) : v;
-            material = (m is null) ? new Lambert("../../../../Textures/Tire Texture.ppm") : m;
+            material = m is null ? (new Lambert()) : m;
             this.color = color;
             aabb = new AABB(BoxBordersInit());
         }
@@ -28,8 +28,9 @@ namespace Lab1
             this.b = new Point(b);
             this.c = new Point(c);
             normal = (v is null) ? Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c))) : v;
-            material = (m is null) ? new Lambert("../../../../Textures/Tire Texture.ppm") : m;
+            // material = (m is null) ? new Lambert("../../../../Textures/Tire Texture.ppm") : m;
             color = Color.White;
+            material = m is null ? (new Lambert()) : m;
             aabb = new AABB(new float[] { float.MaxValue, float.MinValue,
                                           float.MaxValue, float.MinValue,
                                           float.MaxValue, float.MinValue });
