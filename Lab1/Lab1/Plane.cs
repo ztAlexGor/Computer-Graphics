@@ -87,5 +87,9 @@ namespace Lab1
             new float[] { float.MaxValue, float.MinValue,
                           float.MaxValue, float.MinValue,
                           float.MaxValue, float.MinValue };
+
+        public virtual Point? GetUV() => null;
+
+        public virtual (Point?, Point?, Point?) GetVT() => (null, null, null);
     }
 }

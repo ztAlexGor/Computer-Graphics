@@ -1,4 +1,6 @@
-﻿namespace Lab1
+﻿using System.Drawing;
+
+namespace Lab1
 {
     public class Point
     {
@@ -7,7 +9,7 @@
         protected float z;
         protected float w;
 
-        public Point(float x, float y, float z)
+        public Point(float x, float y, float z = 0)
         {
             this.x = x;
             this.y = y;
@@ -24,6 +26,10 @@
 
         public Point(Point a)
         {
+            if (a is null)
+            {
+                throw new ArgumentNullException(nameof(a), "Trying to copy a null point object!");
+            }
             x = a.x;
             y = a.y;
             z = a.z;
@@ -38,11 +44,11 @@
             w = 1;
         }
 
-        public Point(float[] arr)
+        public Point(float?[] arr)
         {
-            x = arr[0];
-            y = arr[1];
-            z = arr[2];
+            x = (float)arr[0];
+            y = (float)arr[1];
+            z = arr.Length >= 3 && arr[2] is not null ? (float)arr[2] : 0;
             w = 1;
         }
 
@@ -84,6 +90,9 @@
         public virtual Point Scale(float sx, float sy, float sz) => MathUtils.GetScaledPoint(this, sx, sy, sz);
 
         public virtual Point Translate(float x, float y, float z) => new(this.x + x, this.y + y, this.z + z);
+
+        public Color ToColor() => Color.FromArgb((byte)x, (byte)y, (byte)z);
+
         public static bool operator !=(Point a, Point b) => (a.x != b.x) || (a.y != b.y) || (a.z != b.z);
 
         public static bool operator ==(Point a, Point b) => !(a != b);

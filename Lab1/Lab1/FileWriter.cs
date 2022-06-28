@@ -43,15 +43,15 @@ public class FileWork
                         {
                             case 'n':
                                 splittedLine = line.Split(' ');
-                                obj.AddVn(new float[] { float.Parse(splittedLine[3], inf), float.Parse(splittedLine[2], inf), float.Parse(splittedLine[1], inf) });
+                                obj.AddVn(new float?[] { float.Parse(splittedLine[3], inf), float.Parse(splittedLine[2], inf), float.Parse(splittedLine[1], inf) });
                                 break;
                             case 't':
                                 splittedLine = line.Split(' ');
-                                obj.AddVt(new float[] { float.Parse(splittedLine[3], inf), float.Parse(splittedLine[2], inf), float.Parse(splittedLine[1], inf) });
+                                obj.AddVt(new float?[] { float.Parse(splittedLine[2], inf), float.Parse(splittedLine[1], inf)});
                                 break;
                             default:
                                 splittedLine = line.Split(' ');
-                                obj.AddV(new float[] { float.Parse(splittedLine[3], inf), float.Parse(splittedLine[2], inf), float.Parse(splittedLine[1], inf) });
+                                obj.AddV(new float?[] { float.Parse(splittedLine[3], inf), float.Parse(splittedLine[2], inf), float.Parse(splittedLine[1], inf) });
                                 break;
                         }
                         break;

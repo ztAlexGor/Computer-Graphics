@@ -8,6 +8,37 @@ public class Lambert : Material
     {
         float r = 0, g = 0, b = 0;
 
+        Point? uvw = interObj.GetUV();
+        (Point? vt1, Point? vt2, Point? vt3) = interObj.GetVT();
+        /*Color[][] colors = new Color[2][];
+        for (int i = 0; i < 2; i++)
+        {
+            colors[i] = new Color[2];
+            for (int j = 0; j < 2; j++)
+            {
+                colors[i][j] = 
+            }
+        }*/
+
+        if (uvw is not null && vt1 is not null && vt2 is not null && vt3 is not null)
+        {
+            Point texturePosition = vt1 * uvw.X() + vt2 * uvw.Y() + vt3 * uvw.Z();
+            float textureX = texturePosition.X() * TEXTURE_WIDTH;
+            float textureY = texturePosition.Y() * TEXTURE_HEIGHT;
+            if ((textureX <= 0.5f && textureY >= 0.5f) || (textureX >= 0.5f && textureY <= 0.5f))
+            {
+                r = 0;
+                g = 0;
+                b = 128;
+            }
+            else
+            {
+                r = 128;
+                g = 0;
+                b = 0;
+            }
+        }
+
         foreach (Light light in lights)
         {
             float illuminance = CalculateIlluminance(tree, interObj, interPoint, light);
@@ -20,6 +51,8 @@ public class Lambert : Material
                 b += (color.B * illuminance);
             }
         }
+
+
         float maxValue = Math.Max(Math.Max(r, g), b);
 
         if (maxValue > 255)
@@ -37,7 +70,7 @@ public class Lambert : Material
         float illuminance = 0;
         int rayNumber = 0;
 
-        point = point + new Point(norm * 0.001f);
+        point += new Point(norm * 0.001f);
         foreach (Vector3D dir in light.GetRayDirection(norm, point))
         {
             float dotProduct = norm * dir;

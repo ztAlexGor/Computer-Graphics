@@ -62,5 +62,15 @@ namespace Lab1
         public float[] GetBoxBorders() => aabb.GetBorders();
         public float[] GetBoxCenter() => aabb.GetCenter();
         public AABB GetAABB() => aabb;
+
+        public Point? GetUV()
+        {
+            throw new NotImplementedException();
+        }
+
+        public (Point?, Point?, Point?) GetVT()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -11,7 +11,7 @@
             length = (float)Math.Sqrt(sqrLength);
         }
 
-        public Vector3D(float[] arr) : base(arr)
+        public Vector3D(float?[] arr) : base(arr)
         {
             sqrLength = x * x + y * y + z * z;
             length = (float)Math.Sqrt(sqrLength);

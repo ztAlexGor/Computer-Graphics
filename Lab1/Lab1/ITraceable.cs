@@ -22,6 +22,10 @@ namespace Lab1
 
         public AABB GetAABB();
 
+        public Point? GetUV();
+
+        public (Point?, Point?, Point?) GetVT();
+
         //set private after changing ITraceable from interface to abstract class
         public float[] BoxBordersInit();
     }
