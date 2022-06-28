@@ -38,6 +38,16 @@ public class ObjStructure
             res.Add(plgn);
             //res.Add(plgn.Scale(10, 10, 10));
         }
+
+        Clear();
         return res;
+    }
+
+    private void Clear()
+    {
+        v.Clear();
+        vn.Clear();
+        vt.Clear();
+        f.Clear();
     }
 }

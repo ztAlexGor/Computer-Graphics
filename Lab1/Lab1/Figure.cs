@@ -8,12 +8,7 @@ namespace Lab1
 
         public Figure(List<ITraceable> polygons)
         {
-            this.polygons = new List<ITraceable>(polygons.Count);
-
-            foreach (Polygon polygon in polygons)
-            {
-                this.polygons.Add(new Polygon(polygon));
-            }
+            this.polygons = polygons;
         }
         
         public Figure()
@@ -21,7 +16,7 @@ namespace Lab1
             this.polygons = new List<ITraceable>();
         }
 
-        public void AddPolygon(ITraceable polygon) => polygons.Add(polygon);//copy!!
+        public void AddPolygon(ITraceable polygon) => polygons.Add(polygon);
 
         public List<ITraceable> GetPolygons() => polygons;
 
@@ -49,9 +44,10 @@ namespace Lab1
                 polygons[i] = polygons[i].Translate(x, y, z);
             }
         }
-
-
-
+        
+        public void Clear() {
+        
+        }
 
 /*        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
         {

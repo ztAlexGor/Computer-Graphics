@@ -51,10 +51,10 @@ namespace Lab1
             foreach (Figure f in figures)
             {
                 total.AddRange(f.GetPolygons());
+                f.Clear();
             }
             tree.Build(total);
             
-
             //Figure mirror = new();
             //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
             //figures.Add(mirror);
