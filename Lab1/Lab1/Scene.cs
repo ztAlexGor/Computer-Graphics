@@ -13,15 +13,19 @@ namespace Lab1
         public Scene(string inputPathName)
         {
             cam = new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 500, 500, 300);
-            viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
-            normalColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             lights = new List<Light>();
             figures = new List<Figure>();
             tree = new BVHTree(4);
 
-            ClearView();
-            SetScene(inputPathName);
-            
+            Material.LoadTexture("../../../../Textures/tire.ppm");
+
+            //SetScene(inputPathName);
+            SetCowScene();
+            BuildTree();
+
+            viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            normalColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
+            //ClearView();
         }
 
         public void SetScene(string inputPathName)
@@ -31,7 +35,7 @@ namespace Lab1
             //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.Red));
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
             //lights.Add(new Light(2f, Color.White));
-            Material.LoadTexture("../../../../Textures/tire.ppm");
+            
             //Figures
             Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
             // Figure 
@@ -46,7 +50,38 @@ namespace Lab1
             floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
 
             figures.Add(floor);
+            //Figure mirror = new();
+            //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
+            //figures.Add(mirror);
+            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
+        }
 
+        public void SetCowScene(string inputPathName = "../../../../Examples/cow.obj")
+        {
+            cam.SetCamera(new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 600, 600, 300));
+
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new Light(0.5f, Color.White));
+
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            cow.Scale(300, 300, 300);
+
+            Figure floor = new Figure();
+            floor.AddPolygon(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
+            floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
+
+            Figure mirror = new();
+            mirror.AddPolygon(new Sphere(new Point(400, 0, -10), 100, Color.White, m: new Reflective(10, 0.8f)));
+
+            figures.Add(cow);
+            figures.Add(floor);
+            figures.Add(mirror);
+            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
+        }
+
+        public void BuildTree()
+        {
             List<ITraceable> total = new List<ITraceable>();
             foreach (Figure f in figures)
             {
@@ -54,11 +89,6 @@ namespace Lab1
                 f.Clear();
             }
             tree.Build(total);
-            
-            //Figure mirror = new();
-            //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
-            //figures.Add(mirror);
-            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
         }
 
         public Scene(List<Figure> figArr)
@@ -76,6 +106,7 @@ namespace Lab1
             for(int i = 0; i < viewColors.Length; i++)
             {
                 viewColors[i] = Material.worldColor;
+                normalColors[i] = Color.FromArgb(0, 0, 0);
             }  
         }
 

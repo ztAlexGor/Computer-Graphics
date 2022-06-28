@@ -6,14 +6,17 @@ namespace Lab1
     {
         private readonly float radius;
         private readonly Point center;
-        //private readonly float[] boxBorders;
+        protected Material material;
+        protected readonly Color color;
         private readonly AABB aabb;
 
-        public Sphere(Point c, float r)
+        public Sphere(Point c, float r, Color color, Material m = null)
         {
             radius = r;
             center = c;
             aabb = new AABB(BoxBordersInit());
+            material = (m is null) ? new Lambert() : m;
+            this.color = color;
         }
 
         public Point? GetIntersectionPoint(Beam ray)
@@ -42,17 +45,17 @@ namespace Lab1
 
         public Color GetColorAtPoint(Beam startRay, Point interPoint, BVHTree tree, List<Light> lights)
         {
-            throw new NotImplementedException();
+            return material.RayBehaviour(startRay, interPoint, this, tree, lights);
         }
 
         public ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
-            new Sphere(center.Rotate(alpha, beta, gamma), radius);
+            new Sphere(center.Rotate(alpha, beta, gamma), radius, color, material);
 
         public ITraceable Scale(float sx = 0, float sy = 0, float sz = 0) =>
-            new Sphere(center, radius * sx);
+            new Sphere(center, radius * sx, color, material);
 
         public ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
-            new Sphere(center.Translate(x, y, z), radius);
+            new Sphere(center.Translate(x, y, z), radius, color, material);
 
         public float[] BoxBordersInit() => 
             new float[6] { center.X() + radius, center.X() - radius,

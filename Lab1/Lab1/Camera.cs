@@ -36,6 +36,17 @@
             focalDistance = f;
         }
 
+        public void SetCamera(Camera c)
+        {
+            position = c.position;
+            alpha = c.alpha;
+            beta = c.beta;
+            gamma = c.gamma;
+            width = c.width;
+            height = c.height;
+            focalDistance = c.focalDistance;
+        }
+
         public Point GetPosition() => position;
 
         // public Vector3D GetDirection() => direction;

@@ -23,12 +23,15 @@ public class Reflective : Material
         if (numOfReflections <= 0) return Color.Black;
 
         Vector3D newStartVector = ray.GetDirection() + (interObj.GetNormalAtPoint(interPoint) * 2.0f);
-        interPoint += (interObj.GetNormalAtPoint(interPoint) * 0.0001f);
+        interPoint += (interObj.GetNormalAtPoint(interPoint) * 0.001f);
         Beam newStartRay = new(interPoint, newStartVector);
         Point? newInterPoint = tree.FindIntersection(ray);
+
         ITraceable? resObject = tree.GetIntersectionObj();
         if (newInterPoint is not null)
         {
+            //newInterPoint += new Point(interObj.GetNormalAtPoint(interPoint) * 0.001f);
+
             Color tempColor = resObject.GetColorAtPoint(newStartRay, newInterPoint, tree, lights);
             return Color.FromArgb((byte)(tempColor.R * reflectionCoeficient),
                                   (byte)(tempColor.G * reflectionCoeficient),
