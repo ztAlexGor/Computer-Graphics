@@ -85,22 +85,17 @@
                         return false;
                     }
 
-                    if (t1 > 0)
+                    
+                    Point final = sPoint + (dirVector * t1);
+                    if (IsItIn(final, i, ray, t1*t2 > 0 ? bestDist : float.MaxValue))
                     {
-                        Point final = sPoint + (dirVector * t1);
-                        if (IsItIn(final, i, ray, bestDist))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
 
-                    if (t2 > 0)
+                    final = sPoint + (dirVector * t2);
+                    if (IsItIn(final, i, ray, t1 * t2 > 0 ? bestDist : float.MaxValue))
                     {
-                        Point final = sPoint + (dirVector * t2);
-                        if (IsItIn(final, i, ray, bestDist))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -116,9 +111,10 @@
                 point[(i + 1) % 3] <= borders[((i + 1) % 3) * 2] &&
                 point[(i + 2) % 3] >= borders[((i + 2) % 3) * 2 + 1] &&
                 point[(i + 2) % 3] <= borders[((i + 2) % 3) * 2])
+
             {
-                return true;
-                //return bestDist >= new Vector3D(ray.GetPosition(), p).SquareLength();
+                //return true;
+                return bestDist >= new Vector3D(ray.GetPosition(), p).SquareLength();
             }
             return false;
         }

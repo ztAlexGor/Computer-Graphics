@@ -20,7 +20,8 @@ namespace Lab1
             Material.LoadTexture("../../../../Textures/tire.ppm");
 
             //SetScene(inputPathName);
-            SetMirrorScene(inputPathName);
+            SetMirrorScene();
+            //SetCarScene();
             //SetCowScene();
             BuildTree();
 
@@ -106,6 +107,29 @@ namespace Lab1
             figures.Add(mirror);
             //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
         }
+
+
+        public void SetCarScene(string inputPathName = "../../../../Examples/car.obj")
+        {
+            cam.SetCamera(new Camera(new Point(0, 100, -350f), new Vector3D(0, 0, 0), 600, 600, 300));
+
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new Light(0.5f, Color.White));
+
+            Figure car = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            //car.Rotate(alpha: 0, beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            car.Scale(100, 100, 100);
+            //car.Translate(y: -5);
+
+            Figure floor = new Figure();
+            floor.AddPolygon(new Polygon(new Point(1000, 0, 0), new Point(-1000, 0, 0), new Point(0, 0, 1000)));
+            floor.AddPolygon(new Polygon(new Point(-1000, 0, 0), new Point(1000, 0, 0), new Point(0, 0, -1000)));
+
+
+            figures.Add(car);
+            figures.Add(floor);
+        }
+
 
         public void BuildTree()
         {
