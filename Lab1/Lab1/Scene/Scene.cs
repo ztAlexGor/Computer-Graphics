@@ -18,8 +18,8 @@ namespace Lab1
             tree = new BVHTree(10);
 
             //SetScene(inputPathName);
-            SetMirrorScene();
-            //SetCarScene();
+            //SetMirrorScene();
+            SetCarScene();
             //SetCowScene();
             BuildTree();
 

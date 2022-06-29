@@ -23,21 +23,24 @@ public class Lambert : Material
         float r = 0, g = 0, b = 0;
 
         //applying texture
-        Point? uvw = interObj.GetUV();
-        (Point? vt1, Point? vt2, Point? vt3) = interObj.GetVT();
-
-        if (uvw is not null && vt1 is not null && vt2 is not null && vt3 is not null)
+        if (texture is not null)
         {
-            Point texturePosition = vt1 * uvw.X() + vt2 * uvw.Y() + vt3 * uvw.Z();
-            float textureX = texturePosition.X() * width;
-            float textureY = texturePosition.Y() * height;
+            Point? uvw = interObj.GetUV();
+            (Point? vt1, Point? vt2, Point? vt3) = interObj.GetVT();
 
-            int tidx = (int)(textureY * width + textureX) % (width * height);
-            r = texture[tidx].R;
-            g = texture[tidx].G;
-            b = texture[tidx].B;
+            if (uvw is not null && vt1 is not null && vt2 is not null && vt3 is not null)
+            {
+                Point texturePosition = vt1 * uvw.X() + vt2 * uvw.Y() + vt3 * uvw.Z();
+                float textureX = texturePosition.X() * width;
+                float textureY = texturePosition.Y() * height;
+
+                int tidx = (int)(textureY * width + textureX) % (width * height);
+                r = texture[tidx].R;
+                g = texture[tidx].G;
+                b = texture[tidx].B;
+            }
         }
-
+        
         //applying light 
         foreach (Light light in lights)
         {
