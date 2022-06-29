@@ -1,3 +1,0 @@
-﻿1. Make a common interface for IO operations
-2. Make a common base figure that may contain ITraceable and that extends its basic functionality
-3. 
