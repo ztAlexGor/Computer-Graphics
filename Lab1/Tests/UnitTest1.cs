@@ -50,9 +50,9 @@ namespace Tests
         [ClassData(typeof(PointMultipleTestData))]
         public void CorrectMultipleIntersection(Sphere sp, Plane pl, Polygon pol, Beam ray, Point res)
         {
-            ITraceable[] objArr = {sp, pl, pol};
+            SceneObject[] objArr = {sp, pl, pol};
 
-            ITraceable resObj;
+            SceneObject resObj;
             Point? result = Scene.RayIntersect(ray, objArr.ToList(), out resObj);
 
             if (res is null)

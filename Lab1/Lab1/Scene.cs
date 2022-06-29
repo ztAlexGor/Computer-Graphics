@@ -27,118 +27,6 @@ namespace Lab1
             normalColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
         }
 
-        public void SetScene(string inputPathName)
-        {
-            //Lights
-            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
-            //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.Red));
-            //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
-            //lights.Add(new Light(2f, Color.White));
-            
-
-            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
-
-
-            // cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
-            cow.Scale(100, 100, 100);
-            cow.Translate(x: 20);
-            figures.Add(cow);
-
-            Figure floor = new Figure();
-            floor.AddPolygon(new Polygon( new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
-            floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
-
-            figures.Add(floor);
-            //Figure mirror = new();
-            //mirror.AddPolygon(new Plane(new Point(200, 0, 0), new Point(0, 0, 200), new Point(200, 200, 0), Color.White, m: new Reflective()));
-            //figures.Add(mirror);
-            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
-        }
-
-        public void SetCowScene(string inputPathName = "../../../../Examples/cow.obj")
-        {
-            cam.SetCamera(new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 600, 600, 300));
-
-            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
-            //lights.Add(new Light(0.5f, Color.White));
-
-            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
-            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
-            cow.Scale(300, 300, 300);
-
-            Figure floor = new Figure();
-            floor.AddPolygon(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
-            floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
-
-            Figure mirror = new();
-            mirror.AddPolygon(new Sphere(new Point(400, 0, -10), 100, Color.White, m: new Reflective(10, 0.8f)));
-
-            figures.Add(cow);
-            figures.Add(floor);
-            figures.Add(mirror);
-            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
-        }
-
-
-        public void SetMirrorScene(string inputPathName = "../../../../Examples/cow.obj")
-        {
-            cam.SetCamera(new Camera(new Point(0, 100, -350f), new Vector3D(0, 0, 0), 800, 800, 400));
-
-            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
-            //lights.Add(new Light(0.5f, Color.White));
-
-            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
-            cow.Rotate(alpha: 0, /*beta: (float)Math.PI, */gamma: (float)Math.PI / 2);
-            cow.Scale(300, 300, 300);
-            cow.Translate(y: -5);
-
-            Figure floor = new Figure();
-            floor.AddPolygon(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
-            floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
-
-            Figure mirror = new();
-            mirror.AddPolygon(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
-            mirror.AddPolygon(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
-            figures.Add(cow);
-            figures.Add(floor);
-            figures.Add(mirror);
-            //objects.Add(new Plane(new Point(1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 1), m: new Reflective()));
-        }
-
-
-        public void SetCarScene(string inputPathName = "../../../../Examples/car.obj")
-        {
-            cam.SetCamera(new Camera(new Point(0, 100, -350f), new Vector3D(0, 0, 0), 600, 600, 300));
-
-            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
-            //lights.Add(new Light(0.5f, Color.White));
-
-            Figure car = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
-            //car.Rotate(alpha: 0, beta: (float)Math.PI, gamma: (float)Math.PI / 2);
-            car.Scale(100, 100, 100);
-            //car.Translate(y: -5);
-
-            Figure floor = new Figure();
-            floor.AddPolygon(new Polygon(new Point(1000, 0, 0), new Point(-1000, 0, 0), new Point(0, 0, 1000)));
-            floor.AddPolygon(new Polygon(new Point(-1000, 0, 0), new Point(1000, 0, 0), new Point(0, 0, -1000)));
-
-
-            figures.Add(car);
-            figures.Add(floor);
-        }
-
-
-        public void BuildTree()
-        {
-            List<ITraceable> total = new List<ITraceable>();
-            foreach (Figure f in figures)
-            {
-                total.AddRange(f.GetPolygons());
-                f.Clear();
-            }
-            tree.Build(total);
-        }
-
         public Scene(List<Figure> figArr)
         {
             cam = new Camera(new Point(0, 0, 0), new Vector3D(0, 0, 1), 128, 128, 70);
@@ -147,15 +35,6 @@ namespace Lab1
             figures = figArr;
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             ClearView();
-        }
-
-        private void ClearView()
-        {
-            for(int i = 0; i < viewColors.Length; i++)
-            {
-                viewColors[i] = Material.worldColor;
-                normalColors[i] = Color.FromArgb(0, 0, 0);
-            }  
         }
 
         public void RayProcessing(string outputPathName)
@@ -180,7 +59,7 @@ namespace Lab1
                     Point? interPoint = tree.FindIntersection(ray);
                     if (interPoint is not null)
                     {
-                        ITraceable resObj = tree.GetIntersectionObj();
+                        SceneObject resObj = tree.GetIntersectionObj();
                         normalColors[i * screenWidth + j] = ((resObj.GetNormalAtPoint(interPoint) / 2 + new Vector3D(0.5f, 0.5f, 0.5f)) * 255.0f).ToColor();
                         viewColors[i * screenWidth + j] = resObj.GetColorAtPoint(ray, interPoint, tree, lights);
                     }
@@ -190,62 +69,116 @@ namespace Lab1
             FileWork.WritePPM(normalColors, screenHeight, screenWidth, "../../../../Examples/result_normals_map.ppm");
         }
 
-        // public static Point RayIntersect(Beam ray, List<ITraceable> objects, ITraceable[] intObj)
-        // {
-        //     float depth = float.MaxValue;
-        //     Point result = null;
-        //     intObj = null;
-        //
-        //     foreach (ITraceable obj in objects)
-        //     {
-        //         if (obj is not null)
-        //         {
-        //             Point? intersectionPoint = obj.GetIntersectionPoint(ray);
-        //             if (intersectionPoint is not null) 
-        //             {
-        //                 float sqLenght = new Vector3D(ray.GetPosition(), intersectionPoint).SquareLength();
-        //                 if (sqLenght < depth)
-        //                 {
-        //                     depth = sqLenght;
-        //                     result = intersectionPoint;
-        //                     intObj[0] = obj;
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     return result;
-        // }
-/*        private void ViewOutput()
+        private void ClearView()
         {
-            for (int i = 0; i < cam.GetScreenHeight(); i++)
+            for (int i = 0; i < viewColors.Length; i++)
             {
-                for (int j = 0; j < cam.GetScreenWidth(); j++)
-                {
-                    float val = viewValues[i * cam.GetScreenWidth() + j];
-
-                    if (val <= 0)
-                    {
-                        Console.Write(' '.ToString().PadLeft(3));
-                    }
-                    else if (val > 0 && val < 0.2f)
-                    {
-                        Console.Write('·'.ToString().PadLeft(3));
-                    }
-                    else if (val >= 0.2f && val < 0.5f)
-                    {
-                        Console.Write('*'.ToString().PadLeft(3));
-                    }
-                    else if (val >= 0.5f && val < 0.8f)
-                    {
-                        Console.Write('O'.ToString().PadLeft(3));
-                    }
-                    else if (val >= 0.8f)
-                    {
-                        Console.Write('#'.ToString().PadLeft(3));
-                    }
-                }
-                Console.WriteLine();
+                viewColors[i] = Material.worldColor;
+                normalColors[i] = Color.FromArgb(0, 0, 0);
             }
-        }*/
+        }
+
+        public void BuildTree()
+        {
+            List<SceneObject> total = new List<SceneObject>();
+            foreach (Figure f in figures)
+            {
+                total.AddRange(f.GetObjects());
+                f.Clear();
+            }
+            tree.Build(total);
+        }
+
+
+        //Scenes
+        public void SetScene(string inputPathName)
+        {
+            //Lights
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new DirectionalLight(new Vector3D(0, -1, 0), 1, Color.Red));
+            //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
+            //lights.Add(new Light(2f, Color.White));
+
+            Figure f = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
+
+            // cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            f.Scale(100, 100, 100);
+            f.Translate(x: 20);
+            figures.Add(f);
+
+            Figure floor = new Figure();
+            floor.AddObject(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
+            floor.AddObject(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
+
+            figures.Add(floor);
+        }
+
+        public void SetCowScene(string inputPathName = "../../../../Examples/cow.obj")
+        {
+            cam.SetCamera(new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 600, 600, 300));
+
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new Light(0.5f, Color.White));
+
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
+            cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            cow.Scale(300, 300, 300);
+
+            Figure floor = new Figure();
+            floor.AddObject(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
+            floor.AddObject(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
+
+            Figure mirror = new();
+            mirror.AddObject(new Sphere(new Point(400, 0, -10), 100, Color.White, m: new Reflective(10, 0.8f)));
+
+            figures.Add(cow);
+            figures.Add(floor);
+            figures.Add(mirror);
+        }
+
+        public void SetMirrorScene(string inputPathName = "../../../../Examples/cow.obj")
+        {
+            cam.SetCamera(new Camera(new Point(0, 100, -350f), new Vector3D(0, 0, 0), 800, 800, 400));
+
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new Light(0.5f, Color.White));
+
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
+            cow.Rotate(alpha: 0, gamma: (float)Math.PI / 2);
+            cow.Scale(300, 300, 300);
+            cow.Translate(y: -5);
+
+            Figure floor = new Figure();
+            floor.AddObject(new Polygon(new Point(1000, -100, 0), new Point(-1000, -100, 0), new Point(0, -100, 1000)));
+            floor.AddObject(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
+
+            Figure mirror = new();
+            mirror.AddObject(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
+            mirror.AddObject(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
+            figures.Add(cow);
+            figures.Add(floor);
+            figures.Add(mirror);
+        }
+
+        public void SetCarScene(string inputPathName = "../../../../Examples/car.obj")
+        {
+            cam.SetCamera(new Camera(new Point(0, 100, -350f), new Vector3D(0, 0, 0), 600, 600, 300));
+
+            lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
+            //lights.Add(new Light(0.5f, Color.White));
+
+            Figure car = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
+            //car.Rotate(alpha: 0, beta: (float)Math.PI, gamma: (float)Math.PI / 2);
+            car.Scale(100, 100, 100);
+            //car.Translate(y: -5);
+
+            Figure floor = new Figure();
+            floor.AddObject(new Polygon(new Point(1000, 0, 0), new Point(-1000, 0, 0), new Point(0, 0, 1000)));
+            floor.AddObject(new Polygon(new Point(-1000, 0, 0), new Point(1000, 0, 0), new Point(0, 0, -1000)));
+
+
+            figures.Add(car);
+            figures.Add(floor);
+        }
     }
 }

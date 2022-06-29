@@ -5,10 +5,10 @@
         internal class Node
         {
             public Node? left, right;
-            public List<ITraceable> items;
+            public List<SceneObject> items;
             public AABB aabb;
 
-            public Node(List<ITraceable> items)
+            public Node(List<SceneObject> items)
             {
                 left = null;
                 right = null;
@@ -21,7 +21,7 @@
         private int capacity;
 
         Point? bestPoint;
-        ITraceable? bestObj;
+        SceneObject? bestObj;
         float bestSqDist;
 
         public BVHTree (int capacity)
@@ -31,7 +31,7 @@
             bestSqDist = float.MaxValue;
         }
 
-        public void Build(List<ITraceable> items)
+        public void Build(List<SceneObject> items)
         {
             root = new Node(items);
             Build(root);
@@ -84,9 +84,9 @@
             }
         }
 
-        private void FindIntersection(List<ITraceable> items, Beam ray)
+        private void FindIntersection(List<SceneObject> items, Beam ray)
         {
-            foreach (ITraceable obj in items)
+            foreach (SceneObject obj in items)
             {
                 if (obj is not null)
                 {
@@ -107,7 +107,7 @@
 
         public Point? GetIntersectionPoint() => bestPoint;
 
-        public ITraceable? GetIntersectionObj() => bestObj;
+        public SceneObject? GetIntersectionObj() => bestObj;
 
 
 

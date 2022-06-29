@@ -7,7 +7,7 @@ public abstract class Material
     public static Color worldColor = Color.FromArgb(200, 255, 255);
     protected static int height = 0, width = 0;
     protected static Color[]? texture;
-    public abstract Color RayBehaviour(Beam startRay, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights);
+    public abstract Color RayBehaviour(Beam startRay, Point interPoint, SceneObject interObj, BVHTree tree, List<Light> lights);
 
     protected void LoadTexture(string path)
     {

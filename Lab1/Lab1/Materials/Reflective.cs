@@ -16,12 +16,12 @@ public class Reflective : Material
         width = 0;
     }
 
-    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)
+    public override Color RayBehaviour(Beam ray, Point interPoint, SceneObject interObj, BVHTree tree, List<Light> lights)
     {
         return RayBehaviour(ray, interPoint, interObj, tree, lights, maxReflectionsNumber);
     }
 
-    private Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights, int numOfReflections)
+    private Color RayBehaviour(Beam ray, Point interPoint, SceneObject interObj, BVHTree tree, List<Light> lights, int numOfReflections)
     {
         if (numOfReflections <= 0) return Color.Black;
 
@@ -30,11 +30,9 @@ public class Reflective : Material
         Beam newStartRay = new(interPoint, newStartVector);
         Point? newInterPoint = tree.FindIntersection(ray);
 
-        ITraceable? resObject = tree.GetIntersectionObj();
+        SceneObject? resObject = tree.GetIntersectionObj();
         if (newInterPoint is not null)
         {
-            //newInterPoint += new Point(interObj.GetNormalAtPoint(interPoint) * 0.001f);
-
             Color tempColor = resObject.GetColorAtPoint(newStartRay, newInterPoint, tree, lights);
             return Color.FromArgb((byte)(tempColor.R * reflectionCoeficient),
                                   (byte)(tempColor.G * reflectionCoeficient),

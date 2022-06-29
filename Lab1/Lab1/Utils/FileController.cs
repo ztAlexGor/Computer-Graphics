@@ -75,10 +75,7 @@ public class FileWork
                 }
             }
         } 
-        catch (Exception)
-        {
-            // Process an exception
-        }
+        catch (Exception){ }
         finally
         {
             reader?.Close();

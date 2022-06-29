@@ -4,65 +4,49 @@ namespace Lab1
 {
     public class Figure
     {
-        private List<ITraceable> polygons;
+        private List<SceneObject> objects;
 
-        public Figure(List<ITraceable> polygons)
+        public Figure(List<SceneObject> objects)
         {
-            this.polygons = polygons;
+            this.objects = objects;
         }
         
         public Figure()
         {
-            this.polygons = new List<ITraceable>();
+            objects = new List<SceneObject>();
         }
 
-        public void AddPolygon(ITraceable polygon) => polygons.Add(polygon);
+        public void AddObject(SceneObject obj) => objects.Add(obj);
 
-        public List<ITraceable> GetPolygons() => polygons;
+        public List<SceneObject> GetObjects() => objects;
 
 
         public void Rotate(float alpha = 0, float beta = 0, float gamma = 0)
         {
-            for (int i = 0; i < polygons.Count; i++)
+            for (int i = 0; i < objects.Count; i++)
             {
-                polygons[i] = polygons[i].Rotate(alpha, beta, gamma);
+                objects[i] = objects[i].Rotate(alpha, beta, gamma);
             }
         }
 
         public void Scale(float x = 0, float y = 0, float z = 0)
         {
-            for (int i = 0; i < polygons.Count; i++)
+            for (int i = 0; i < objects.Count; i++)
             {
-                polygons[i] = polygons[i].Scale(x, y, z);
+                objects[i] = objects[i].Scale(x, y, z);
             }
         }
 
         public void Translate(float x = 0, float y = 0, float z = 0)
         {
-            for (int i = 0; i < polygons.Count; i++)
+            for (int i = 0; i < objects.Count; i++)
             {
-                polygons[i] = polygons[i].Translate(x, y, z);
+                objects[i] = objects[i].Translate(x, y, z);
             }
         }
         
         public void Clear() {
-        
+            objects.Clear();
         }
-
-/*        public Color GetColorAtPoint(Beam startRay, Point interPoint, List<ITraceable> objects, List<Light> lights)
-        {
-            throw new NotImplementedException();
-        }
-
-                public Point? GetIntersectionPoint(Beam ray)
-        {
-            return null;
-        }
-
-        public Vector3D GetNormalAtPoint(Point point)
-        {
-            throw new NotImplementedException();
-        }
-*/
     }
 }

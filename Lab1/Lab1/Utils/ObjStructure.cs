@@ -23,9 +23,9 @@ public class ObjStructure
     
     public void AddF(int?[] f1) => f.Add(f1);
 
-    public List<ITraceable> GetObjects(Color color, Material material)
+    public List<SceneObject> GetObjects(Color color, Material material)
     {
-        List<ITraceable> res = new List<ITraceable>();
+        List<SceneObject> res = new List<SceneObject>();
         foreach (int?[] p in f)
         {
             Polygon plgn = new Polygon(new Point(v[(int)p[6] - 1]), new Point(v[(int)p[3] - 1]), new Point(v[(int)p[0] - 1]), color, m: material);
@@ -36,7 +36,6 @@ public class ObjStructure
             }
 
             res.Add(plgn);
-            //res.Add(plgn.Scale(10, 10, 10));
         }
 
         Clear();

@@ -4,32 +4,20 @@
     {
         private float[] borders; // 0, 2, 4 - max  |  1, 3, 5 - min
         private float[] center;
-        //private Point min, max, center;
 
         public AABB(float[] boxBorders)
         {
             borders = boxBorders;
-/*            for (int i = 0; i < 6; i++)
-            {
-                if (i % 2 == 0)
-                {
-                    borders[i] += 1;
-                }
-                else
-                {
-                    borders[i] -= 1;
-                }
-            }*/
             center = ComputeCenter();
         }
 
-        public AABB(List<ITraceable> items)
+        public AABB(List<SceneObject> items)
         {
             borders = new float[] { float.MinValue, float.MaxValue,
                                     float.MinValue, float.MaxValue,
                                     float.MinValue, float.MaxValue };
 
-            foreach (ITraceable item in items)
+            foreach (SceneObject item in items)
             {
                 float[] itemBorders = item.GetAABB().GetBorders();
                 for (int i = 0; i < 3; i++)
@@ -62,12 +50,6 @@
         }
 
 
-
-
-
-
-
-
         public bool IsIntersect(Beam ray, float bestDist = float.MaxValue)
         {
             Point sPoint = ray.GetPosition();
@@ -85,9 +67,9 @@
                         return false;
                     }
 
-                    
+
                     Point final = sPoint + (dirVector * t1);
-                    if (IsItIn(final, i, ray, t1*t2 > 0 ? bestDist : float.MaxValue))
+                    if (IsItIn(final, i, ray, t1 * t2 > 0 ? bestDist : float.MaxValue))
                     {
                         return true;
                     }
@@ -99,7 +81,6 @@
                     }
                 }
             }
-
             return false;
         }
 
@@ -111,62 +92,10 @@
                 point[(i + 1) % 3] <= borders[((i + 1) % 3) * 2] &&
                 point[(i + 2) % 3] >= borders[((i + 2) % 3) * 2 + 1] &&
                 point[(i + 2) % 3] <= borders[((i + 2) % 3) * 2])
-
             {
-                //return true;
                 return bestDist >= new Vector3D(ray.GetPosition(), p).SquareLength();
             }
             return false;
         }
-        /*        public AABB(Point min, Point max)
-                {
-                    this.min = new Point(min);
-                    this.max = new Point(max);
-                    center = new Point((min + max) / 2);
-                }*/
-        /*        public AABB(List<ITraceable> items)
-                {
-                    min = new Point(float.MaxValue, float.MaxValue, float.MaxValue);
-                    max = new Point(float.MinValue, float.MinValue, float.MinValue);
-
-                    foreach (ITraceable item in items)
-                    {
-                        if (min.X() < )
-                        if (min > item.GetAABB().GetMin())
-                        {
-                            min = item.GetAABB().GetMin();
-                        }
-
-                        if (max < item.GetAABB().GetMax())
-                        {
-                            max = item.GetAABB().GetMax();
-                        }
-                    }
-                }*/
-
-        /*        public Point GetMin() => min;
-                public Point GetMax() => max;
-                public Point GetCenter() => center;*/
-
-
-        /*        public int GetLongestDimension()
-                {
-                    float sizeX = max.X() - min.X();
-                    float sizeY = max.Y() - min.Y();
-                    float sizeZ = max.Z() - min.Z();
-
-                    float maxSize = Math.Max(Math.Max(sizeX, sizeY), sizeZ);
-
-                    if (sizeX == maxSize)return 0;
-                    if (sizeY == maxSize)return 1;
-                    return 2;
-                }*/
-
-        /*        public int Compare(AABB other, int dimension)
-                {
-                    if (dimension == 0) return center.X().CompareTo(other.GetCenter().X());
-                    if (dimension == 1) return center.Y().CompareTo(other.GetCenter().Y());
-                    return center.Z().CompareTo(other.GetCenter().Z());
-                }*/
     }
 }

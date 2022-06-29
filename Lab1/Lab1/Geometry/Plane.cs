@@ -2,7 +2,7 @@
 
 namespace Lab1
 {
-    public class Plane : ITraceable
+    public class Plane : SceneObject
     {
         protected readonly Point a;
         protected readonly Point b;
@@ -51,7 +51,7 @@ namespace Lab1
             aabb = plane.GetAABB();
         }
 
-        public virtual Point? GetIntersectionPoint(Beam ray)
+        public override Point? GetIntersectionPoint(Beam ray)
         {
             Vector3D d = ray.GetDirection();
             Vector3D k = new Vector3D(ray.GetPosition(), c);
@@ -65,32 +65,32 @@ namespace Lab1
             return null;
         }
 
-        public Vector3D GetNormalAtPoint(Point point) => normal;
+        public override Vector3D GetNormalAtPoint(Point point) => normal;
 
-        public Color GetColorAtPoint(Beam startRay, Point interPoint, BVHTree tree, List<Light> lights) =>
+        public override Color GetColorAtPoint(Beam startRay, Point interPoint, BVHTree tree, List<Light> lights) =>
             material.RayBehaviour(startRay, interPoint, this, tree, lights);
 
-        public virtual ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
+        public override SceneObject Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
             new Plane(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
 
-        public virtual ITraceable Scale(float sx = 0, float sy = 0, float sz = 0) => new Plane(this);
+        public override SceneObject Scale(float sx = 0, float sy = 0, float sz = 0) => new Plane(this);
 
-        public virtual ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
+        public override SceneObject Translate(float x = 0, float y = 0, float z = 0) =>
             new Plane(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color);
 
-        public float[] GetBoxBorders() => aabb.GetBorders();
+        public override float[] GetBoxBorders() => aabb.GetBorders();
 
-        public float[] GetBoxCenter() => aabb.GetCenter();
+        public override float[] GetBoxCenter() => aabb.GetCenter();
 
-        public AABB GetAABB() => aabb;
+        public override AABB GetAABB() => aabb;
 
-        public virtual float[] BoxBordersInit() =>
+        public override float[] BoxBordersInit() =>
             new float[] { float.MaxValue, float.MinValue,
                           float.MaxValue, float.MinValue,
                           float.MaxValue, float.MinValue };
 
-        public virtual Point? GetUV() => null;
+        public override Point? GetUV() => null;
 
-        public virtual (Point?, Point?, Point?) GetVT() => (null, null, null);
+        public override (Point?, Point?, Point?) GetVT() => (null, null, null);
     }
 }

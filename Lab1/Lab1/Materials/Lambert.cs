@@ -18,47 +18,28 @@ public class Lambert : Material
         }
     }
 
-    public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)
+    public override Color RayBehaviour(Beam ray, Point interPoint, SceneObject interObj, BVHTree tree, List<Light> lights)
     {
         float r = 0, g = 0, b = 0;
 
+        //texture applying 
         Point? uvw = interObj.GetUV();
         (Point? vt1, Point? vt2, Point? vt3) = interObj.GetVT();
-        /*Color[][] colors = new Color[2][];
-        for (int i = 0; i < 2; i++)
-        {
-            colors[i] = new Color[2];
-            for (int j = 0; j < 2; j++)
-            {
-                colors[i][j] = 
-            }
-        }*/
 
         if (uvw is not null && vt1 is not null && vt2 is not null && vt3 is not null)
         {
             Point texturePosition = vt1 * uvw.X() + vt2 * uvw.Y() + vt3 * uvw.Z();
-            float textureX = texturePosition.X() * Material.width;
-            float textureY = texturePosition.Y() * Material.height;
+            float textureX = texturePosition.X() * width;
+            float textureY = texturePosition.Y() * height;
 
-            /*            if ((textureX <= 0.5f && textureY >= 0.5f) || (textureX >= 0.5f && textureY <= 0.5f))
-                        {
-                            r = 0;
-                            g = 0;
-                            b = 128;
-                        }
-                        else
-                        {
-                            r = 128;
-                            g = 0;
-                            b = 0;
-                        }*/
-            int tidx = Math.Min((int)((int)(textureY * Material.width) + (int)textureX), Material.width * Material.height - 1);
+            int tidx = Math.Min((int)((int)(textureY * width) + (int)textureX), width * height - 1);
             
-            r = (Material.texture[tidx]).R;
-            g = (Material.texture[tidx]).G;
-            b = (Material.texture[tidx]).B;
+            r = texture[tidx].R;
+            g = texture[tidx].G;
+            b = texture[tidx].B;
         }
 
+        //light applying
         foreach (Light light in lights)
         {
             float illuminance = CalculateIlluminance(tree, interObj, interPoint, light);
@@ -84,7 +65,7 @@ public class Lambert : Material
         return Color.FromArgb((byte)r, (byte)g, (byte)b);
     }
 
-    private float CalculateIlluminance(BVHTree tree, ITraceable thisObject, Point point, Light light)
+    private float CalculateIlluminance(BVHTree tree, SceneObject thisObject, Point point, Light light)
     {
         Vector3D norm = thisObject.GetNormalAtPoint(point);
         float illuminance = 0;
@@ -94,7 +75,7 @@ public class Lambert : Material
         foreach (Vector3D dir in light.GetRayDirection(norm, point))
         {
             float dotProduct = norm * dir;
-            if (dotProduct > 0 && IsVisible(tree, thisObject, point, dir, light.IsRayInfinite()))
+            if (dotProduct > 0 && IsVisible(tree, point, dir, light.IsRayInfinite()))
             {
                 illuminance += light.GetIntensity() * light.GetAttenuationCoefficient(point) * dotProduct / norm.Length() / dir.Length();
             }
@@ -105,7 +86,7 @@ public class Lambert : Material
     }
 
 
-    private bool IsVisible(BVHTree tree, ITraceable thisObject, Point start, Vector3D dir, bool bIgnoreDistance)
+    private bool IsVisible(BVHTree tree, Point start, Vector3D dir, bool bIgnoreDistance)
     {
         Beam lightRay = bIgnoreDistance ? new(start, dir) : new(start, new Vector3D(start, start + dir));
         Point? intersectionPoint = tree.FindIntersection(lightRay);

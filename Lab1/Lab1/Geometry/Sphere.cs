@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace Lab1
 {
-    public class Sphere : ITraceable
+    public class Sphere : SceneObject
     {
         private readonly float radius;
         private readonly Point center;
@@ -19,7 +19,7 @@ namespace Lab1
             this.color = color;
         }
 
-        public Point? GetIntersectionPoint(Beam ray)
+        public override Point? GetIntersectionPoint(Beam ray)
         {
             Vector3D d = new(ray.GetDirection());
             Point o = new(ray.GetPosition());
@@ -41,37 +41,37 @@ namespace Lab1
             return (x2 > 0) ? (o + (d * x2)) : ((x1 > 0) ? (o + (d * x1)) : null);
         }
 
-        public Vector3D GetNormalAtPoint(Point point) => Vector3D.Normalize(new Vector3D(center, point));
+        public override Vector3D GetNormalAtPoint(Point point) => Vector3D.Normalize(new Vector3D(center, point));
 
-        public Color GetColorAtPoint(Beam startRay, Point interPoint, BVHTree tree, List<Light> lights)
+        public override Color GetColorAtPoint(Beam startRay, Point interPoint, BVHTree tree, List<Light> lights)
         {
             return material.RayBehaviour(startRay, interPoint, this, tree, lights);
         }
 
-        public ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
+        public override SceneObject Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
             new Sphere(center.Rotate(alpha, beta, gamma), radius, color, material);
 
-        public ITraceable Scale(float sx = 0, float sy = 0, float sz = 0) =>
+        public override SceneObject Scale(float sx = 0, float sy = 0, float sz = 0) =>
             new Sphere(center, radius * sx, color, material);
 
-        public ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
+        public override SceneObject Translate(float x = 0, float y = 0, float z = 0) =>
             new Sphere(center.Translate(x, y, z), radius, color, material);
 
-        public float[] BoxBordersInit() => 
+        public override float[] BoxBordersInit() => 
             new float[6] { center.X() + radius, center.X() - radius,
                            center.Y() + radius, center.Y() - radius,
                            center.Z() + radius, center.Z() - radius };
 
-        public float[] GetBoxBorders() => aabb.GetBorders();
-        public float[] GetBoxCenter() => aabb.GetCenter();
-        public AABB GetAABB() => aabb;
+        public override float[] GetBoxBorders() => aabb.GetBorders();
+        public override float[] GetBoxCenter() => aabb.GetCenter();
+        public override AABB GetAABB() => aabb;
 
-        public Point? GetUV()
+        public override Point? GetUV()
         {
             throw new NotImplementedException();
         }
 
-        public (Point?, Point?, Point?) GetVT()
+        public override (Point?, Point?, Point?) GetVT()
         {
             throw new NotImplementedException();
         }

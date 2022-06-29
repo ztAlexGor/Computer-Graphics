@@ -33,13 +33,13 @@ namespace Lab1
             vt3 = polygon.vt3;
         }
 
-        public override ITraceable Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
+        public override SceneObject Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
             new Polygon(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color, vt1, vt2, vt3);
 
-        public override ITraceable Scale(float sx = 0, float sy = 0, float sz = 0) =>
+        public override SceneObject Scale(float sx = 0, float sy = 0, float sz = 0) =>
             new Polygon(a.Scale(sx, sy, sz), b.Scale(sx, sy, sz), c.Scale(sx, sy, sz), color, vt1, vt2, vt3);
 
-        public override ITraceable Translate(float x = 0, float y = 0, float z = 0) =>
+        public override SceneObject Translate(float x = 0, float y = 0, float z = 0) =>
             new Polygon(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color, vt1, vt2, vt3);
 
         public void AddVt(Point a, Point b, Point c)
