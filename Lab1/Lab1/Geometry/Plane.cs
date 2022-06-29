@@ -8,32 +8,16 @@ namespace Lab1
         protected readonly Point b;
         protected readonly Point c;
         protected readonly Vector3D normal;
-        protected Material material;
-        protected readonly Color color;
-        protected AABB aabb;
 
-        public Plane(Point a, Point b, Point c, Color color, Vector3D v = null, Material m = null)
+        public Plane(Point a, Point b, Point c, Vector3D? v = null, Color? color = null, Material? m = null)
         {
             this.a = a;
             this.b = b;
             this.c = c;
             normal = (v is null) ? Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c))) : v;
-            material = m is null ? (new Lambert()) : m;
-            this.color = color;
+            material = (m is null) ? new Lambert() : m;
+            this.color = (color is null) ? Color.White : (Color)color;
             aabb = new AABB(BoxBordersInit());
-        }
-        public Plane(Point a, Point b, Point c, Vector3D v = null, Material m = null)
-        {
-            this.a = a;
-            this.b = b;
-            this.c = c;
-            normal = (v is null) ? Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c))) : v;
-            // material = (m is null) ? new Lambert("../../../../Textures/Tire Texture.ppm") : m;
-            color = Color.White;
-            material = m is null ? (new Lambert()) : m;
-            aabb = new AABB(new float[] { float.MaxValue, float.MinValue,
-                                          float.MaxValue, float.MinValue,
-                                          float.MaxValue, float.MinValue });
         }
 
         public Plane(Plane plane)
@@ -47,7 +31,7 @@ namespace Lab1
             c = plane.c;
             color = plane.color;
             material = plane.material;
-            normal = Vector3D.Normalize(Vector3D.CrossProduct(new Vector3D(a, b), new Vector3D(a, c)));
+            normal = plane.normal;
             aabb = plane.GetAABB();
         }
 
@@ -71,20 +55,14 @@ namespace Lab1
             material.RayBehaviour(startRay, interPoint, this, tree, lights);
 
         public override SceneObject Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
-            new Plane(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color);
+            new Plane(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color: color, m: material);
 
         public override SceneObject Scale(float sx = 0, float sy = 0, float sz = 0) => new Plane(this);
 
         public override SceneObject Translate(float x = 0, float y = 0, float z = 0) =>
-            new Plane(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color);
+            new Plane(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color: color, m: material);
 
-        public override float[] GetBoxBorders() => aabb.GetBorders();
-
-        public override float[] GetBoxCenter() => aabb.GetCenter();
-
-        public override AABB GetAABB() => aabb;
-
-        public override float[] BoxBordersInit() =>
+        protected override float[] BoxBordersInit() =>
             new float[] { float.MaxValue, float.MinValue,
                           float.MaxValue, float.MinValue,
                           float.MaxValue, float.MinValue };

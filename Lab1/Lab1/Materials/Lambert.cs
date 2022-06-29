@@ -22,7 +22,7 @@ public class Lambert : Material
     {
         float r = 0, g = 0, b = 0;
 
-        //texture applying 
+        //applying texture
         Point? uvw = interObj.GetUV();
         (Point? vt1, Point? vt2, Point? vt3) = interObj.GetVT();
 
@@ -32,14 +32,13 @@ public class Lambert : Material
             float textureX = texturePosition.X() * width;
             float textureY = texturePosition.Y() * height;
 
-            int tidx = Math.Min((int)((int)(textureY * width) + (int)textureX), width * height - 1);
-            
+            int tidx = (int)(textureY * width + textureX) % (width * height);
             r = texture[tidx].R;
             g = texture[tidx].G;
             b = texture[tidx].B;
         }
 
-        //light applying
+        //applying light 
         foreach (Light light in lights)
         {
             float illuminance = CalculateIlluminance(tree, interObj, interPoint, light);

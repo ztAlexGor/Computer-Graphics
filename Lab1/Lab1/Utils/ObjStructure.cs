@@ -28,7 +28,7 @@ public class ObjStructure
         List<SceneObject> res = new List<SceneObject>();
         foreach (int?[] p in f)
         {
-            Polygon plgn = new Polygon(new Point(v[(int)p[6] - 1]), new Point(v[(int)p[3] - 1]), new Point(v[(int)p[0] - 1]), color, m: material);
+            Polygon plgn = new Polygon(new Point(v[(int)p[6] - 1]), new Point(v[(int)p[3] - 1]), new Point(v[(int)p[0] - 1]), color: color, m: material);
 
             if (p[7] is not null && p[4] is not null && p[1] is not null)
             {

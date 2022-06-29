@@ -153,8 +153,8 @@ namespace Lab1
             floor.AddObject(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
 
             Figure mirror = new();
-            mirror.AddObject(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
-            mirror.AddObject(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
+            mirror.AddObject(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), color: Color.White, m: new Reflective(10, 0.9f)));
+            mirror.AddObject(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), color: Color.White, m: new Reflective(10, 0.9f)));
             figures.Add(cow);
             figures.Add(floor);
             figures.Add(mirror);

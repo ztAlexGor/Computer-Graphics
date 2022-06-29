@@ -4,6 +4,10 @@ namespace Lab1
 {
     public abstract class SceneObject
     {
+        protected Material material;
+        protected Color color;
+        protected AABB aabb;
+
         public abstract Point? GetIntersectionPoint(Beam ray);
 
         public abstract Vector3D GetNormalAtPoint(Point point);
@@ -16,17 +20,16 @@ namespace Lab1
 
         public abstract SceneObject Translate(float x = 0, float y = 0, float z = 0);
 
-        public abstract float[] GetBoxBorders();
-
-        public abstract float[] GetBoxCenter();
-
-        public abstract AABB GetAABB();
-
         public abstract Point? GetUV();
 
         public abstract (Point?, Point?, Point?) GetVT();
+        
+        protected abstract float[] BoxBordersInit();
 
-        //set private after changing ITraceable from interface to abstract class
-        public abstract float[] BoxBordersInit();
+        public float[] GetBoxBorders() => aabb.GetBorders();
+
+        public float[] GetBoxCenter() => aabb.GetCenter();
+
+        public AABB GetAABB() => aabb;
     }
 }

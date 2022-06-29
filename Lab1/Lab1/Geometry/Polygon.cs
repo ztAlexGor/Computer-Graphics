@@ -10,11 +10,11 @@ namespace Lab1
         private float u;
         private float v;
 
-        public Polygon(Point a, Point b, Point c) : base(a, b, c, Color.White) { }
+        public Polygon(Point a, Point b, Point c) : base(a, b, c) { }
 
-        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, Color.White, v) { BoxBordersInit(); }
+        public Polygon(Point a, Point b, Point c, Vector3D v) : base(a, b, c, v) { BoxBordersInit(); }
 
-        public Polygon(Point a, Point b, Point c, Color color, Point? vt1 = null, Point? vt2 = null, Point? vt3 = null, Material m = null) : base(a, b, c, color, m: m) 
+        public Polygon(Point a, Point b, Point c, Point? vt1 = null, Point? vt2 = null, Point? vt3 = null, Color? color = null, Material? m = null) : base(a, b, c, color: color, m: m) 
         {
             this.vt1 = vt1;
             this.vt2 = vt2;
@@ -34,13 +34,13 @@ namespace Lab1
         }
 
         public override SceneObject Rotate(float alpha = 0, float beta = 0, float gamma = 0) =>
-            new Polygon(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), color, vt1, vt2, vt3);
+            new Polygon(a.Rotate(alpha, beta, gamma), b.Rotate(alpha, beta, gamma), c.Rotate(alpha, beta, gamma), vt1, vt2, vt3, color: color, m: material);
 
         public override SceneObject Scale(float sx = 0, float sy = 0, float sz = 0) =>
-            new Polygon(a.Scale(sx, sy, sz), b.Scale(sx, sy, sz), c.Scale(sx, sy, sz), color, vt1, vt2, vt3);
+            new Polygon(a.Scale(sx, sy, sz), b.Scale(sx, sy, sz), c.Scale(sx, sy, sz), vt1, vt2, vt3, color: color, m: material);
 
         public override SceneObject Translate(float x = 0, float y = 0, float z = 0) =>
-            new Polygon(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), color, vt1, vt2, vt3);
+            new Polygon(a.Translate(x, y, z), b.Translate(x, y, z), c.Translate(x, y, z), vt1, vt2, vt3, color: color, m: material);
 
         public void AddVt(Point a, Point b, Point c)
         {
@@ -85,7 +85,7 @@ namespace Lab1
         }
         
 
-        public override float[] BoxBordersInit() =>
+        protected override float[] BoxBordersInit() =>
             new float[] { MaxBorder(a.X(), b.X(), c.X()), MinBorder(a.X(), b.X(), c.X()),
                           MaxBorder(a.Y(), b.Y(), c.Y()), MinBorder(a.Y(), b.Y(), c.Y()),
                           MaxBorder(a.Z(), b.Z(), c.Z()), MinBorder(a.Z(), b.Z(), c.Z()) };
