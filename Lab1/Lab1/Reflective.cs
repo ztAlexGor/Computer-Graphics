@@ -11,6 +11,9 @@ public class Reflective : Material
     {
         this.maxReflectionsNumber = maxReflectionsNumber;
         this.reflectionCoeficient = reflectionCoeficient;
+        texture = null;
+        height = 0;
+        width = 0;
     }
 
     public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)

@@ -9,7 +9,7 @@ public abstract class Material
     protected static Color[]? texture;
     public abstract Color RayBehaviour(Beam startRay, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights);
 
-    static public void LoadTexture(string path)
+    protected void LoadTexture(string path)
     {
         StreamReader? reader = null;
         try

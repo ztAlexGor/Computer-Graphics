@@ -1,4 +1,4 @@
-using System.Numerics;
+using System.Drawing;
 
 namespace Lab1;
 
@@ -23,12 +23,12 @@ public class ObjStructure
     
     public void AddF(int?[] f1) => f.Add(f1);
 
-    public List<ITraceable> GetObjects()
+    public List<ITraceable> GetObjects(Color color, Material material)
     {
         List<ITraceable> res = new List<ITraceable>();
         foreach (int?[] p in f)
         {
-            Polygon plgn = new Polygon(new Point(v[(int)p[6] - 1]), new Point(v[(int)p[3] - 1]), new Point(v[(int)p[0] - 1]));
+            Polygon plgn = new Polygon(new Point(v[(int)p[6] - 1]), new Point(v[(int)p[3] - 1]), new Point(v[(int)p[0] - 1]), color, m: material);
 
             if (p[7] is not null && p[4] is not null && p[1] is not null)
             {

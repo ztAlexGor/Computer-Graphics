@@ -4,10 +4,20 @@ namespace Lab1;
 
 public class Lambert : Material
 {
-    public Lambert()
+    public Lambert(string? path = null)
     {
-        // LoadTexture(path);
+        if (path is not null)
+        {
+            LoadTexture(path);
+        }
+        else
+        {
+            texture = null;
+            height = 0;
+            width = 0;
+        }
     }
+
     public override Color RayBehaviour(Beam ray, Point interPoint, ITraceable interObj, BVHTree tree, List<Light> lights)
     {
         float r = 0, g = 0, b = 0;

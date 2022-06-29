@@ -15,9 +15,7 @@ namespace Lab1
             cam = new Camera(new Point(50, 100, -350f), new Vector3D(0, 0, 0), 500, 500, 300);
             lights = new List<Light>();
             figures = new List<Figure>();
-            tree = new BVHTree(4);
-
-            Material.LoadTexture("../../../../Textures/tire.ppm");
+            tree = new BVHTree(10);
 
             //SetScene(inputPathName);
             SetMirrorScene();
@@ -27,7 +25,6 @@ namespace Lab1
 
             viewColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
             normalColors = new Color[cam.GetScreenHeight() * cam.GetScreenWidth()];
-            //ClearView();
         }
 
         public void SetScene(string inputPathName)
@@ -38,9 +35,9 @@ namespace Lab1
             //lights.Add(new PointLight(new Point(150, 0, 0), 1, Color.DeepPink));
             //lights.Add(new Light(2f, Color.White));
             
-            //Figures
-            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
-            // Figure 
+
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
+
 
             // cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
             cow.Scale(100, 100, 100);
@@ -65,7 +62,7 @@ namespace Lab1
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new Light(0.5f, Color.White));
 
-            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
             cow.Rotate(beta: (float)Math.PI, gamma: (float)Math.PI / 2);
             cow.Scale(300, 300, 300);
 
@@ -90,7 +87,7 @@ namespace Lab1
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new Light(0.5f, Color.White));
 
-            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            Figure cow = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
             cow.Rotate(alpha: 0, /*beta: (float)Math.PI, */gamma: (float)Math.PI / 2);
             cow.Scale(300, 300, 300);
             cow.Translate(y: -5);
@@ -100,8 +97,8 @@ namespace Lab1
             floor.AddPolygon(new Polygon(new Point(-1000, -100, 0), new Point(1000, -100, 0), new Point(0, -100, -1000)));
 
             Figure mirror = new();
-            mirror.AddPolygon(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), Color.White, m: new Reflective(20, 0.9f)));
-            mirror.AddPolygon(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), Color.White, m: new Reflective(20, 0.9f)));
+            mirror.AddPolygon(new Polygon(new Point(300, -100, 0), new Point(0, -100, 500), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
+            mirror.AddPolygon(new Polygon(new Point(0, -100, 500), new Point(-300, -100, 0), new Point(0, 1000, 500), Color.White, m: new Reflective(10, 0.9f)));
             figures.Add(cow);
             figures.Add(floor);
             figures.Add(mirror);
@@ -116,7 +113,7 @@ namespace Lab1
             lights.Add(new DirectionalLight(new Vector3D(-1, -1, 1), 1, Color.DodgerBlue));
             //lights.Add(new Light(0.5f, Color.White));
 
-            Figure car = new Figure(FileWork.ReadObj(inputPathName).GetObjects());
+            Figure car = new Figure(FileWork.ReadObj(inputPathName).GetObjects(Color.White, new Lambert("../../../../Textures/tire.ppm")));
             //car.Rotate(alpha: 0, beta: (float)Math.PI, gamma: (float)Math.PI / 2);
             car.Scale(100, 100, 100);
             //car.Translate(y: -5);
